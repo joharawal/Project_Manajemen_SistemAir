@@ -40,36 +40,23 @@
             margin-bottom: 0.5rem;
             text-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
             letter-spacing: -0.5px;
-            
-            /* Warna Dasar & Persiapan Gradasi */
-            color: rgba(255, 255, 255, 0.1); /* Sedikit transparan agar kilap menonjol */
-            
-            /* Membuat Gradasi */
+            color: rgba(255, 255, 255, 0.1); 
             background: linear-gradient(
                 to right, 
-                #ffffff 20%,    /* Putih biasa */
-                #ffffff 40%,    /* Putih biasa */
-                #c5a059 50%,    /* Emas (kilapan) */
-                #ffffff 60%,    /* Kembali putih */
-                #ffffff 80%     /* Kembali putih */
+                #ffffff 20%,    
+                #ffffff 40%,    
+                #c5a059 50%,    
+                #ffffff 60%,    
+                #ffffff 80%     
             );
-            
-            /* Mengatur Ukuran Background agar Gradasi Lebih Besar dari Teks */
             background-size: 200% auto;
-            
-            /* Kliping Background ke Teks */
             -webkit-background-clip: text;
             background-clip: text;
-            
-            /* Memulai Animasi */
             animation: shineWalking 8s linear infinite;
         }
 
-        /* Definisi Animasi */
         @keyframes shineWalking {
-            to {
-                background-position: 200% center; /* Menggeser background */
-            }
+            to { background-position: 200% center; }
         }
 
         .header p {
@@ -153,6 +140,12 @@
             background: linear-gradient(135deg, #c5a059, #8a6a1c);
             margin-bottom: 1.2rem;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease;
+        }
+
+        /* Penambahan kursor pointer dan efek hover pada foto */
+        .img-wrapper:hover {
+            transform: scale(1.05);
         }
 
         .profile-img {
@@ -161,6 +154,7 @@
             border-radius: 50%;
             object-fit: cover;
             border: 4px solid #1a1a1a;
+            cursor: pointer; /* Kursor berubah menjadi tangan saat di-hover */
         }
 
         .dev-name {
@@ -325,6 +319,59 @@
             text-align: center;
         }
 
+        /* ===== CSS MODAL UNTUK ZOOM FOTO ===== */
+        .modal {
+            display: none; /* Sembunyikan secara default */
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.85); /* Background gelap transparan */
+            backdrop-filter: blur(8px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal.show {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal-content {
+            max-width: 90%;
+            max-height: 85vh;
+            border-radius: 20px;
+            border: 4px solid #c5a059;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.8);
+            transform: scale(0.7);
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .modal.show .modal-content {
+            transform: scale(1);
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 30px;
+            right: 40px;
+            color: #ffffff;
+            font-size: 40px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .close-btn:hover {
+            color: #c5a059;
+        }
+
         /* ===== RESPONSIVE ===== */
         @media (max-width: 1024px) {
             .info-list { grid-template-columns: repeat(2, 1fr); }
@@ -345,11 +392,9 @@
                 padding-bottom: 2rem;
             }
             .info-list { grid-template-columns: 1fr; }
-            
-            /* Perbaikan Menjadi 1 Kolom di HP */
             .team-grid {
                 display: flex;
-                flex-direction: column; /* Mengubah flex ke vertikal */
+                flex-direction: column;
                 align-items: center;
                 gap: 2rem;
             }
@@ -501,6 +546,41 @@
             </div>
         </div>
     </div>
+
+    <div id="imageModal" class="modal">
+        <span class="close-btn">&times;</span>
+        <img class="modal-content" id="zoomedImg">
+    </div>
+
+    <script>
+        // Mengambil elemen modal dan gambar di dalamnya
+        const modal = document.getElementById("imageModal");
+        const modalImg = document.getElementById("zoomedImg");
+        const closeBtn = document.querySelector(".close-btn");
+        
+        // Mengambil semua gambar profil
+        const profileImages = document.querySelectorAll(".profile-img");
+
+        // Menambahkan event listener ke setiap gambar profil
+        profileImages.forEach(img => {
+            img.addEventListener("click", function() {
+                modal.classList.add("show");
+                modalImg.src = this.src; // Memasukkan URL gambar yang diklik ke dalam modal
+            });
+        });
+
+        // Menutup modal jika tombol 'X' diklik
+        closeBtn.addEventListener("click", function() {
+            modal.classList.remove("show");
+        });
+
+        // Menutup modal jika area gelap di luar gambar diklik
+        modal.addEventListener("click", function(event) {
+            if (event.target === modal) {
+                modal.classList.remove("show");
+            }
+        });
+    </script>
 
 </body>
 </html>
