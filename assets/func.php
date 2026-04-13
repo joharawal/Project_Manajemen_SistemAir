@@ -14,7 +14,7 @@ class klas_air {
             $this->host = "localhost";
             $this->user = "root";
             $this->pass = "";
-            $this->db   = "kelompok8.te24e.my.id";
+            $this->db   = "air";
         } else {
             // HOSTING (cPanel)
             $this->host = "localhost";

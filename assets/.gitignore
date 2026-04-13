@@ -1,0 +1,10 @@
+# Abaikan file log server
+error_log
+*.log
+
+# Abaikan file konfigurasi database lokal (sangat disarankan)
+# config.php (sesuaikan dengan nama file koneksi database Anda)
+
+# Abaikan folder temporary/cache
+.cache/
+tmp/
