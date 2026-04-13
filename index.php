@@ -131,7 +131,7 @@ $koneksi = $air->koneksi();
                                         <!-- Tombol Meet the Developers sesuai Gambar -->
                                         <a href="profile.html" class="btn-purple-pill">
                                             <i class="fas fa-user-circle"></i> 
-                                            <span>Meet the Developers</span>
+                                            <span>AKU the Developers</span>
                                         </a>
                                     </div>
                                 </div>
