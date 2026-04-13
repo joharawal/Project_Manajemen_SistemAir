@@ -127,3 +127,135 @@ Stack trace:
 #1 /home/teemyid/kelompok8.te24e.my.id/index.php(5): klas_air->koneksi()
 #2 {main}
   thrown in /home/teemyid/kelompok8.te24e.my.id/assets/func.php on line 9
+[13-Apr-2026 14:33:41 Asia/Jakarta] PHP Fatal error:  Uncaught mysqli_sql_exception: Access denied for user 'root'@'localhost' (using password: NO) in /home/teemyid/kelompok8.te24e.my.id/assets/func.php:14
+Stack trace:
+#0 /home/teemyid/kelompok8.te24e.my.id/assets/func.php(14): mysqli_connect()
+#1 /home/teemyid/kelompok8.te24e.my.id/index.php(8): klas_air->koneksi()
+#2 {main}
+  thrown in /home/teemyid/kelompok8.te24e.my.id/assets/func.php on line 14
+[13-Apr-2026 14:33:43 Asia/Jakarta] PHP Fatal error:  Uncaught mysqli_sql_exception: Access denied for user 'root'@'localhost' (using password: NO) in /home/teemyid/kelompok8.te24e.my.id/assets/func.php:14
+Stack trace:
+#0 /home/teemyid/kelompok8.te24e.my.id/assets/func.php(14): mysqli_connect()
+#1 /home/teemyid/kelompok8.te24e.my.id/index.php(8): klas_air->koneksi()
+#2 {main}
+  thrown in /home/teemyid/kelompok8.te24e.my.id/assets/func.php on line 14
+[13-Apr-2026 14:33:44 Asia/Jakarta] PHP Fatal error:  Uncaught mysqli_sql_exception: Access denied for user 'root'@'localhost' (using password: NO) in /home/teemyid/kelompok8.te24e.my.id/assets/func.php:14
+Stack trace:
+#0 /home/teemyid/kelompok8.te24e.my.id/assets/func.php(14): mysqli_connect()
+#1 /home/teemyid/kelompok8.te24e.my.id/index.php(8): klas_air->koneksi()
+#2 {main}
+  thrown in /home/teemyid/kelompok8.te24e.my.id/assets/func.php on line 14
+[13-Apr-2026 14:34:10 Asia/Jakarta] PHP Fatal error:  Uncaught mysqli_sql_exception: Access denied for user 'root'@'localhost' (using password: NO) in /home/teemyid/kelompok8.te24e.my.id/assets/func.php:14
+Stack trace:
+#0 /home/teemyid/kelompok8.te24e.my.id/assets/func.php(14): mysqli_connect()
+#1 /home/teemyid/kelompok8.te24e.my.id/index.php(8): klas_air->koneksi()
+#2 {main}
+  thrown in /home/teemyid/kelompok8.te24e.my.id/assets/func.php on line 14
+[13-Apr-2026 14:34:11 Asia/Jakarta] PHP Fatal error:  Uncaught mysqli_sql_exception: Access denied for user 'root'@'localhost' (using password: NO) in /home/teemyid/kelompok8.te24e.my.id/assets/func.php:14
+Stack trace:
+#0 /home/teemyid/kelompok8.te24e.my.id/assets/func.php(14): mysqli_connect()
+#1 /home/teemyid/kelompok8.te24e.my.id/index.php(8): klas_air->koneksi()
+#2 {main}
+  thrown in /home/teemyid/kelompok8.te24e.my.id/assets/func.php on line 14
+[13-Apr-2026 14:34:11 Asia/Jakarta] PHP Fatal error:  Uncaught mysqli_sql_exception: Access denied for user 'root'@'localhost' (using password: NO) in /home/teemyid/kelompok8.te24e.my.id/assets/func.php:14
+Stack trace:
+#0 /home/teemyid/kelompok8.te24e.my.id/assets/func.php(14): mysqli_connect()
+#1 /home/teemyid/kelompok8.te24e.my.id/index.php(8): klas_air->koneksi()
+#2 {main}
+  thrown in /home/teemyid/kelompok8.te24e.my.id/assets/func.php on line 14
+[13-Apr-2026 14:34:12 Asia/Jakarta] PHP Fatal error:  Uncaught mysqli_sql_exception: Access denied for user 'root'@'localhost' (using password: NO) in /home/teemyid/kelompok8.te24e.my.id/assets/func.php:14
+Stack trace:
+#0 /home/teemyid/kelompok8.te24e.my.id/assets/func.php(14): mysqli_connect()
+#1 /home/teemyid/kelompok8.te24e.my.id/index.php(8): klas_air->koneksi()
+#2 {main}
+  thrown in /home/teemyid/kelompok8.te24e.my.id/assets/func.php on line 14
+[13-Apr-2026 14:34:12 Asia/Jakarta] PHP Fatal error:  Uncaught mysqli_sql_exception: Access denied for user 'root'@'localhost' (using password: NO) in /home/teemyid/kelompok8.te24e.my.id/assets/func.php:14
+Stack trace:
+#0 /home/teemyid/kelompok8.te24e.my.id/assets/func.php(14): mysqli_connect()
+#1 /home/teemyid/kelompok8.te24e.my.id/index.php(8): klas_air->koneksi()
+#2 {main}
+  thrown in /home/teemyid/kelompok8.te24e.my.id/assets/func.php on line 14
+[13-Apr-2026 14:34:12 Asia/Jakarta] PHP Fatal error:  Uncaught mysqli_sql_exception: Access denied for user 'root'@'localhost' (using password: NO) in /home/teemyid/kelompok8.te24e.my.id/assets/func.php:14
+Stack trace:
+#0 /home/teemyid/kelompok8.te24e.my.id/assets/func.php(14): mysqli_connect()
+#1 /home/teemyid/kelompok8.te24e.my.id/index.php(8): klas_air->koneksi()
+#2 {main}
+  thrown in /home/teemyid/kelompok8.te24e.my.id/assets/func.php on line 14
+[13-Apr-2026 14:34:12 Asia/Jakarta] PHP Fatal error:  Uncaught mysqli_sql_exception: Access denied for user 'root'@'localhost' (using password: NO) in /home/teemyid/kelompok8.te24e.my.id/assets/func.php:14
+Stack trace:
+#0 /home/teemyid/kelompok8.te24e.my.id/assets/func.php(14): mysqli_connect()
+#1 /home/teemyid/kelompok8.te24e.my.id/index.php(8): klas_air->koneksi()
+#2 {main}
+  thrown in /home/teemyid/kelompok8.te24e.my.id/assets/func.php on line 14
+[13-Apr-2026 14:34:13 Asia/Jakarta] PHP Fatal error:  Uncaught mysqli_sql_exception: Access denied for user 'root'@'localhost' (using password: NO) in /home/teemyid/kelompok8.te24e.my.id/assets/func.php:14
+Stack trace:
+#0 /home/teemyid/kelompok8.te24e.my.id/assets/func.php(14): mysqli_connect()
+#1 /home/teemyid/kelompok8.te24e.my.id/index.php(8): klas_air->koneksi()
+#2 {main}
+  thrown in /home/teemyid/kelompok8.te24e.my.id/assets/func.php on line 14
+[13-Apr-2026 14:34:13 Asia/Jakarta] PHP Fatal error:  Uncaught mysqli_sql_exception: Access denied for user 'root'@'localhost' (using password: NO) in /home/teemyid/kelompok8.te24e.my.id/assets/func.php:14
+Stack trace:
+#0 /home/teemyid/kelompok8.te24e.my.id/assets/func.php(14): mysqli_connect()
+#1 /home/teemyid/kelompok8.te24e.my.id/index.php(8): klas_air->koneksi()
+#2 {main}
+  thrown in /home/teemyid/kelompok8.te24e.my.id/assets/func.php on line 14
+[13-Apr-2026 14:34:13 Asia/Jakarta] PHP Fatal error:  Uncaught mysqli_sql_exception: Access denied for user 'root'@'localhost' (using password: NO) in /home/teemyid/kelompok8.te24e.my.id/assets/func.php:14
+Stack trace:
+#0 /home/teemyid/kelompok8.te24e.my.id/assets/func.php(14): mysqli_connect()
+#1 /home/teemyid/kelompok8.te24e.my.id/index.php(8): klas_air->koneksi()
+#2 {main}
+  thrown in /home/teemyid/kelompok8.te24e.my.id/assets/func.php on line 14
+[13-Apr-2026 14:34:13 Asia/Jakarta] PHP Fatal error:  Uncaught mysqli_sql_exception: Access denied for user 'root'@'localhost' (using password: NO) in /home/teemyid/kelompok8.te24e.my.id/assets/func.php:14
+Stack trace:
+#0 /home/teemyid/kelompok8.te24e.my.id/assets/func.php(14): mysqli_connect()
+#1 /home/teemyid/kelompok8.te24e.my.id/index.php(8): klas_air->koneksi()
+#2 {main}
+  thrown in /home/teemyid/kelompok8.te24e.my.id/assets/func.php on line 14
+[13-Apr-2026 14:34:14 Asia/Jakarta] PHP Fatal error:  Uncaught mysqli_sql_exception: Access denied for user 'root'@'localhost' (using password: NO) in /home/teemyid/kelompok8.te24e.my.id/assets/func.php:14
+Stack trace:
+#0 /home/teemyid/kelompok8.te24e.my.id/assets/func.php(14): mysqli_connect()
+#1 /home/teemyid/kelompok8.te24e.my.id/index.php(8): klas_air->koneksi()
+#2 {main}
+  thrown in /home/teemyid/kelompok8.te24e.my.id/assets/func.php on line 14
+[13-Apr-2026 14:34:14 Asia/Jakarta] PHP Fatal error:  Uncaught mysqli_sql_exception: Access denied for user 'root'@'localhost' (using password: NO) in /home/teemyid/kelompok8.te24e.my.id/assets/func.php:14
+Stack trace:
+#0 /home/teemyid/kelompok8.te24e.my.id/assets/func.php(14): mysqli_connect()
+#1 /home/teemyid/kelompok8.te24e.my.id/index.php(8): klas_air->koneksi()
+#2 {main}
+  thrown in /home/teemyid/kelompok8.te24e.my.id/assets/func.php on line 14
+[13-Apr-2026 14:34:14 Asia/Jakarta] PHP Fatal error:  Uncaught mysqli_sql_exception: Access denied for user 'root'@'localhost' (using password: NO) in /home/teemyid/kelompok8.te24e.my.id/assets/func.php:14
+Stack trace:
+#0 /home/teemyid/kelompok8.te24e.my.id/assets/func.php(14): mysqli_connect()
+#1 /home/teemyid/kelompok8.te24e.my.id/index.php(8): klas_air->koneksi()
+#2 {main}
+  thrown in /home/teemyid/kelompok8.te24e.my.id/assets/func.php on line 14
+[13-Apr-2026 14:34:14 Asia/Jakarta] PHP Fatal error:  Uncaught mysqli_sql_exception: Access denied for user 'root'@'localhost' (using password: NO) in /home/teemyid/kelompok8.te24e.my.id/assets/func.php:14
+Stack trace:
+#0 /home/teemyid/kelompok8.te24e.my.id/assets/func.php(14): mysqli_connect()
+#1 /home/teemyid/kelompok8.te24e.my.id/index.php(8): klas_air->koneksi()
+#2 {main}
+  thrown in /home/teemyid/kelompok8.te24e.my.id/assets/func.php on line 14
+[13-Apr-2026 14:34:14 Asia/Jakarta] PHP Fatal error:  Uncaught mysqli_sql_exception: Access denied for user 'root'@'localhost' (using password: NO) in /home/teemyid/kelompok8.te24e.my.id/assets/func.php:14
+Stack trace:
+#0 /home/teemyid/kelompok8.te24e.my.id/assets/func.php(14): mysqli_connect()
+#1 /home/teemyid/kelompok8.te24e.my.id/index.php(8): klas_air->koneksi()
+#2 {main}
+  thrown in /home/teemyid/kelompok8.te24e.my.id/assets/func.php on line 14
+[13-Apr-2026 14:34:15 Asia/Jakarta] PHP Fatal error:  Uncaught mysqli_sql_exception: Access denied for user 'root'@'localhost' (using password: NO) in /home/teemyid/kelompok8.te24e.my.id/assets/func.php:14
+Stack trace:
+#0 /home/teemyid/kelompok8.te24e.my.id/assets/func.php(14): mysqli_connect()
+#1 /home/teemyid/kelompok8.te24e.my.id/index.php(8): klas_air->koneksi()
+#2 {main}
+  thrown in /home/teemyid/kelompok8.te24e.my.id/assets/func.php on line 14
+[13-Apr-2026 14:34:16 Asia/Jakarta] PHP Fatal error:  Uncaught mysqli_sql_exception: Access denied for user 'root'@'localhost' (using password: NO) in /home/teemyid/kelompok8.te24e.my.id/assets/func.php:14
+Stack trace:
+#0 /home/teemyid/kelompok8.te24e.my.id/assets/func.php(14): mysqli_connect()
+#1 /home/teemyid/kelompok8.te24e.my.id/index.php(8): klas_air->koneksi()
+#2 {main}
+  thrown in /home/teemyid/kelompok8.te24e.my.id/assets/func.php on line 14
+[13-Apr-2026 14:43:09 Asia/Jakarta] PHP Fatal error:  Uncaught mysqli_sql_exception: Access denied for user 'root'@'localhost' (using password: NO) in /home/teemyid/kelompok8.te24e.my.id/assets/func.php:14
+Stack trace:
+#0 /home/teemyid/kelompok8.te24e.my.id/assets/func.php(14): mysqli_connect()
+#1 /home/teemyid/kelompok8.te24e.my.id/index.php(8): klas_air->koneksi()
+#2 {main}
+  thrown in /home/teemyid/kelompok8.te24e.my.id/assets/func.php on line 14

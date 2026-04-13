@@ -1,0 +1,5 @@
+---
+deployment:
+  tasks:
+    - export DEPLOYPATH=/home/teemyid/kelompok8.te24e.my.id
+    - /bin/cp -R * $DEPLOYPATH
