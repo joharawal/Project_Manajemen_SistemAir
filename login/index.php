@@ -74,11 +74,11 @@ $level = strtolower($dt_user[2] ?? '');
                             </a>
                                 <a class="nav-link" href="index.php?p=pemakaian_warga">
                                 <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt fa-spin text-success"></i></div>
-                                Lihat Pemakaian Warga
+                                Lihat Pemakaian Air Warga
                             </a>
-                                <a class="nav-link" href="index.php?p=pembayaran_warga">
+                                <a class="nav-link" href="index.php?p=manajemen_tarif">
                                 <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt fa-spin text-success"></i></div>
-                                Pembayaran Warga
+                                Manajemen Tarif Air
                             </a>
                                 <a class="nav-link" href="index.php?p=ubah_datameter_warga">
                                 <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt fa-spin text-success"></i></div>
@@ -88,18 +88,19 @@ $level = strtolower($dt_user[2] ?? '');
                             } 
                             elseif($level=="bendahara") {
                             ?>
-                                <a class="nav-link" href="index.php?p=pembayaran_warga">
+                                <a class="nav-link" href="index.php?p=manajemen_tarif">
                                 <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt fa-spin text-success"></i></div>
-                                Pembayaran Warga
+                                Manajemen Tarif Air
                             </a>
                                 <a class="nav-link" href="index.php?p=ubah_datameter_warga">
                                 <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt fa-spin text-success"></i></div>
                                 Ubah Datameter Warga
                             </a>
-                                <a class="nav-link" href="index.php?p=manajemen_tarif">
+                            <a class="nav-link" href="index.php?p=tagihan_warga_bendahara">
                                 <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt fa-spin text-success"></i></div>
-                                Manajemen Tarif
+                                 Melihat Tagihan Warga
                             </a>
+                           
                             <?php
                             }
                              elseif($level=="petugas") {
@@ -108,6 +109,10 @@ $level = strtolower($dt_user[2] ?? '');
                                 <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt fa-spin text-success"></i></div>
                                 Ubah Datameter Warga
                             </a>
+                            <a class="nav-link" href="index.php?p=pemakaian_warga">
+                                <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt fa-spin text-success"></i></div>
+                                Lihat Pemakaian Air Warga
+                            </a>
                             <?php
                              }
                              elseif($level=="warga") {
@@ -115,6 +120,10 @@ $level = strtolower($dt_user[2] ?? '');
                                 <a class="nav-link" href="index.php?p=pemakaian_warga">
                                 <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt fa-spin text-success"></i></div>
                                  Melihat Pemakaian
+                            </a>
+                              <a class="nav-link" href="index.php?p=tagihan_warga">
+                                <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt fa-spin text-success"></i></div>
+                                 Melihat Tagihan
                             </a>
                                
                             <?php
@@ -155,6 +164,14 @@ $level = strtolower($dt_user[2] ?? '');
                             elseif($e[1]=="manajemen_tarif") {
                                 $h1="Manajemen Tarif";
                                 $li="Manajemen Tarif Air";  
+                            }
+                            elseif($e[1]=="tagihan_warga") {
+                                $h1="Lihat Tagihan";
+                                $li="Lihat Data Tagihan Air";
+                            }
+                             elseif($e[1]=="tagihan_warga_bendahara") {
+                                $h1="Lihat Tagihan Warga";
+                                $li="Lihat Data Tagihan Air Warga";
                             }
                         }
                         else {
