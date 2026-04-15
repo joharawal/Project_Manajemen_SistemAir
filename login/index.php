@@ -260,7 +260,20 @@ $level = strtolower($dt_user[2] ?? '');
                                 $tipe=$_POST['tipe'];
                                 $stats=$_POST['status'];
 
-                                               }
+                                // Query untuk memasukkan data dari form ke dalam database tabel user
+                                $query_insert = "INSERT INTO user (username, password, nama, alamat, kota, tlp, level, tipe, status) 
+                                                 VALUES ('$user', '$pass', '$nama', '$alamat', '$kota', '$tlp', '$leve', '$tipe', '$stats')";
+                                
+                                $eksekusi = mysqli_query($koneksi, $query_insert);
+
+                                if($eksekusi) {
+                                    // Jika sukses akan memunculkan alert dan me-refresh tabel manajemen user
+                                    echo "<script>alert('User berhasil ditambahkan!'); window.location.replace('index.php?p=user');</script>";
+                                } else {
+                                    // Memunculkan pesan jika gagal terkoneksi atau terjadi duplikat
+                                    echo "<script>alert('Gagal menambahkan user: " . mysqli_error($koneksi) . "');</script>";
+                                }
+                            }
                         }
                         ?>
                         <div class="card mb-4">
