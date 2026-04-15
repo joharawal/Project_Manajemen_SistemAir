@@ -259,7 +259,6 @@ $level = strtolower($dt_user[2] ?? '');
                                 $leve=$_POST['level'];
                                 $tipe=$_POST['tipe'];
                                 $stats=$_POST['status'];
-
                                                }
                         }
                         ?>
