@@ -259,8 +259,14 @@ $level = strtolower($dt_user[2] ?? '');
                                 $leve=$_POST['level'];
                                 $tipe=$_POST['tipe'];
                                 $stats=$_POST['status'];
-
-                                               }
+                                $q=mysqli_query($koneksi,"INSERT INTO user VALUES ('$user','$pass','$leve','$nama','$alamat','$kota','$tlp','$tipe','$stats')");
+                                    if($q) {
+                                        echo "<script>alert('User berhasil ditambahkan');window.location.replace('index.php?p=user')</script>";
+                                    }
+                                    else {
+                                        echo "<script>alert('User gagal ditambahkan');window.location.replace('index.php?p=user')</script>";
+                                }
+                        }
                         }
                         ?>
                         <div class="card mb-4">
