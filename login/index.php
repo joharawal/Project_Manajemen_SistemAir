@@ -266,6 +266,15 @@ $level = strtolower($dt_user[2] ?? '');
                                     else {
                                         echo "<script>alert('User gagal ditambahkan');window.location.replace('index.php?p=user')</script>";
                                 }
+                                // Query untuk menambahkan data ke tabel user
+                                $query_insert = "INSERT INTO user (username, password, nama, alamat, kota, tlp, level, tipe, status) 
+                                VALUES ('$user', '$pass', '$nama', '$alamat', '$kota', '$tlp', '$leve', '$tipe', '$stats')";
+                                $eksekusi = mysqli_query($koneksi, $query_insert);
+                                if($eksekusi) {
+                                    echo "<script>alert('User berhasil ditambahkan!'); window.location.replace('index.php?p=user');</script>";
+                                } else {
+                                    echo "<script>alert('Gagal menambahkan user: " . mysqli_error($koneksi) . "');</script>";
+}   
                         }
                         }
                         ?>
