@@ -145,7 +145,7 @@ $level = strtolower($dt_user[2] ?? '');
                         $e=explode("=",$_SERVER['REQUEST_URI']);
                         // echo "<BR> [0]: $e[0] --> [1]: $e[1]";
                         if(!empty($e[1])) {
-                            if($e[1]=="user") {
+                            if($e[1]=="user" || (isset($e[1]) && strpos($e[1], 'user_edit') === 0)) {
                                 $h1="Manajemen User";
                                 $li="Menu Untuk CRUD User";
                             }
@@ -246,9 +246,18 @@ $level = strtolower($dt_user[2] ?? '');
                         </div>
 
                         <?php 
+                        // Deteksi mode edit: dari URL ?p=user_edit&user=xxx
+                        $edit_mode = false;
+                        $edit_user = '';
+                        if (isset($_GET['p']) && $_GET['p'] == 'user_edit' && isset($_GET['user'])) {
+                            $edit_mode = true;
+                            $edit_user = $_GET['user'];
+                        }
+
                         if (isset($_POST['tombol'])) {
                             $t = $_POST['tombol'];
                             if ($t == "user_add") {
+                                
                                 $user=$_POST['username'];
                                 $pass= password_hash($_POST['password'], PASSWORD_DEFAULT);
                                 $pass2= $_POST['password'];
@@ -270,6 +279,55 @@ $level = strtolower($dt_user[2] ?? '');
                                 } else {
                                     echo "<script>alert('Gagal menambahkan user: " . mysqli_error($koneksi) . "');</script>";
                                 }
+                            } elseif ($t == "user_edit") {
+                                $user   = mysqli_real_escape_string($koneksi, $_POST['username']);
+                                $nama   = mysqli_real_escape_string($koneksi, $_POST['nama']);
+                                $alamat = mysqli_real_escape_string($koneksi, $_POST['alamat']);
+                                $kota   = mysqli_real_escape_string($koneksi, $_POST['kota']);
+                                $tlp    = mysqli_real_escape_string($koneksi, $_POST['tlp']);
+                                $leve   = mysqli_real_escape_string($koneksi, $_POST['level']);
+                                $tipe   = mysqli_real_escape_string($koneksi, $_POST['tipe']);
+                                $stats  = mysqli_real_escape_string($koneksi, $_POST['status']);
+
+                                // Jika password diubah (bukan sentinel), update password juga
+                                if (!empty($_POST['password']) && $_POST['password'] !== '__NOCHANGE__') {
+                                    $pass_baru = password_hash($_POST['password'], PASSWORD_DEFAULT);
+                                    $query_update = "UPDATE user SET nama='$nama', alamat='$alamat', kota='$kota', tlp='$tlp', level='$leve', tipe='$tipe', status='$stats', password='$pass_baru' WHERE username='$user'";
+                                } else {
+                                    $query_update = "UPDATE user SET nama='$nama', alamat='$alamat', kota='$kota', tlp='$tlp', level='$leve', tipe='$tipe', status='$stats' WHERE username='$user'";
+                                }
+
+                                $eksekusi = mysqli_query($koneksi, $query_update);
+                                if ($eksekusi) {
+                                    echo "<script>alert('User berhasil diubah!'); window.location.replace('index.php?p=user');</script>";
+                                } else {
+                                    echo "<script>alert('Gagal mengubah user: " . mysqli_error($koneksi) . "');</script>";
+                                }
+                            }
+                        } elseif(isset($_GET['p'])) {
+                            $p = $_GET['p'];
+                            if($p == "user_edit" && isset($_GET['user'])) {
+
+                                $user = mysqli_real_escape_string($koneksi, $_GET['user']);
+                                $q = mysqli_query($koneksi, "SELECT password,nama,alamat,kota,tlp,level,tipe,status FROM user WHERE username='$user'");
+                                
+                                $d = mysqli_fetch_row($q);
+                                $pass2  = ''; // Jangan tampilkan hash password
+                                $nama   = $d[1];
+                                $alamat = $d[2];
+                                $kota   = $d[3];
+                                $tlp    = $d[4];
+                                $leve   = $d[5];
+                                $tipe   = $d[6];
+                                $stats  = $d[7];
+                            } elseif($p == "user_delete" && isset($_GET['user'])) {
+                                $user_del = mysqli_real_escape_string($koneksi, $_GET['user']);
+                                $del = mysqli_query($koneksi, "DELETE FROM user WHERE username='$user_del'");
+                                if ($del) {
+                                    echo "<script>alert('User \"$user_del\" berhasil dihapus!'); window.location.replace('index.php?p=user');</script>";
+                                } else {
+                                    echo "<script>alert('Gagal menghapus user: " . mysqli_error($koneksi) . "');</script>";
+                                }
                             }
                         }
                         ?>
@@ -279,42 +337,47 @@ $level = strtolower($dt_user[2] ?? '');
                                  User
                             </div>
                             <div class="card-body">
-                                <form method="post" class="need-validation" id="user_form">
+                                <form method="post" class="need-validation" id="user_form" action="index.php<?php echo $edit_mode ? '?p=user_edit&user='.urlencode($edit_user) : ''; ?>">
+                                <?php if ($edit_mode): ?>
+                                    <input type="hidden" name="username" value="<?php echo htmlspecialchars($edit_user); ?>">
+                                <?php endif; ?>
                                 <div class="mb-3">
-                                    <label for="usernmae" class="form-label">Username :</label>
-                                    <input type="text" class="form-control" id="username" placeholder="Enter Username" name="username" value="<?php echo $user ?? ''; ?>" required>
+                                    <label for="username_lbl" class="form-label">Username :</label>
+                                    <?php if ($edit_mode): ?>
+                                        <input type="text" class="form-control" id="username" placeholder="Enter Username" value="<?php echo htmlspecialchars($edit_user); ?>" disabled>
+                                    <?php else: ?>
+                                        <input type="text" class="form-control" id="username" placeholder="Enter Username" name="username" value="<?php echo htmlspecialchars($user ?? ''); ?>" required>
+                                    <?php endif; ?>
                                 </div>
                                 <div class="mb-3">
                                     <label for="pwd" class="form-label">Password :</label>
-                                    <input type="password" class="form-control" id="pwd" placeholder="Enter Password" name="password" value="<?php echo $pass2 ?? ''; ?>" required>
+                                    <input type="password" class="form-control" id="pwd" placeholder="Enter Password" name="password" value="<?php echo $edit_mode ? '__NOCHANGE__' : ''; ?>" <?php echo $edit_mode ? '' : 'required'; ?>>
                                 </div>
                                 <div class="mb-3">
                                     <label for="nama" class="form-label">Nama :</label>
-                                    <input type="text" class="form-control" id="nama" placeholder="Enter Nama" name="nama" value="<?php echo $nama ?? ''; ?>" required>
+                                    <input type="text" class="form-control" id="nama" placeholder="Enter Nama" name="nama" value="<?php echo htmlspecialchars($nama ?? ''); ?>" required>
                                 </div>
                                 <div class="mb-3 mt-3">
                                     <label for="alamat">Alamat :</label>
-                                    <textarea class="form-control" rows="5" id="alamat" name="alamat"><?php echo $alamat ?? ''; ?></textarea>
+                                    <textarea class="form-control" rows="5" id="alamat" name="alamat"><?php echo htmlspecialchars($alamat ?? ''); ?></textarea>
                                 </div>
                                 <div class="mb-3">
                                     <label for="kota" class="form-label">Kota :</label>
-                                    <input type="text" class="form-control" id="kota" placeholder="Enter Kota" name="kota" value="<?php echo $kota ?? ''; ?>">
+                                    <input type="text" class="form-control" id="kota" placeholder="Enter Kota" name="kota" value="<?php echo htmlspecialchars($kota ?? ''); ?>">
                                 </div>
                                 <div class="mb-3">
                                     <label for="tlp" class="form-label">Telepon :</label>
-                                    <input type="text" class="form-control" id="tlp" placeholder="Enter Telepon" name="tlp" value="<?php echo $tlp ?? ''; ?>">
+                                    <input type="text" class="form-control" id="tlp" placeholder="Enter Telepon" name="tlp" value="<?php echo htmlspecialchars($tlp ?? ''); ?>">
                                 </div>
                                 <div class="mb-3">
                                     <label for="level" class="form-label">Level :</label>
                                     <select class="form-select" name="level">
                                         <option value="">Level</option>
                                         <?php 
-                                        $lv=array("admin","bendahara","petugas","warga");
-                                        foreach($lv as $lv2){
-                                            //$selected_level = $_POST['level'] ?? '';
-                                            if($level==$lv2) $sel="SELECTED";
-                                            else $sel= "";
-                                            echo "<option value=$lv2 $sel>".ucwords($lv2)."</option>";
+                                        $lv_options = array("admin","bendahara","petugas","warga");
+                                        foreach($lv_options as $lv2){
+                                            $sel = (isset($leve) && $leve == $lv2) ? 'selected' : '';
+                                            echo "<option value='$lv2' $sel>".ucwords($lv2)."</option>";
                                         }
                                         ?>
                                     </select>
@@ -324,11 +387,10 @@ $level = strtolower($dt_user[2] ?? '');
                                     <select class="form-select" name="tipe">
                                         <option value="">Tipe</option>
                                         <?php 
-                                        $tp=array("RT","Kos");
-                                        foreach($tp as $tp2){
-                                            if($tipe==$tp2) $sel="SELECTED";
-                                            else $sel= "";
-                                            echo "<option value=$tp2 $sel>".ucwords($tp2)."</option>";
+                                        $tp_options = array("RT","Kos");
+                                        foreach($tp_options as $tp2){
+                                            $sel = (isset($tipe) && $tipe == $tp2) ? 'selected' : '';
+                                            echo "<option value='$tp2' $sel>".ucwords($tp2)."</option>";
                                         }
                                         ?>
                                     </select>
@@ -338,16 +400,20 @@ $level = strtolower($dt_user[2] ?? '');
                                     <select class="form-select" name="status">
                                         <option value="">Status</option>
                                         <?php 
-                                        $st=array("AKTIF","TIDAK AKTIF");
-                                        foreach($st as $st2){
-                                            if($status==$st2) $sel="SELECTED";
-                                            else $sel="";
+                                        $st_options = array("AKTIF","TIDAK AKTIF");
+                                        foreach($st_options as $st2){
+                                            $sel = (isset($stats) && $stats == $st2) ? 'selected' : '';
                                             echo "<option value='$st2' $sel>$st2</option>";
                                         }
                                         ?>
                                     </select>
                                 </div>
-                                <button type="submit" class="btn btn-primary" name="tombol" value="user_add">Simpan</button>
+                                <button type="submit" class="btn btn-primary" name="tombol" value="<?php echo $edit_mode ? 'user_edit' : 'user_add'; ?>">
+                                    <?php echo $edit_mode ? '<i class="fas fa-save me-1"></i> Update' : '<i class="fas fa-plus me-1"></i> Simpan'; ?>
+                                </button>
+                                <?php if ($edit_mode): ?>
+                                <a href="index.php?p=user" class="btn btn-secondary ms-2"><i class="fas fa-arrow-left me-1"></i> Batal</a>
+                                <?php endif; ?>
                                 </form>
                             </div>
                         </div>
@@ -368,6 +434,7 @@ $level = strtolower($dt_user[2] ?? '');
                                             <th>Level</th>
                                             <th>Tipe</th>
                                             <th>Status</th>
+                                            <th></th>
                                         </tr>
                                     </thead>
                                 
@@ -393,6 +460,10 @@ $level = strtolower($dt_user[2] ?? '');
                                                     <td>$level</td>
                                                     <td>$tipe</td>
                                                     <td>$status</td>
+                                                    <td>
+                                                    <a href=index.php?p=user_edit&user=$user><button type=button class='btn btn-outline-success btn-sm'>Ubah</button></a>
+                                                    <button type='button' class='btn btn-outline-danger btn-sm btn-hapus' data-bs-toggle='modal' data-bs-target='#modalHapus' data-user='$user'>Hapus</button>
+                                                    </td>
                                                 </tr>";
                                         }
                                         ?>
@@ -404,6 +475,25 @@ $level = strtolower($dt_user[2] ?? '');
                         </div>
                     </div>
                 </main>
+
+                <!-- Modal Konfirmasi Hapus -->
+                <div class="modal fade" id="modalHapus" tabindex="-1" aria-labelledby="modalHapusLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="modalHapusLabel">Konfirmasi Hapus Data</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                Yakin hapus data username: <strong id="namaUserHapus"></strong>?
+                            </div>
+                            <div class="modal-footer">
+                                <a href="#" id="btnKonfirmasiHapus" class="btn btn-danger">Ya</a>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tidak</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <footer class="py-4 bg-light mt-auto">
                     <div class="container-fluid px-4">
                         <div class="d-flex align-items-center justify-content-between small">
