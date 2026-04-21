@@ -63,7 +63,7 @@ class klas_air {
     public function dt_user($username) {
         $koneksi = $this->koneksi();
         $username = mysqli_real_escape_string($koneksi, $username);
-        $query = mysqli_query($koneksi, "SELECT nama, username, level FROM user WHERE username = '$username'");
+        $query = mysqli_query($koneksi, "SELECT nama, username, level, kota FROM user WHERE username = '$username'");
         return mysqli_fetch_row($query); 
     }
 }

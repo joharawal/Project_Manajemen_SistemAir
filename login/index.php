@@ -137,7 +137,7 @@ $level = $dt_user[2];
                     </div>
                     <div class="sb-sidenav-footer">
                         <div class="small"><i class="fa-regular fa-user fa-flip text-warning"></i> Logged in as : <?php echo $dt_user[2]?></div>
-                        <?php echo $dt_user[0].' ('.$dt_user [1]. ')'; ?>
+                        <?php echo $dt_user[0].' ('.$dt_user [3]. ')'; ?>
                     </div>
                 </nav>
             </div>
