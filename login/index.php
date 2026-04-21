@@ -1,4 +1,4 @@
-<?php
+<?php 
 session_start ();
 if(empty($_SESSION['user']) && empty($_SESSION['pass'])) {
     echo "<script>window.location.replace('../index.php')</script>";
@@ -9,7 +9,7 @@ include '../assets/func.php';
 $air = new klas_air;
 $koneksi = $air->koneksi();
 $dt_user = $air->dt_user($_SESSION['user']);
-$level = strtolower($dt_user[2] ?? '');
+$level = $dt_user[2];
 
 
 ?>
@@ -23,12 +23,13 @@ $level = strtolower($dt_user[2] ?? '');
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
         <meta name="description" content="" />
         <meta name="author" content="" />
-        <title>Dashboard - Sistem Manajemen Air</title>
-        <link rel="icon" type="icon.png" href="../assets/img/Icon.png">
+        <title>Dashboard - Sistem Manajemen Pemakaian Air</title>
         <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
         <link href="../css/styles.css" rel="stylesheet" />
         <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
-     
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+        <script src="../js/air.js"></script>
+
     <body class="sb-nav-fixed">
         <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
             <!-- Navbar Brand-->
@@ -74,11 +75,11 @@ $level = strtolower($dt_user[2] ?? '');
                             </a>
                                 <a class="nav-link" href="index.php?p=pemakaian_warga">
                                 <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt fa-spin text-success"></i></div>
-                                Lihat Pemakaian Air Warga
+                                Lihat Pemakaian Warga
                             </a>
-                                <a class="nav-link" href="index.php?p=manajemen_tarif">
+                                <a class="nav-link" href="index.php?p=pembayaran_warga">
                                 <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt fa-spin text-success"></i></div>
-                                Manajemen Tarif Air
+                                Pembayaran Warga
                             </a>
                                 <a class="nav-link" href="index.php?p=ubah_datameter_warga">
                                 <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt fa-spin text-success"></i></div>
@@ -88,19 +89,22 @@ $level = strtolower($dt_user[2] ?? '');
                             } 
                             elseif($level=="bendahara") {
                             ?>
-                                <a class="nav-link" href="index.php?p=manajemen_tarif">
+                                <a class="nav-link" href="index.php?p=pembayaran_warga">
                                 <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt fa-spin text-success"></i></div>
-                                Manajemen Tarif Air
+                                Pembayaran Warga
                             </a>
                                 <a class="nav-link" href="index.php?p=ubah_datameter_warga">
                                 <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt fa-spin text-success"></i></div>
                                 Ubah Datameter Warga
                             </a>
-                            <a class="nav-link" href="index.php?p=tagihan_warga_bendahara">
+                                <a class="nav-link" href="index.php?p=manajemen_tarif_air">
                                 <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt fa-spin text-success"></i></div>
-                                 Melihat Tagihan Warga
+                                Manajemen Tarif Air
                             </a>
-                           
+                                <a class="nav-link" href="index.php?p=tagihan_warga_bendahara">
+                                <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt fa-spin text-success"></i></div>
+                                Lihat Tagihan Warga
+                            </a>
                             <?php
                             }
                              elseif($level=="petugas") {
@@ -109,23 +113,23 @@ $level = strtolower($dt_user[2] ?? '');
                                 <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt fa-spin text-success"></i></div>
                                 Ubah Datameter Warga
                             </a>
-                            <a class="nav-link" href="index.php?p=pemakaian_warga">
+                                <a class="nav-link" href="index.php?p=lihat_pemakaian_warga">
                                 <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt fa-spin text-success"></i></div>
-                                Lihat Pemakaian Air Warga
+                                Lihat Pemakaian Air
                             </a>
+                      
                             <?php
                              }
                              elseif($level=="warga") {
                             ?>
                                 <a class="nav-link" href="index.php?p=pemakaian_warga">
                                 <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt fa-spin text-success"></i></div>
-                                 Melihat Pemakaian
+                                Lihat Pemakaian Warga
                             </a>
-                              <a class="nav-link" href="index.php?p=tagihan_warga">
+                            <a class="nav-link" href="index.php?p=lihat_tagihan_warga">
                                 <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt fa-spin text-success"></i></div>
-                                 Melihat Tagihan
+                                Lihat Tagihan Warga
                             </a>
-                               
                             <?php
                              }
                             ?>
@@ -145,13 +149,13 @@ $level = strtolower($dt_user[2] ?? '');
                         $e=explode("=",$_SERVER['REQUEST_URI']);
                         // echo "<BR> [0]: $e[0] --> [1]: $e[1]";
                         if(!empty($e[1])) {
-                            if($e[1]=="user" || (isset($e[1]) && strpos($e[1], 'user_edit') === 0)) {
+                            if($e[1]=="user" || $e[1]=="user_edit&user") {
                                 $h1="Manajemen User";
                                 $li="Menu Untuk CRUD User";
                             }
                             elseif($e[1]=="pemakaian_warga") {
-                                $h1="Melihat Pemakaian Air";
-                                $li="Melihat Data Pemakaian Air";
+                                $h1="Lihat Pemakaian Warga";
+                                $li="Lihat Data Pemakaian Air Warga";
                             }
                             elseif($e[1]=="pembayaran_warga") {
                                 $h1="Lihat Pembayaran Warga";
@@ -159,20 +163,25 @@ $level = strtolower($dt_user[2] ?? '');
                             }
                             elseif($e[1]=="ubah_datameter_warga") {
                                 $h1="Ubah Datameter Warga";
-                                $li="Ubah Air Warga";
+                                $li="Ubah Data Meter Warga";
                             }
-                            elseif($e[1]=="manajemen_tarif") {
-                                $h1="Manajemen Tarif";
-                                $li="Manajemen Tarif Air";  
+                            elseif($e[1]=="manajemen_tarif_air") {
+                                $h1="Manajemen Tarif Air";
+                                $li="Menu Untuk CRUD Tarif Air";
                             }
-                            elseif($e[1]=="tagihan_warga") {
-                                $h1="Lihat Tagihan";
-                                $li="Lihat Data Tagihan Air";
-                            }
-                             elseif($e[1]=="tagihan_warga_bendahara") {
+                            elseif($e[1]=="tagihan_warga_bendahara") {
                                 $h1="Lihat Tagihan Warga";
                                 $li="Lihat Data Tagihan Air Warga";
                             }
+                            elseif($e[1]=="lihat_pemakaian_warga") {
+                                $h1="Lihat Pemakaian Air Warga";
+                                $li="Lihat Data Pemakaian Air Warga";
+                            }
+                            elseif($e[1]=="lihat_tagihan_warga") {
+                                $h1="Lihat Tagihan Air Warga";
+                                $li="Lihat Data Tagihan Air Warga";
+                            }
+
                         }
                         else {
                             $h1="Dashboard";
@@ -185,7 +194,7 @@ $level = strtolower($dt_user[2] ?? '');
                         </ol>
                         <?php
                         // echo "sesi user: " . $_SESSION['user'] . " sesi pass: " . $_SESSION['pass']; 
-                            ?>
+                        ?>
                         <div class="row" id="sumary">
                             <div class="col-xl-3 col-md-6">
                                 <div class="card bg-primary text-white mb-4">
@@ -246,18 +255,9 @@ $level = strtolower($dt_user[2] ?? '');
                         </div>
 
                         <?php 
-                        // Deteksi mode edit: dari URL ?p=user_edit&user=xxx
-                        $edit_mode = false;
-                        $edit_user = '';
-                        if (isset($_GET['p']) && $_GET['p'] == 'user_edit' && isset($_GET['user'])) {
-                            $edit_mode = true;
-                            $edit_user = $_GET['user'];
-                        }
-
                         if (isset($_POST['tombol'])) {
                             $t = $_POST['tombol'];
                             if ($t == "user_add") {
-                                
                                 $user=$_POST['username'];
                                 $pass= password_hash($_POST['password'], PASSWORD_DEFAULT);
                                 $pass2= $_POST['password'];
@@ -265,119 +265,148 @@ $level = strtolower($dt_user[2] ?? '');
                                 $alamat=$_POST['alamat'];
                                 $kota=$_POST['kota'];
                                 $tlp=$_POST['tlp'];
-                                $leve=$_POST['level'];
+                                $level=$_POST['level'];
                                 $tipe=$_POST['tipe'];
-                                $stats=$_POST['status'];
-                                // Query untuk menambahkan data ke tabel user dengan urutan nama field secara eksplisit
-                                $query_insert = "INSERT INTO user (username, password, nama, alamat, kota, tlp, level, tipe, status) 
-                                                 VALUES ('$user', '$pass', '$nama', '$alamat', '$kota', '$tlp', '$leve', '$tipe', '$stats')";
+                                $status=$_POST['status'];
                                 
-                                $eksekusi = mysqli_query($koneksi, $query_insert);
-
-                                if($eksekusi) {
-                                    echo "<script>alert('User berhasil ditambahkan!'); window.location.replace('index.php?p=user');</script>";
-                                } else {
-                                    echo "<script>alert('Gagal menambahkan user: " . mysqli_error($koneksi) . "');</script>";
+                                //cek username sudah ada atau belum
+                                $qc= mysqli_query($koneksi,"SELECT username FROM user WHERE username='$user'");
+                                $qj=mysqli_num_rows($qc);
+                                // echo "jumlah data: $qj";
+                                //username tidak ada
+                                if (empty($qj)) {
+                                        mysqli_query($koneksi,"INSERT INTO user (username, password, level, tipe, status, nama, alamat, kota, tlp) VALUES ('$user','$pass','$level','$tipe','$status',\"$nama\",'$alamat','$kota','$tlp')");
+                                        if (mysqli_affected_rows($koneksi) > 0) {
+                                            echo "<div class='alert alert-success alert-dismissible fade show'>
+                                                    <button type=button class=btn-close data-bs-dismiss=alert></button>
+                                                    <strong>Data</strong> Berhasil Disimpan
+                                            </div>";
+                                        }
+                                        else {
+                                            echo "<div class='alert alert-danger alert-dismissible fade show'>
+                                                    <button type=button class=btn-close data-bs-dismiss=alert></button>
+                                                    <strong>Data</strong> Gagal Disimpan
+                                            </div>";
+                                        }
+                                }else { //username sudah ada
+                                    echo "<div class='alert alert-danger alert-dismissible fade show'>
+                                            <button type=button class=btn-close data-bs-dismiss=alert></button>
+                                            <strong>Username $user</strong> Sudah Ada
+                                    </div>";
                                 }
                             } elseif ($t == "user_edit") {
-                                $user   = mysqli_real_escape_string($koneksi, $_POST['username']);
-                                $nama   = mysqli_real_escape_string($koneksi, $_POST['nama']);
-                                $alamat = mysqli_real_escape_string($koneksi, $_POST['alamat']);
-                                $kota   = mysqli_real_escape_string($koneksi, $_POST['kota']);
-                                $tlp    = mysqli_real_escape_string($koneksi, $_POST['tlp']);
-                                $leve   = mysqli_real_escape_string($koneksi, $_POST['level']);
-                                $tipe   = mysqli_real_escape_string($koneksi, $_POST['tipe']);
-                                $stats  = mysqli_real_escape_string($koneksi, $_POST['status']);
+                                $user=$_POST['username'];
+                                $pass=$_POST['password'];
+                                // $pass2= $_POST['password'];
+                                $nama=$_POST['nama'];
+                                $alamat=$_POST['alamat'];
+                                $kota=$_POST['kota'];
+                                $tlp=$_POST['tlp'];
+                                $level=$_POST['level'];
+                                $tipe=$_POST['tipe'];
+                                $status=$_POST['status'];
 
-                                // Jika password diubah (bukan sentinel), update password juga
-                                if (!empty($_POST['password']) && $_POST['password'] !== '__NOCHANGE__') {
-                                    $pass_baru = password_hash($_POST['password'], PASSWORD_DEFAULT);
-                                    $query_update = "UPDATE user SET nama='$nama', alamat='$alamat', kota='$kota', tlp='$tlp', level='$leve', tipe='$tipe', status='$stats', password='$pass_baru' WHERE username='$user'";
-                                } else {
-                                    $query_update = "UPDATE user SET nama='$nama', alamat='$alamat', kota='$kota', tlp='$tlp', level='$leve', tipe='$tipe', status='$stats' WHERE username='$user'";
+                                //cek password yg ada di tabel user
+                                $qcp= mysqli_query($koneksi,"SELECT password FROM user WHERE username='$user'");
+                                $dcp=mysqli_fetch_row($qcp);
+                                $pass_db=$dcp[0];
+
+                                if ($pass == $pass_db) {
+                                    //tidak ada perubahan password
+                                    mysqli_query($koneksi,"UPDATE user SET nama= \"$nama\", alamat='$alamat', kota='$kota', tlp='$tlp', level='$level', tipe='$tipe', status='$status' WHERE username='$user'");
                                 }
-
-                                $eksekusi = mysqli_query($koneksi, $query_update);
-                                if ($eksekusi) {
-                                    echo "<script>alert('User berhasil diubah!'); window.location.replace('index.php?p=user');</script>";
-                                } else {
-                                    echo "<script>alert('Gagal mengubah user: " . mysqli_error($koneksi) . "');</script>";
+                                else {
+                                    //ada perubahan password
+                                    $pass2= password_hash($pass, PASSWORD_DEFAULT);
+                                    mysqli_query($koneksi,"UPDATE user SET password='$pass2', nama= \"$nama\", alamat='$alamat', kota='$kota', tlp='$tlp', level='$level', tipe='$tipe', status='$status' WHERE username='$user'");
+                                }
+                                        if (mysqli_affected_rows($koneksi) > 0) {
+                                            echo "<div class='alert alert-success alert-dismissible fade show'>
+                                                    <button type=button class=btn-close data-bs-dismiss=alert></button>
+                                                    <strong>Data</strong> Berhasil Diupdate
+                                            </div>";
+                                        }
+                                        else {
+                                            echo "<div class='alert alert-primary alert-dismissible fade show'>
+                                                    <button type=button class=btn-close data-bs-dismiss=alert></button>
+                                                    <strong>Data</strong> Tidak Ada Perubahan
+                                            </div>";
+                                        }
+                            } elseif ($t == "user_hapus") {
+                                $user=$_POST['user'];
+                                mysqli_query($koneksi,"DELETE FROM user WHERE username='$user'");
+                                if (mysqli_affected_rows($koneksi) > 0) {
+                                    echo "<div class='alert alert-success alert-dismissible fade show'>
+                                            <button type=button class=btn-close data-bs-dismiss=alert></button>
+                                            <strong>Data</strong> Berhasil Dihapus
+                                    </div>";
+                                }
+                                else {
+                                    echo "<div class='alert alert-danger alert-dismissible fade show'>
+                                            <button type=button class=btn-close data-bs-dismiss=alert></button>
+                                            <strong>Data</strong> Gagal Dihapus
+                                    </div>";
                                 }
                             }
-                        } elseif(isset($_GET['p'])) {
-                            $p = $_GET['p'];
-                            if($p == "user_edit" && isset($_GET['user'])) {
-
-                                $user = mysqli_real_escape_string($koneksi, $_GET['user']);
-                                $q = mysqli_query($koneksi, "SELECT password,nama,alamat,kota,tlp,level,tipe,status FROM user WHERE username='$user'");
-                                
-                                $d = mysqli_fetch_row($q);
-                                $pass2  = ''; // Jangan tampilkan hash password
-                                $nama   = $d[1];
-                                $alamat = $d[2];
-                                $kota   = $d[3];
-                                $tlp    = $d[4];
-                                $leve   = $d[5];
-                                $tipe   = $d[6];
-                                $stats  = $d[7];
-                            } elseif($p == "user_delete" && isset($_GET['user'])) {
-                                $user_del = mysqli_real_escape_string($koneksi, $_GET['user']);
-                                $del = mysqli_query($koneksi, "DELETE FROM user WHERE username='$user_del'");
-                                if ($del) {
-                                    echo "<script>alert('User \"$user_del\" berhasil dihapus!'); window.location.replace('index.php?p=user');</script>";
-                                } else {
-                                    echo "<script>alert('Gagal menghapus user: " . mysqli_error($koneksi) . "');</script>";
+                        } elseif (isset($_GET['p'])) {
+                            $p=$_GET['p'];
+                            if ($p=="user_edit") {
+                                $user=$_GET['user'];
+                                $q=mysqli_query($koneksi,"SELECT password,nama,alamat,kota,tlp,level,tipe,status FROM user WHERE username='$user'");
+                                $d=mysqli_fetch_row($q);
+                                $pass=$d[0];
+                                $pass2=password_hash($pass, PASSWORD_DEFAULT);
+                                $nama=$d[1];
+                                $alamat=$d[2];
+                                $kota=$d[3];
+                                $tlp=$d[4];
+                                $level=$d[5];
+                                $tipe=$d[6];
+                                $status=$d[7];                           
                                 }
-                            }
-                        }
+                            }   
                         ?>
-                        <div class="card mb-4">
+                        <div class="card mb-4" id="form_user">
                             <div class="card-header">
                                 <i class="fa-solid fa-user-plus me-2 text-success fa-fade"></i>
                                  User
                             </div>
                             <div class="card-body">
-                                <form method="post" class="need-validation" id="user_form" action="index.php<?php echo $edit_mode ? '?p=user_edit&user='.urlencode($edit_user) : ''; ?>">
-                                <?php if ($edit_mode): ?>
-                                    <input type="hidden" name="username" value="<?php echo htmlspecialchars($edit_user); ?>">
-                                <?php endif; ?>
+                                <form method="post" class="need-validation" id="user_form">
                                 <div class="mb-3">
-                                    <label for="username_lbl" class="form-label">Username :</label>
-                                    <?php if ($edit_mode): ?>
-                                        <input type="text" class="form-control" id="username" placeholder="Enter Username" value="<?php echo htmlspecialchars($edit_user); ?>" disabled>
-                                    <?php else: ?>
-                                        <input type="text" class="form-control" id="username" placeholder="Enter Username" name="username" value="<?php echo htmlspecialchars($user ?? ''); ?>" required>
-                                    <?php endif; ?>
+                                    <label for="usernmae" class="form-label">Username :</label>
+                                    <input type="text" class="form-control" id="username" placeholder="Enter Username" name="username" value="<?php echo $user ?? ''; ?>" required>
                                 </div>
                                 <div class="mb-3">
                                     <label for="pwd" class="form-label">Password :</label>
-                                    <input type="password" class="form-control" id="pwd" placeholder="Enter Password" name="password" value="<?php echo $edit_mode ? '__NOCHANGE__' : ''; ?>" <?php echo $edit_mode ? '' : 'required'; ?>>
+                                    <input type="password" class="form-control" id="pwd" placeholder="Enter Password" name="password" value="<?php echo $pass ?? ''; ?>" required>
                                 </div>
                                 <div class="mb-3">
                                     <label for="nama" class="form-label">Nama :</label>
-                                    <input type="text" class="form-control" id="nama" placeholder="Enter Nama" name="nama" value="<?php echo htmlspecialchars($nama ?? ''); ?>" required>
+                                    <input type="text" class="form-control" id="nama" placeholder="Enter Nama" name="nama" value="<?php echo $nama ?? ''; ?>" required>
                                 </div>
                                 <div class="mb-3 mt-3">
                                     <label for="alamat">Alamat :</label>
-                                    <textarea class="form-control" rows="5" id="alamat" name="alamat"><?php echo htmlspecialchars($alamat ?? ''); ?></textarea>
+                                    <textarea class="form-control" rows="5" id="alamat" name="alamat"><?php echo $alamat ?? ''; ?></textarea>
                                 </div>
                                 <div class="mb-3">
                                     <label for="kota" class="form-label">Kota :</label>
-                                    <input type="text" class="form-control" id="kota" placeholder="Enter Kota" name="kota" value="<?php echo htmlspecialchars($kota ?? ''); ?>">
+                                    <input type="text" class="form-control" id="kota" placeholder="Enter Kota" name="kota" value="<?php echo $kota ?? ''; ?>">
                                 </div>
                                 <div class="mb-3">
                                     <label for="tlp" class="form-label">Telepon :</label>
-                                    <input type="text" class="form-control" id="tlp" placeholder="Enter Telepon" name="tlp" value="<?php echo htmlspecialchars($tlp ?? ''); ?>">
+                                    <input type="text" class="form-control" id="tlp" placeholder="Enter Telepon" name="tlp" value="<?php echo $tlp ?? ''; ?>">
                                 </div>
                                 <div class="mb-3">
                                     <label for="level" class="form-label">Level :</label>
                                     <select class="form-select" name="level">
                                         <option value="">Level</option>
                                         <?php 
-                                        $lv_options = array("admin","bendahara","petugas","warga");
-                                        foreach($lv_options as $lv2){
-                                            $sel = (isset($leve) && $leve == $lv2) ? 'selected' : '';
-                                            echo "<option value='$lv2' $sel>".ucwords($lv2)."</option>";
+                                        $lv=array("admin","bendahara","petugas","warga");
+                                        foreach($lv as $lv2){
+                                            if($level==$lv2) $sel="SELECTED";
+                                            else $sel= "";
+                                            echo "<option value=$lv2 $sel>".ucwords($lv2)."</option>";
                                         }
                                         ?>
                                     </select>
@@ -387,10 +416,11 @@ $level = strtolower($dt_user[2] ?? '');
                                     <select class="form-select" name="tipe">
                                         <option value="">Tipe</option>
                                         <?php 
-                                        $tp_options = array("RT","Kos");
-                                        foreach($tp_options as $tp2){
-                                            $sel = (isset($tipe) && $tipe == $tp2) ? 'selected' : '';
-                                            echo "<option value='$tp2' $sel>".ucwords($tp2)."</option>";
+                                        $tp=array("RT","Kos");
+                                        foreach($tp as $tp2){
+                                            if($tipe==$tp2) $sel="SELECTED";
+                                            else $sel= "";
+                                            echo "<option value=$tp2 $sel>".ucwords($tp2)."</option>";
                                         }
                                         ?>
                                     </select>
@@ -400,24 +430,48 @@ $level = strtolower($dt_user[2] ?? '');
                                     <select class="form-select" name="status">
                                         <option value="">Status</option>
                                         <?php 
-                                        $st_options = array("AKTIF","TIDAK AKTIF");
-                                        foreach($st_options as $st2){
-                                            $sel = (isset($stats) && $stats == $st2) ? 'selected' : '';
+                                        $st=array("AKTIF","TIDAK AKTIF");
+                                        foreach($st as $st2){
+                                            if($status==$st2) $sel="SELECTED";
+                                            else $sel= "";
                                             echo "<option value='$st2' $sel>$st2</option>";
                                         }
                                         ?>
                                     </select>
                                 </div>
-                                <button type="submit" class="btn btn-primary" name="tombol" value="<?php echo $edit_mode ? 'user_edit' : 'user_add'; ?>">
-                                    <?php echo $edit_mode ? '<i class="fas fa-save me-1"></i> Update' : '<i class="fas fa-plus me-1"></i> Simpan'; ?>
-                                </button>
-                                <?php if ($edit_mode): ?>
-                                <a href="index.php?p=user" class="btn btn-secondary ms-2"><i class="fas fa-arrow-left me-1"></i> Batal</a>
-                                <?php endif; ?>
+                                <button type="submit" class="btn btn-primary" name="tombol" value="user_add">Simpan</button>
                                 </form>
                             </div>
                         </div>
-                        <div class="card mb-4">
+                        <!-- The Modal -->
+                        <div class="modal" id="myModal">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+
+                                 <!-- Modal Header -->
+                                <div class="modal-header">
+                                <h4 class="modal-title">Konfirmasi Hapus Data</h4>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                </div>
+
+                                <!-- Modal body -->
+                                <div class="modal-body">
+                                    <!-- //Apakah Anda yakin ingin menghapus data ini? -->
+                                </div>
+
+                                <!-- Modal footer -->
+                                <div class="modal-footer">
+                                    <form method="post">
+                                        <button type="submit" name="tombol" value="user_hapus" class="btn btn-danger" data-bs-dismiss="modal">Ya</button>
+                                    </form>
+                                    <button type="button" class="btn btn-success" data-bs-dismiss="modal">Tidak</button>
+                                </div>
+
+                            </div>
+                        </div>
+                        </div>   
+
+                        <div class="card mb-4" id="data_user">
                             <div class="card-header">
                                 <i class="fa-solid fa-users me-2 text-success fa-fade"></i>
                                 Data User
@@ -462,7 +516,7 @@ $level = strtolower($dt_user[2] ?? '');
                                                     <td>$status</td>
                                                     <td>
                                                     <a href=index.php?p=user_edit&user=$user><button type=button class='btn btn-outline-success btn-sm'>Ubah</button></a>
-                                                    <button type='button' class='btn btn-outline-danger btn-sm btn-hapus' data-bs-toggle='modal' data-bs-target='#modalHapus' data-user='$user'>Hapus</button>
+                                                    <button type=button class='btn btn-outline-danger btn-sm' data-bs-toggle=modal data-bs-target=#myModal data_user=$user>Hapus</button> 
                                                     </td>
                                                 </tr>";
                                         }
@@ -475,25 +529,6 @@ $level = strtolower($dt_user[2] ?? '');
                         </div>
                     </div>
                 </main>
-
-                <!-- Modal Konfirmasi Hapus -->
-                <div class="modal fade" id="modalHapus" tabindex="-1" aria-labelledby="modalHapusLabel" aria-hidden="true">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="modalHapusLabel">Konfirmasi Hapus Data</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div>
-                            <div class="modal-body">
-                                Yakin hapus data username: <strong id="namaUserHapus"></strong>?
-                            </div>
-                            <div class="modal-footer">
-                                <a href="#" id="btnKonfirmasiHapus" class="btn btn-danger">Ya</a>
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tidak</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
                 <footer class="py-4 bg-light mt-auto">
                     <div class="container-fluid px-4">
                         <div class="d-flex align-items-center justify-content-between small">
@@ -515,8 +550,6 @@ $level = strtolower($dt_user[2] ?? '');
         <script src="../assets/demo/chart-bar-demo.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js" crossorigin="anonymous"></script>
         <script src="../js/datatables-simple-demo.js"></script>
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-        <script src="../js/air.js"></script>
-    </head>
+        </head>
     </body>
 </html>
