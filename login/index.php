@@ -256,7 +256,7 @@ $level = $dt_user[2];
 
                         <?php 
                         if (isset($_POST['tombol'])) {
-                            $t = $_POST['tombol'];
+                             $t = $_POST['tombol'];
                             if ($t == "user_add") {
                                 $user=$_POST['username'];
                                 $pass= password_hash($_POST['password'], PASSWORD_DEFAULT);
@@ -347,27 +347,59 @@ $level = $dt_user[2];
                                             <strong>Data</strong> Gagal Dihapus
                                     </div>";
                                 }
-                            }
-                        } elseif (isset($_GET['p'])) {
-                            $p=$_GET['p'];
-                            if ($p=="user_edit") {
-                                $user=$_GET['user'];
-                                $q=mysqli_query($koneksi,"SELECT password,nama,alamat,kota,tlp,level,tipe,status FROM user WHERE username='$user'");
+                            } elseif ($t == "tarif_add") {
+                                $id_tarif=$_POST['id_tarif'];
+                                $tarif=$_POST['tarif'];
+                                $tipe_tarif=$_POST['tipe_tarif'];
+                                $status=$_POST['status'];
+
+                                        $qc= mysqli_query($koneksi,"SELECT id_tarif FROM tarif WHERE id_tarif='$id_tarif'");
+                                        $qj=mysqli_num_rows($qc);
+                                        if (empty($qj)) {
+                                        mysqli_query($koneksi,"INSERT INTO tarif (id_tarif, tarif, tipe, status) VALUES ('$id_tarif','$tarif',\"$tipe_tarif\",'$status')");
+                                        if (mysqli_affected_rows($koneksi) > 0) {
+                                            echo "<div class='alert alert-success alert-dismissible fade show'>
+                                                    <button type=button class=btn-close data-bs-dismiss=alert></button>
+                                                    <strong>Data</strong> Berhasil Disimpan
+                                            </div>";
+                                        }
+                                        else {
+                                            echo "<div class='alert alert-danger alert-dismissible fade show'>
+                                                    <button type=button class=btn-close data-bs-dismiss=alert></button>
+                                                    <strong>Data</strong> Gagal Disimpan
+                                            </div>";
+                                        }
+                                        }else { //tarif sudah ada
+                                            echo "<div class='alert alert-danger alert-dismissible fade show'>
+                                            <button type=button class=btn-close data-bs-dismiss=alert></button>
+                                            <strong> Tarif $id_tarif</strong> Sudah Ada
+                                    </div>";
+                                }
+                            } elseif (isset($_GET['p'])) {
+                              $p=$_GET['p'];
+                              if ($p=="tarif_edit") {
+                                $id_tarif=$_GET['id_tarif'];
+                                $q=mysqli_query($koneksi,"SELECT * FROM tarif WHERE id_tarif='$id_tarif'");
                                 $d=mysqli_fetch_row($q);
-                                $pass=$d[0];
-                                $pass2=password_hash($pass, PASSWORD_DEFAULT);
-                                $nama=$d[1];
-                                $alamat=$d[2];
-                                $kota=$d[3];
-                                $tlp=$d[4];
-                                $level=$d[5];
-                                $tipe=$d[6];
-                                $status=$d[7];                           
+                                $tipe_tarif=$d[1];
+                                $tarif=$d[2];
+                                $status=$d[3];
+                                                         
                             } elseif ($p=="tarif") {
                                 $id_tarif="";
                                 $status="";                         
+                                }
                             }
-                        }   
+                        
+
+                        
+
+
+                       
+                        }
+
+
+                           
                         ?>
                         <div class="card mb-4" id="form_user">
                             <div class="card-header">
@@ -486,7 +518,7 @@ $level = $dt_user[2];
                                          </div>";
                                     }
                                     ?>
-                                    <div class mt->
+                                    <div class="mt-3">
                                     <button type="submit" class="btn btn-primary" name="tombol" value="tarif_add">Simpan</button>
                                     </div>
                                 </form>
