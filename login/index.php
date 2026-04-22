@@ -363,8 +363,9 @@ $level = $dt_user[2];
                                 $level=$d[5];
                                 $tipe=$d[6];
                                 $status=$d[7];                           
-                            } elseif ($p == "tarif") {
-                                $status = "";                         
+                            } elseif ($p=="tarif") {
+                                $id_tarif="";
+                                $status="";                         
                             }
                         }   
                         ?>
@@ -477,16 +478,16 @@ $level = $dt_user[2];
                                 <?php
                                 $st=array("AKTIF","TIDAK AKTIF");
                                 foreach($st as $st2) {
-                                    if($status == $st2) $sel="CHECKED";
-                                    else $sel= "";
+                                    if($status==$st2) $sel="CHECKED";
+                                    else $sel="";
                                     echo "<div class=\"form-check form-check-inline\">
                                             <input type=radio class=form-check-input id=status name=status value=\"$st2\" $sel>
                                             <label class=form-check-label for=status>$st2</label>
                                          </div>";
                                     }
                                     ?>
-                                    <div class mt-3>
-                                    <button type="submit" class="btn btn-primary" name="tombol" value="user_add">Simpan</button>
+                                    <div class mt->
+                                    <button type="submit" class="btn btn-primary" name="tombol" value="tarif_add">Simpan</button>
                                     </div>
                                 </form>
                             </div>
