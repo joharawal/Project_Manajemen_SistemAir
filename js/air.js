@@ -93,7 +93,7 @@ $(document).ready(function () {
         //klik dashboard
         //id summary dan chart disembunyikan
         $("#sumary, #chart").show();
-        $("#form_user, #data_user").hide();
+        $("#form_user, #data_user, #form_tarif, #data_tarif").hide();
 
     }
     

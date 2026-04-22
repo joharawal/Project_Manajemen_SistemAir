@@ -508,6 +508,7 @@ $level = $dt_user[2];
                                     <input type="number" class="form-control" id="tarif" placeholder="Enter Tarif" name="tarif" value="<?php echo $tarif ?? ''; ?>" required>
                                 </div>
                                 <?php
+                                $status=$status ?? '';
                                 $st=array("AKTIF","TIDAK AKTIF");
                                 foreach($st as $st2) {
                                     if($status==$st2) $sel="CHECKED";
