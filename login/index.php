@@ -639,9 +639,10 @@ $level = $dt_user[2];
                                                     <td>$tipe_tarif</td>
                                                     <td>$status</td>                                                    
                                                     <td>
-                                                    <a href=index.php?p=tar_edit&id_tarif=$id_tarif><button type=button class='btn btn-outline-success btn-sm'>Ubah</button></a>
+                                                    <a href=index.php?p=tarif_edit&id_tarif=$id_tarif><button type=button class='btn btn-outline-success btn-sm'>Ubah</button></a>
                                                     <button type=button class='btn btn-outline-danger btn-sm' data-bs-toggle=modal data-bs-target=#myModal data_id_tarif=$id_tarif>Hapus</button> 
                                                     </td>
+                                            
                                                 </tr>";
                                         }
                                         ?>
