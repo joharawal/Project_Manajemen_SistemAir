@@ -485,7 +485,7 @@ $level = $dt_user[2];
                                          </div>";
                                     }
                                     ?>
-                                    <div class="mt-2">
+                                    <div class mt-3>
                                     <button type="submit" class="btn btn-primary" name="tombol" value="user_add">Simpan</button>
                                     </div>
                                 </form>
@@ -535,7 +535,7 @@ $level = $dt_user[2];
                                             <th>Level</th>
                                             <th>Tipe</th>
                                             <th>Status</th>
-                                            <th></th>
+                                            <th>Editing</th>
                                         </tr>
                                     </thead>
                                 

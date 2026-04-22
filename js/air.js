@@ -7,7 +7,7 @@ $(document).ready(function () {
 
     if (e[1] == "user" || e[1] == "user_edit&user") {
 
-        $("#sumary, #chart, #form_user").hide();
+        $("#sumary, #chart, #form_user, #form_tarif, #data_tarif").hide();
         if (e[1] == "user") {
             //id summary dan chart disembunyikan
             $("#sumary, #chart, #form_user").hide();
