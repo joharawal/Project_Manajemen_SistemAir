@@ -165,7 +165,7 @@ $level = $dt_user[2];
                                 $h1="Ubah Datameter Warga";
                                 $li="Ubah Data Meter Warga";
                             }
-                            elseif($e[1]=="tarif") {
+                            elseif($e[1]=="tarif" || $e[1]=="tarif_edit&id_tarif") {
                                 $h1="Manajemen Tarif Air";
                                 $li="Menu Untuk CRUD Tarif Air";
                             }
@@ -375,6 +375,40 @@ $level = $dt_user[2];
                                             <strong> Tarif $id_tarif</strong> Sudah Ada
                                     </div>";
                                 }
+                            } elseif ($t == "tarif_edit") {
+                                $id_tarif=$_POST['id_tarif'];
+                                $tarif=$_POST['tarif'];
+                                $tipe_tarif=$_POST['tipe_tarif'];
+                                $status=$_POST['status'];
+
+                                mysqli_query($koneksi,"UPDATE tarif SET tarif='$tarif', tipe=\"$tipe_tarif\", status='$status' WHERE id_tarif='$id_tarif'");
+                                if (mysqli_affected_rows($koneksi) > 0) {
+                                    echo "<div class='alert alert-success alert-dismissible fade show'>
+                                            <button type=button class=btn-close data-bs-dismiss=alert></button>
+                                            <strong>Data</strong> Berhasil Diupdate
+                                    </div>";
+                                }
+                                else {
+                                    echo "<div class='alert alert-primary alert-dismissible fade show'>
+                                            <button type=button class=btn-close data-bs-dismiss=alert></button>
+                                            <strong>Data</strong> Tidak Ada Perubahan
+                                    </div>";
+                                }
+                            } elseif ($t == "tarif_hapus") {
+                                $id_tarif=$_POST['id_tarif'];
+                                mysqli_query($koneksi,"DELETE FROM tarif WHERE id_tarif='$id_tarif'");
+                                if (mysqli_affected_rows($koneksi) > 0) {
+                                    echo "<div class='alert alert-success alert-dismissible fade show'>
+                                            <button type=button class=btn-close data-bs-dismiss=alert></button>
+                                            <strong>Data</strong> Berhasil Dihapus
+                                    </div>";
+                                }
+                                else {
+                                    echo "<div class='alert alert-danger alert-dismissible fade show'>
+                                            <button type=button class=btn-close data-bs-dismiss=alert></button>
+                                            <strong>Data</strong> Gagal Dihapus
+                                    </div>";
+                                }
                             } elseif (isset($_GET['p'])) {
                               $p=$_GET['p'];
                               if ($p=="tarif_edit") {
@@ -388,18 +422,9 @@ $level = $dt_user[2];
                             } elseif ($p=="tarif") {
                                 $id_tarif="";
                                 $status="";                         
-                                }
+                            } 
                             }
-                        
-
-                        
-
-
-                       
-                        }
-
-
-                           
+                        }                             
                         ?>
                         <div class="card mb-4" id="form_user">
                             <div class="card-header">
@@ -544,7 +569,7 @@ $level = $dt_user[2];
                                     <!-- Modal footer -->
                                     <div class="modal-footer">
                                         <form method="post">
-                                            <button type="submit" name="tombol" value="user_hapus" class="btn btn-danger" data-bs-dismiss="modal">Ya</button>
+                                            <button type="submit" name="tombol" id="modal_delete_btn" value="user_hapus" class="btn btn-danger" data-bs-dismiss="modal">Ya</button>
                                         </form>
                                         <button type="button" class="btn btn-success" data-bs-dismiss="modal">Tidak</button>
                                     </div>
