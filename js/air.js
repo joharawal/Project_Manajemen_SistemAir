@@ -15,7 +15,7 @@ $(document).ready(function () {
             $("#sumary, #chart, #data_user").hide();
             $("#form_user").show();
 
-            //reset value tombol user_add jadi useer_edit
+            //reset value tombol user_add jadi user_edit
             $("#user_form button").val('user_edit');
 
             //mendisble premier key username
@@ -44,6 +44,51 @@ $(document).ready(function () {
             $(".modal-footer form").append("<input type=hidden name=user value=" + user +">");
         });
 
+    } else if (e[1] == "tarif" || e[1] == "tarif_edit&id_tarif") {
+        $("#sumary, #chart, #form_user, #data_user").hide();
+
+        if (e[1] == "tarif") {
+            //id summary dan chart disembunyikan
+            $("#form_tarif").hide();
+            $("#data_tarif").show();
+        } else {
+            $("#sumary, #chart, #data_tarif").hide();
+            $("#form_tarif").show();
+
+            //reset value tombol user_add jadi user_edit
+            $("#tarif_form button").val('tarif_edit');
+
+            //mendisble premier key username
+            $("#tarif_form input[name='id_tarif']").attr("disabled", true);
+
+            //menambah element input dengan tipe hidden
+            $("#tarif_form").append("<input type=hidden name=id_tarif value=" + e[2] +">");
+        }
+
+        const datatablesSimple = document.getElementById('tarif_table');
+        if (datatablesSimple) {
+        new simpleDatatables.DataTable(datatablesSimple);
+        }
+
+        //menambhakan tombol add user
+        $(".datatable-dropdown").append("<button type='button' class='btn btn-outline-success float-start me-2'><i class='fa-solid fa-money-bill-1-wave fa-beat'></i> Tarif</button>");
+        
+        //menambahkan klik add user
+        $(".datatable-dropdown button").click(function (){
+            //console.log("Tombol Di Klik");
+            $("#form_tarif").show();
+            $("#data_tarif").hide();
+        })
+
+        //konfirmasi hapus data user dengan modal
+        $("button[data-bs-toggle='modal']").click(function () {
+            console.log("Tombol Hapus Di Klik");
+            id_tarif = $(this).attr('data_id_tarif');
+            $("#myModal .modal-body").text("Yakin ingin menghapus data tarif : " + id_tarif + " ?");
+            $(".modal-footer form").append("<input type=hidden name=id_tarif value=" + id_tarif +">");
+        });
+
+        
     } else {
         //klik dashboard
         //id summary dan chart disembunyikan

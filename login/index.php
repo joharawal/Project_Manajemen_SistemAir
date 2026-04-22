@@ -97,7 +97,7 @@ $level = $dt_user[2];
                                 <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt fa-spin text-success"></i></div>
                                 Ubah Datameter Warga
                             </a>
-                                <a class="nav-link" href="index.php?p=manajemen_tarif_air">
+                                <a class="nav-link" href="index.php?p=tarif">
                                 <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt fa-spin text-success"></i></div>
                                 Manajemen Tarif Air
                             </a>
@@ -165,7 +165,7 @@ $level = $dt_user[2];
                                 $h1="Ubah Datameter Warga";
                                 $li="Ubah Data Meter Warga";
                             }
-                            elseif($e[1]=="manajemen_tarif_air") {
+                            elseif($e[1]=="tarif") {
                                 $h1="Manajemen Tarif Air";
                                 $li="Menu Untuk CRUD Tarif Air";
                             }
@@ -363,8 +363,10 @@ $level = $dt_user[2];
                                 $level=$d[5];
                                 $tipe=$d[6];
                                 $status=$d[7];                           
-                                }
-                            }   
+                            } elseif ($p == "tarif") {
+                                $status = "";                         
+                            }
+                        }   
                         ?>
                         <div class="card mb-4" id="form_user">
                             <div class="card-header">
@@ -443,34 +445,79 @@ $level = $dt_user[2];
                                 </form>
                             </div>
                         </div>
+                        <div class="card mb-4" id="form_tarif">
+                            <div class="card-header">
+                                <i class="fa-solid fa-user-plus me-2 text-success fa-fade"></i>
+                                 Tarif
+                            </div>
+                            <div class="card-body">
+                                <form method="post" class="need-validation" id="tarif_form">
+                                <div class="mb-3">
+                                    <label for="id_tarif" class="form-label">ID Tarif :</label>
+                                    <input type="text" class="form-control" id="id_tarif" placeholder="Enter ID Tarif" name="id_tarif" value="<?php echo $id_tarif ?? ''; ?>" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="tipe_tarif" class="form-label">Tipe Tarif :</label>
+                                    <select class="form-select" name="tipe_tarif">
+                                        <option value="">Tipe Tarif</option>
+                                        <?php 
+                                        $tt=array("Rumah","Kos");
+                                        foreach($tt as $tt2){
+                                            if($tipe_tarif==$tt2) $sel="SELECTED";
+                                            else $sel= "";
+                                            echo "<option value=$tt2 $sel>".ucwords($tt2)."</option>";
+                                        }
+                                        ?>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="tarif" class="form-label">Tarif :</label>
+                                    <input type="number" class="form-control" id="tarif" placeholder="Enter Tarif" name="tarif" value="<?php echo $tarif ?? ''; ?>" required>
+                                </div>
+                                <?php
+                                $st=array("AKTIF","TIDAK AKTIF");
+                                foreach($st as $st2) {
+                                    if($status == $st2) $sel="CHECKED";
+                                    else $sel= "";
+                                    echo "<div class=\"form-check form-check-inline\">
+                                            <input type=radio class=form-check-input id=status name=status value=\"$st2\" $sel>
+                                            <label class=form-check-label for=status>$st2</label>
+                                         </div>";
+                                    }
+                                    ?>
+                                    <div class="mt-2">
+                                    <button type="submit" class="btn btn-primary" name="tombol" value="user_add">Simpan</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
                         <!-- The Modal -->
                         <div class="modal" id="myModal">
                             <div class="modal-dialog">
                                 <div class="modal-content">
 
-                                 <!-- Modal Header -->
-                                <div class="modal-header">
-                                <h4 class="modal-title">Konfirmasi Hapus Data</h4>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                                </div>
+                                    <!-- Modal Header -->
+                                    <div class="modal-header">
+                                    <h4 class="modal-title">Konfirmasi Hapus Data</h4>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                    </div>
 
-                                <!-- Modal body -->
-                                <div class="modal-body">
-                                    <!-- //Apakah Anda yakin ingin menghapus data ini? -->
-                                </div>
+                                    <!-- Modal body -->
+                                    <div class="modal-body">
+                                        <!-- //Apakah Anda yakin ingin menghapus data ini? -->
+                                    </div>
 
-                                <!-- Modal footer -->
-                                <div class="modal-footer">
-                                    <form method="post">
-                                        <button type="submit" name="tombol" value="user_hapus" class="btn btn-danger" data-bs-dismiss="modal">Ya</button>
-                                    </form>
-                                    <button type="button" class="btn btn-success" data-bs-dismiss="modal">Tidak</button>
-                                </div>
+                                    <!-- Modal footer -->
+                                    <div class="modal-footer">
+                                        <form method="post">
+                                            <button type="submit" name="tombol" value="user_hapus" class="btn btn-danger" data-bs-dismiss="modal">Ya</button>
+                                        </form>
+                                        <button type="button" class="btn btn-success" data-bs-dismiss="modal">Tidak</button>
+                                    </div>
 
+                                </div>
                             </div>
-                        </div>
                         </div>   
-
                         <div class="card mb-4" id="data_user">
                             <div class="card-header">
                                 <i class="fa-solid fa-users me-2 text-success fa-fade"></i>
@@ -517,6 +564,49 @@ $level = $dt_user[2];
                                                     <td>
                                                     <a href=index.php?p=user_edit&user=$user><button type=button class='btn btn-outline-success btn-sm'>Ubah</button></a>
                                                     <button type=button class='btn btn-outline-danger btn-sm' data-bs-toggle=modal data-bs-target=#myModal data_user=$user>Hapus</button> 
+                                                    </td>
+                                                </tr>";
+                                        }
+                                        ?>
+                                        
+                                        
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="card mb-4" id="data_tarif">
+                            <div class="card-header">
+                                <i class="fa-solid fa-users me-2 text-success fa-fade"></i>
+                                Data Tarif
+                            </div>
+                            <div class="card-body">
+                                <table id="tarif_table">
+                                    <thead>
+                                        <tr>
+                                            <th>ID Tarif</th>
+                                            <th>Tarif</th>
+                                            <th>Tipe Tarif</th>
+                                            <th>Status</th>
+                                            <th>Editing</th>
+                                        </tr>
+                                    </thead>
+                                
+                                    <tbody>
+                                        <?php 
+                                        $q=mysqli_query($koneksi,"SELECT id_tarif,tarif,tipe,status FROM tarif ORDER BY id_tarif ASC ");
+                                        while($d=mysqli_fetch_row($q)) {
+                                            $id_tarif=$d[0];
+                                            $tarif=$d[1];
+                                            $tipe_tarif=$d[2];
+                                            $status=$d[3];                                         
+                                            echo " <tr>
+                                                    <td>$id_tarif</td>
+                                                    <td>$tarif</td>
+                                                    <td>$tipe_tarif</td>
+                                                    <td>$status</td>                                                    
+                                                    <td>
+                                                    <a href=index.php?p=tar_edit&id_tarif=$id_tarif><button type=button class='btn btn-outline-success btn-sm'>Ubah</button></a>
+                                                    <button type=button class='btn btn-outline-danger btn-sm' data-bs-toggle=modal data-bs-target=#myModal data_id_tarif=$id_tarif>Hapus</button> 
                                                     </td>
                                                 </tr>";
                                         }
