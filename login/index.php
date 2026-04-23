@@ -409,21 +409,41 @@ $level = $dt_user[2];
                                             <strong>Data</strong> Gagal Dihapus
                                     </div>";
                                 }
-                            } elseif (isset($_GET['p'])) {
-                              $p=$_GET['p'];
-                              if ($p=="tarif_edit") {
-                                $id_tarif=$_GET['id_tarif'];
-                                $q=mysqli_query($koneksi,"SELECT * FROM tarif WHERE id_tarif='$id_tarif'");
-                                $d=mysqli_fetch_row($q);
+                            }
+                        }
+                        
+                        // Handle GET request untuk fetch data edit
+                        if (isset($_GET['p'])) {
+                          $p=$_GET['p'];
+                          if ($p=="user_edit") {
+                            $user = $_GET['user'] ?? '';
+                            $q = mysqli_query($koneksi,"SELECT username,password,nama,alamat,kota,tlp,level,tipe,status FROM user WHERE username='$user'");
+                            $d = mysqli_fetch_row($q);
+                            if ($d) {
+                                $user = $d[0];
+                                $pass = $d[1];
+                                $nama = $d[2];
+                                $alamat = $d[3];
+                                $kota = $d[4];
+                                $tlp = $d[5];
+                                $level = $d[6];
+                                $tipe = $d[7];
+                                $status = $d[8];
+                            }
+                          }
+                          if ($p=="tarif_edit") {
+                            $id_tarif=$_GET['id_tarif'];
+                            $q=mysqli_query($koneksi,"SELECT * FROM tarif WHERE id_tarif='$id_tarif'");
+                            $d=mysqli_fetch_row($q);
+                            if ($d) {
                                 $tipe_tarif=$d[1];
                                 $tarif=$d[2];
                                 $status=$d[3];
-                                                         
-                            } elseif ($p=="tarif") {
-                                $id_tarif="";
-                                $status="";                         
-                            } 
                             }
+                          } elseif ($p=="tarif") {
+                            $id_tarif="";
+                            $status="";                         
+                          } 
                         }                             
                         ?>
                         <div class="card mb-4" id="form_user">
@@ -435,7 +455,7 @@ $level = $dt_user[2];
                                 <form method="post" class="need-validation" id="user_form">
                                 <div class="mb-3">
                                     <label for="usernmae" class="form-label">Username :</label>
-                                    <input type="text" class="form-control" id="username" placeholder="Enter Username" name="username" value="<?php echo $user ?? ''; ?>" required>
+                                    <input type="text" class="form-control" id="username" placeholder="Enter Username" name="username" value="<?php echo $user ?? ''; ?>" <?php if(($p ?? '')=='user_edit') echo 'readonly'; ?> required>
                                 </div>
                                 <div class="mb-3">
                                     <label for="pwd" class="form-label">Password :</label>
@@ -499,7 +519,7 @@ $level = $dt_user[2];
                                         ?>
                                     </select>
                                 </div>
-                                <button type="submit" class="btn btn-primary" name="tombol" value="user_add">Simpan</button>
+                                <button type="submit" class="btn btn-primary" name="tombol" value="<?php echo (($p ?? '')=='user_edit') ? 'user_edit' : 'user_add'; ?>">Simpan</button>
                                 </form>
                             </div>
                         </div>
@@ -512,7 +532,7 @@ $level = $dt_user[2];
                                 <form method="post" class="need-validation" id="tarif_form">
                                 <div class="mb-3">
                                     <label for="id_tarif" class="form-label">ID Tarif :</label>
-                                    <input type="text" class="form-control" id="id_tarif" placeholder="Enter ID Tarif" name="id_tarif" value="<?php echo $id_tarif ?? ''; ?>" required>
+                                    <input type="text" class="form-control" id="id_tarif" placeholder="Enter ID Tarif" name="id_tarif" value="<?php echo $id_tarif ?? ''; ?>" <?php if(($p ?? '')=='tarif_edit') echo 'readonly'; ?> required>
                                 </div>
                                 <div class="mb-3">
                                     <label for="tipe_tarif" class="form-label">Tipe Tarif :</label>
@@ -545,7 +565,7 @@ $level = $dt_user[2];
                                     }
                                     ?>
                                     <div class="mt-3">
-                                    <button type="submit" class="btn btn-primary" name="tombol" value="tarif_add">Simpan</button>
+                                    <button type="submit" class="btn btn-primary" name="tombol" value="<?php echo (($p ?? '')=='tarif_edit') ? 'tarif_edit' : 'tarif_add'; ?>">Simpan</button>
                                     </div>
                                 </form>
                             </div>

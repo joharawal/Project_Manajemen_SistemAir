@@ -41,7 +41,6 @@ $(document).ready(function () {
     //konfirmasi hapus data user dengan modal
     $("button[data-bs-toggle='modal']").click(function () {
       console.log("Tombol Hapus Di Klik");
-      user = $(this).attr("data_user");
       $("#myModal .modal-body").text(
         "Yakin hapus data username : " + user + " ?",
       );
