@@ -14,7 +14,7 @@ $koneksi = $air->koneksi();
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
         <title>Login - Sistem Manajemen Air</title>
-        <link rel="icon" type="icon.png" href="../assets/img/Icon.png">
+        <link rel="icon" type="image/x-icon" href="../assets/img/Icon.png">
         
         <!-- SB Admin CSS -->
         <link href="css/styles.css" rel="stylesheet" />

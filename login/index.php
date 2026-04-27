@@ -10,10 +10,7 @@ $air = new klas_air;
 $koneksi = $air->koneksi();
 $dt_user = $air->dt_user($_SESSION['user']);
 $level = $dt_user[2];
-
-
 ?>
-
 
 <!DOCTYPE html>
 <html lang="en">
@@ -24,6 +21,7 @@ $level = $dt_user[2];
         <meta name="description" content="" />
         <meta name="author" content="" />
         <title>Dashboard - Sistem Manajemen Pemakaian Air</title>
+        <link rel="icon" type="image/x-icon" href="../assets/img/Icon.png">
         <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
         <link href="../css/styles.css" rel="stylesheet" />
         <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
@@ -446,6 +444,7 @@ $level = $dt_user[2];
                           } 
                         }                             
                         ?>
+
                         <div class="card mb-4" id="form_user">
                             <div class="card-header">
                                 <i class="fa-solid fa-user-plus me-2 text-success fa-fade"></i>
