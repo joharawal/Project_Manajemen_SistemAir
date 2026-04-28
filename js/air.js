@@ -39,8 +39,9 @@ $(document).ready(function () {
     });
 
     //konfirmasi hapus data user dengan modal
-    $("button[data-bs-toggle='modal']").click(function () {
+    $("button[data-bs-toggle='modal'][data_user]").click(function () {
       console.log("Tombol Hapus Di Klik");
+      user = $(this).attr("data_user");
       $("#myModal .modal-body").text(
         "Yakin hapus data username : " + user + " ?",
       );
@@ -91,7 +92,7 @@ $(document).ready(function () {
     });
 
     //konfirmasi hapus data tarif dengan modal
-    $("button[data-bs-toggle='modal']").click(function () {
+    $("button[data-bs-toggle='modal'][data_id_tarif]").click(function () {
       console.log("Tombol Hapus Di Klik");
       id_tarif = $(this).attr("data_id_tarif");
       $("#myModal .modal-body").text(
