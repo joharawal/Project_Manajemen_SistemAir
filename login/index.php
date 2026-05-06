@@ -278,7 +278,8 @@ $level = $dt_user[2];
                                             echo "<div class='alert alert-success alert-dismissible fade show'>
                                                     <button type=button class=btn-close data-bs-dismiss=alert></button>
                                                     <strong>Data</strong> Berhasil Disimpan
-                                            </div>";
+                                            </div>
+                                            <script>setTimeout(function() { window.location.href = 'index.php?p=user'; }, 1500);</script>";
                                         }
                                         else {
                                             echo "<div class='alert alert-danger alert-dismissible fade show'>
@@ -322,7 +323,8 @@ $level = $dt_user[2];
                                             echo "<div class='alert alert-success alert-dismissible fade show'>
                                                     <button type=button class=btn-close data-bs-dismiss=alert></button>
                                                     <strong>Data</strong> Berhasil Diupdate
-                                            </div>";
+                                            </div>
+                                            <script>setTimeout(function() { window.location.href = 'index.php?p=user'; }, 1500);</script>";
                                         }
                                         else {
                                             echo "<div class='alert alert-primary alert-dismissible fade show'>
@@ -359,7 +361,8 @@ $level = $dt_user[2];
                                             echo "<div class='alert alert-success alert-dismissible fade show'>
                                                     <button type=button class=btn-close data-bs-dismiss=alert></button>
                                                     <strong>Data</strong> Berhasil Disimpan
-                                            </div>";
+                                            </div>
+                                            <script>setTimeout(function() { window.location.href = 'index.php?p=tarif'; }, 1500);</script>";
                                         }
                                         else {
                                             echo "<div class='alert alert-danger alert-dismissible fade show'>
@@ -384,7 +387,8 @@ $level = $dt_user[2];
                                     echo "<div class='alert alert-success alert-dismissible fade show'>
                                             <button type=button class=btn-close data-bs-dismiss=alert></button>
                                             <strong>Data</strong> Berhasil Diupdate
-                                    </div>";
+                                    </div>
+                                    <script>setTimeout(function() { window.location.href = 'index.php?p=tarif'; }, 1500);</script>";
                                 }
                                 else {
                                     echo "<div class='alert alert-primary alert-dismissible fade show'>
