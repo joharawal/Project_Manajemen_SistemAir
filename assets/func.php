@@ -45,19 +45,19 @@ class klas_air {
         $tipe = $d[0];
 
         $id_tarif = $this->tipe_to_idtarif($tipe);
-        return $id_tarif;
+        return $id_tarif ?? 0;
     }
 
     public function tipe_to_idtarif($tipe) {
         $q = mysqli_query($this->koneksi(), "SELECT id_tarif FROM tarif WHERE tipe = '$tipe' AND status = 'AKTIF'");
         $d = mysqli_fetch_row($q);
-        return $d[0];
+        return $d[0] ?? 0;
     }
 
     public function idtarif_to_tarif($id_tarif) {
         $q = mysqli_query($this->koneksi(), "SELECT tarif FROM tarif WHERE id_tarif = '$id_tarif' AND status = 'AKTIF'");
         $d = mysqli_fetch_row($q);
-        return $d[0];
+        return $d[0] ?? 0;
     }
 
     public function tgl_balik($tgl) {
