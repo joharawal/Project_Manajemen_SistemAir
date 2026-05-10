@@ -7,7 +7,7 @@ $(document).ready(function () {
 
   if (e[1] == "user" || e[1] == "user_edit&user") {
     $(
-      "#sumary, #chart, #form_user, #form_tarif, #data_tarif, #form_meter, #data_meter",
+      "#sumary, #chart, #form_user, #form_tarif, #data_tarif, #form_meter, #data_meter, #data_pemakaian",
     ).hide();
     if (e[1] == "user") {
       //id summary dan chart disembunyikan
@@ -55,7 +55,7 @@ $(document).ready(function () {
     });
   } else if (e[1] == "tarif" || e[1] == "tarif_edit&id_tarif") {
     $(
-      "#sumary, #chart, #form_user, #data_user, #form_meter, #data_meter",
+      "#sumary, #chart, #form_user, #data_user, #form_meter, #data_meter, #data_pemakaian",
     ).hide();
 
     if (e[1] == "tarif") {
@@ -112,7 +112,7 @@ $(document).ready(function () {
     });
   } else if (e[1] == "catat_meter" || e[1] == "meter_edit&no") {
     $(
-      "#sumary, #chart, #form_user, #data_user, #form_tarif, #data_tarif",
+      "#sumary, #chart, #form_user, #data_user, #form_tarif, #data_tarif, #data_pemakaian",
     ).hide();
 
     if (e[1] == "catat_meter") {
@@ -130,6 +130,10 @@ $(document).ready(function () {
 
       //menambah element input dengan tipe hidden
       $("#meter_form").append("<input type=hidden name=no value=" + e[2] + ">");
+
+      //menambah element input hidden untuk username (karena select disabled tidak mengirim value)
+      var selectedUsername = $("#meter_form select[name='username']").val();
+      $("#meter_form").append("<input type=hidden name=username value=" + selectedUsername + ">");
     }
 
     if ($("alert-meter").hasClass("alert-danger")) {
@@ -146,19 +150,21 @@ $(document).ready(function () {
     if (datatablesSimple) {
       new simpleDatatables.DataTable(datatablesSimple);
     }
-    //<i class="fa-solid fa-gauge"></i>;
-    //menambhakan tombol add tarif
-    $(".datatable-dropdown").append(
-      "<button type='button' class='btn btn-outline-success float-start me-2'><i class='fa-solid fa-gauge fa-beat me-1'></i> Catat Meter</button>",
-    );
+    //menambhakan tombol catat meter (hanya untuk admin dan petugas)
+    var userLevel = $("#user_level").val();
+    if (userLevel != "bendahara") {
+      $(".datatable-dropdown").append(
+        "<button type='button' class='btn btn-outline-success float-start me-2'><i class='fa-solid fa-gauge fa-beat me-1'></i> Catat Meter</button>",
+      );
 
-    //menambahkan klik add tarif
-    $(".datatable-dropdown button").click(function () {
-      //console.log("Tombol Di Klik");
-      $("#form_meter").show();
-      $("#data_meter").hide();
-      $("#meter_form input, #meter_form textarea").val("");
-    });
+      //menambahkan klik add meter
+      $(".datatable-dropdown button").click(function () {
+        //console.log("Tombol Di Klik");
+        $("#form_meter").show();
+        $("#data_meter").hide();
+        $("#meter_form input, #meter_form textarea").val("");
+      });
+    }
 
     //konfirmasi hapus data tarif dengan modal
     $("button[data-bs-toggle='modal'][data_no]").click(function () {
@@ -171,10 +177,19 @@ $(document).ready(function () {
         "<input type=hidden class='modal-hidden' name=no value=" + no + ">",
       );
     });
+  } else if (e[1] == "lihat_pemakaian_warga") {
+    //klik lihat pemakaian warga
+    $("#sumary, #chart, #form_user, #data_user, #form_tarif, #data_tarif, #form_meter, #data_meter").hide();
+    $("#data_pemakaian").show();
+
+    const datatablesSimple = document.getElementById("pemakaian_table");
+    if (datatablesSimple) {
+      new simpleDatatables.DataTable(datatablesSimple);
+    }
   } else {
     //klik dashboard
     //id summary dan chart disembunyikan
     $("#sumary, #chart").show();
-    $("#form_user, #data_user, #form_tarif, #data_tarif, #data_meter, #form_meter").hide();
+    $("#form_user, #data_user, #form_tarif, #data_tarif, #data_meter, #form_meter, #data_pemakaian").hide();
   }
 });
