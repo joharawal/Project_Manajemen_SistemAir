@@ -279,6 +279,7 @@ $level = $dt_user[2];
                                                     <button type=button class=btn-close data-bs-dismiss=alert></button>
                                                     <strong>Data</strong> Berhasil Disimpan
                                             </div>";
+                                            echo "<meta http-equiv='refresh' content='1.5;url=index.php?p=user'>";
                                         }
                                         else {
                                             echo "<div class='alert alert-danger alert-dismissible fade show'>
@@ -323,12 +324,14 @@ $level = $dt_user[2];
                                                     <button type=button class=btn-close data-bs-dismiss=alert></button>
                                                     <strong>Data</strong> Berhasil Diupdate
                                             </div>";
+                                            echo "<meta http-equiv='refresh' content='1.5;url=index.php?p=user'>";
                                         }
                                         else {
                                             echo "<div class='alert alert-primary alert-dismissible fade show'>
                                                     <button type=button class=btn-close data-bs-dismiss=alert></button>
                                                     <strong>Data</strong> Tidak Ada Perubahan
                                             </div>";
+                                            echo "<meta http-equiv='refresh' content='1.5;url=index.php?p=user'>";
                                         }
                             } elseif ($t == "user_hapus") {
                                 $user=$_POST['user'];
@@ -338,6 +341,7 @@ $level = $dt_user[2];
                                             <button type=button class=btn-close data-bs-dismiss=alert></button>
                                             <strong>Data</strong> Berhasil Dihapus
                                     </div>";
+                                    echo "<meta http-equiv='refresh' content='1.5;url=index.php?p=user'>";
                                 }
                                 else {
                                     echo "<div class='alert alert-danger alert-dismissible fade show'>
@@ -360,6 +364,7 @@ $level = $dt_user[2];
                                                     <button type=button class=btn-close data-bs-dismiss=alert></button>
                                                     <strong>Data</strong> Berhasil Disimpan
                                             </div>";
+                                            echo "<meta http-equiv='refresh' content='1.5;url=index.php?p=tarif'>";
                                         }
                                         else {
                                             echo "<div class='alert alert-danger alert-dismissible fade show'>
@@ -385,12 +390,14 @@ $level = $dt_user[2];
                                             <button type=button class=btn-close data-bs-dismiss=alert></button>
                                             <strong>Data</strong> Berhasil Diupdate
                                     </div>";
+                                    echo "<meta http-equiv='refresh' content='1.5;url=index.php?p=tarif'>";
                                 }
                                 else {
                                     echo "<div class='alert alert-primary alert-dismissible fade show'>
                                             <button type=button class=btn-close data-bs-dismiss=alert></button>
                                             <strong>Data</strong> Tidak Ada Perubahan
                                     </div>";
+                                    echo "<meta http-equiv='refresh' content='1.5;url=index.php?p=tarif'>";
                                 }
                             } elseif ($t == "tarif_hapus") {
                                 $id_tarif=$_POST['id_tarif'];
@@ -400,6 +407,7 @@ $level = $dt_user[2];
                                             <button type=button class=btn-close data-bs-dismiss=alert></button>
                                             <strong>Data</strong> Berhasil Dihapus
                                     </div>";
+                                    echo "<meta http-equiv='refresh' content='1.5;url=index.php?p=tarif'>";
                                 }
                                 else {
                                     echo "<div class='alert alert-danger alert-dismissible fade show'>
