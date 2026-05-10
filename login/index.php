@@ -107,9 +107,9 @@ $level = $dt_user[2];
                             }
                              elseif($level=="petugas") {
                             ?>
-                                <a class="nav-link" href="index.php?p=ubah_datameter_warga">
+                                <a class="nav-link" href="index.php?p=catat_meter">
                                 <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt fa-spin text-success"></i></div>
-                                Ubah Datameter Warga
+                                Catat Meter Air
                             </a>
                                 <a class="nav-link" href="index.php?p=lihat_pemakaian_warga">
                                 <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt fa-spin text-success"></i></div>
@@ -159,9 +159,9 @@ $level = $dt_user[2];
                                 $h1="Lihat Pembayaran Warga";
                                 $li="Lihat Data Pembayaran Air Warga";
                             }
-                            elseif($e[1]=="ubah_datameter_warga") {
-                                $h1="Ubah Datameter Warga";
-                                $li="Ubah Data Meter Warga";
+                            elseif($e[1]=="catat_meter" || $e[1]=="meter_edit&no") {
+                                $h1="Pencatatan Meter";
+                                $li="Pencatatan Meter Air Warga";
                             }
                             elseif($e[1]=="tarif" || $e[1]=="tarif_edit&id_tarif") {
                                 $h1="Manajemen Tarif Air";
@@ -411,9 +411,89 @@ $level = $dt_user[2];
                                             <strong>Data</strong> Gagal Dihapus
                                     </div>";
                                 }
+                            } elseif ($t == "meter_add") {
+                                $username=$_POST['username'];
+                                $meter_awal=$_POST['meter_awal'];
+                                $meter_akhir=$_POST['meter_akhir'];
+                                $id_tarif=$air->user_to_idtarif($username);
+                                $tarif=$air->idtarif_to_tarif($id_tarif);
+                           
+                                        //cek meter awal harus lebih kecil dari meter akhir
+                                        $pemakaian=$meter_akhir-$meter_awal;
+                                        $tagihan = $tarif * $pemakaian;
+                                        if ($pemakaian < 0) { //meter akhir lebih kecil dari meter awal atau pemakaian negatif
+                                            echo "<div class='alert alert-danger alert-dismissible fade show'>
+                                            <button type=button class=btn-close data-bs-dismiss=alert></button>
+                                            <strong>Meter Akhir</strong> Harus Lebih Besar Dari Meter Awal
+                                            </div>";
+
+                                        } else { //meter akhir lebih besar dari meter awal atau pemakaian positif
+                                            mysqli_query($koneksi,"INSERT INTO pemakaian (username, meter_awal, meter_akhir, pemakaian, tgl, waktu, id_tarif, tagihan, status) VALUES ('$username','$meter_awal','$meter_akhir','$pemakaian',CURRENT_DATE(), CURRENT_TIME(), '$id_tarif', '$tagihan', 'Belum Lunas')");
+                                            if (mysqli_affected_rows($koneksi) > 0) {
+                                                echo "<div class='alert alert-success alert-dismissible fade show' id=alert-meter>
+                                                        <button type=button class=btn-close data-bs-dismiss=alert></button>
+                                                        <strong>Data</strong> Berhasil Disimpan
+                                                </div>
+                                                <script>setTimeout(function() { window.location.href = 'index.php?p=catat_meter'; }, 1500);</script>";
+                                            }
+                                            else {
+                                                echo "<div class='alert alert-danger alert-dismissible fade show' id=alert-meter>
+                                                        <button type=button class=btn-close data-bs-dismiss=alert></button>
+                                                        <strong>Data</strong> Gagal Disimpan
+                                                </div>";
+                                            }
+                                        }
+                            } elseif ($t == "meter_edit") {
+                                $no=$_POST['no'];
+                                $username=$_POST['username'];
+                                $meter_awal=$_POST['meter_awal'];
+                                $meter_akhir=$_POST['meter_akhir'];
+                                $id_tarif=$air->user_to_idtarif($username);
+                                $tarif=$air->idtarif_to_tarif($id_tarif);
+
+                                        //cek meter awal harus lebih kecil dari meter akhir
+                                        $pemakaian=$meter_akhir-$meter_awal;
+                                        $tagihan = $tarif * $pemakaian;
+                                        if ($pemakaian < 0) { //meter akhir lebih kecil dari meter awal atau pemakaian negatif
+                                            echo "<div class='alert alert-danger alert-dismissible fade show'>
+                                            <button type=button class=btn-close data-bs-dismiss=alert></button>
+                                            <strong>Meter Akhir</strong> Harus Lebih Besar Dari Meter Awal
+                                            </div>";
+
+                                        } else { //meter akhir lebih besar dari meter awal atau pemakaian positif
+                                            mysqli_query($koneksi,"UPDATE pemakaian SET username='$username', meter_awal='$meter_awal', meter_akhir='$meter_akhir', pemakaian='$pemakaian', id_tarif='$id_tarif', tagihan='$tagihan' WHERE no='$no'");
+                                            if (mysqli_affected_rows($koneksi) > 0) {
+                                                echo "<div class='alert alert-success alert-dismissible fade show' id=alert-meter>
+                                                        <button type=button class=btn-close data-bs-dismiss=alert></button>
+                                                        <strong>Data</strong> Berhasil Diupdate
+                                                </div>
+                                                <script>setTimeout(function() { window.location.href = 'index.php?p=catat_meter'; }, 1500);</script>";
+                                            }
+                                            else {
+                                                echo "<div class='alert alert-primary alert-dismissible fade show' id=alert-meter>
+                                                        <button type=button class=btn-close data-bs-dismiss=alert></button>
+                                                        <strong>Data</strong> Tidak Ada Perubahan
+                                                </div>";
+                                            }
+                                        }
+                            } elseif ($t == "meter_hapus") {
+                                $no=$_POST['no'];
+                                mysqli_query($koneksi,"DELETE FROM pemakaian WHERE no='$no'");
+                                if (mysqli_affected_rows($koneksi) > 0) {
+                                    echo
+                                            "<div class='alert alert-success alert-dismissible fade show' id=alert-meter>
+                                            <button type=button class=btn-close data-bs-dismiss=alert></button>
+                                            <strong>Data</strong> Berhasil Dihapus
+                                    </div>";
+                                }
+                                else {
+                                    echo    "<div class='alert alert-danger alert-dismissible fade show' id=alert-meter>
+                                            <button type=button class=btn-close data-bs-dismiss=alert></button>
+                                            <strong>Data</strong> Gagal Dihapus
+                                    </div>";
+                                }
                             }
                         }
-                        
                         // Handle GET request untuk fetch data edit
                         if (isset($_GET['p'])) {
                           $p=$_GET['p'];
@@ -432,8 +512,7 @@ $level = $dt_user[2];
                                 $tipe = $d[7];
                                 $status = $d[8];
                             }
-                          }
-                          if ($p=="tarif_edit") {
+                          } else if ($p=="tarif_edit") {
                             $id_tarif=$_GET['id_tarif'];
                             $q=mysqli_query($koneksi,"SELECT * FROM tarif WHERE id_tarif='$id_tarif'");
                             $d=mysqli_fetch_row($q);
@@ -442,10 +521,18 @@ $level = $dt_user[2];
                                 $tarif=$d[2];
                                 $status=$d[3];
                             }
-                          } elseif ($p=="tarif") {
-                            $id_tarif="";
-                            $status="";                         
-                          } 
+                          } else if ($p=="meter_edit") {
+                            $no=$_GET['no'];
+                            $q=mysqli_query($koneksi,"SELECT * FROM pemakaian WHERE no='$no'");
+                            $d=mysqli_fetch_row($q);
+                            if ($d) {
+                                $username=$d[1];
+                                $meter_awal=$d[2];
+                                $meter_akhir=$d[3];
+                                $id_tarif=$d[7];
+                                $tarif=$air->idtarif_to_tarif($id_tarif);
+                            }
+                          }
                         }                             
                         ?>
 
@@ -542,7 +629,7 @@ $level = $dt_user[2];
                                     <select class="form-select" name="tipe_tarif">
                                         <option value="">Tipe Tarif</option>
                                         <?php 
-                                        $tt=array("Rumah","Kos");
+                                        $tt=array("RT","Kos");
                                         foreach($tt as $tt2){
                                             if($tipe_tarif==$tt2) $sel="SELECTED";
                                             else $sel= "";
@@ -569,6 +656,45 @@ $level = $dt_user[2];
                                     ?>
                                     <div class="mt-3">
                                     <button type="submit" class="btn btn-primary" name="tombol" value="<?php echo (($p ?? '')=='tarif_edit') ? 'tarif_edit' : 'tarif_add'; ?>">Simpan</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        <div class="card mb-4" id="form_meter">
+                            <div class="card-header">
+                                <i class="fa-solid fa-user-plus me-2 text-success fa-fade"></i>
+                                 Meter
+                            </div>
+                            <div class="card-body">
+                                <?php
+                                if ($e[1] == "meter_edit&no") $dis='disabled';
+                                else $dis="";
+                                ?>
+                                <form method="post" class="need-validation" id="meter_form">
+                                    <div class="mb-3">
+                                    <label for="username" class="form-label">Nama Warga :</label>
+                                    <select class="form-select" name="username" required <?php echo $dis; ?>>
+                                        <option value="">Nama Warga</option>
+                                        <?php
+                                        $qw=mysqli_query($koneksi,"SELECT username, nama FROM user WHERE level='warga'");
+                                        while($dw=mysqli_fetch_row($qw)) {
+                                            if($username==$dw[0]) $sel="SELECTED";
+                                            else $sel="";
+                                            echo "<option value='$dw[0]' $sel>$dw[1]</option>";
+                                        }
+                                        ?>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="meter_awal" class="form-label">Meter Awal (m<sup>3</sup>) :</label>
+                                    <input type="text" class="form-control" id="meter_awal" placeholder="Enter Meter Awal" name="meter_awal" value="<?php echo $meter_awal ?? ''; ?>" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="meter_akhir" class="form-label">Meter Akhir (m<sup>3</sup>) :</label>
+                                    <input type="text" class="form-control" id="meter_akhir" placeholder="Enter Meter Akhir" name="meter_akhir" value="<?php echo $meter_akhir ?? ''; ?>" required>
+                                </div>                                                                     
+                                    <div class="mt-3">
+                                    <button type="submit" class="btn btn-primary" name="tombol" value="<?php echo (($p ?? '')=='meter_edit') ? 'meter_edit' : 'meter_add'; ?>">Simpan</button>
                                     </div>
                                 </form>
                             </div>
@@ -700,12 +826,72 @@ $level = $dt_user[2];
                                 </table>
                             </div>
                         </div>
+                        <div class="card mb-4" id="data_meter">
+                            <div class="card-header">
+                                <i class="fa-solid fa-users me-2 text-success fa-fade"></i>
+                                Data Meter Warga
+                            </div>
+                            <div class="card-body">
+                                <table id="meter_table">
+                                    <thead>
+                                        <tr>
+                                            <th>Nama Warga</th>
+                                            <th>Tanggal & Waktu</th>
+                                            <th>Meter Awal (m³)</th>
+                                            <th>Meter Akhir (m³)</th>
+                                            <th>Pemakaian (m³)</th>
+                                            <th>Editing</th>
+                                        </tr>
+                                    </thead>
+                                
+                                    <tbody>
+                                        <?php 
+                                        $q=mysqli_query($koneksi,"SELECT no,username,meter_awal,meter_akhir,pemakaian,tgl,waktu FROM pemakaian ORDER BY tgl DESC, username ASC");
+                                        while($d=mysqli_fetch_row($q)) {
+                                            $no=$d[0];
+                                            $dt_user2=$air->dt_user($d[1]); 
+                                            $nama=$dt_user2[0];
+                                            $meter_awal=$d[2];
+                                            $meter_akhir=$d[3];
+                                            $pemakaian=$d[4];
+                                            $tgl=$air->tgl_balik($d[5]);
+                                            $waktu=$d[6];
+
+                                            $tgl_tabel = date_create ($d[5]);
+                                            $tgl_sekarang = date_create ();
+                                            $diff = date_diff( $tgl_tabel, $tgl_sekarang );
+                                            $selisih = $diff->days;
+                            
+                                            
+                                            echo " <tr>
+                                                    <td>$nama</td>
+                                                    <td>$tgl $waktu | ". date("Y-m-d") . " $selisih hari</td>
+                                                    <td>$meter_awal</td>
+                                                    <td>$meter_akhir</td>
+                                                    <td>$pemakaian</td>";
+                                                    if ($selisih <= 30) {
+                                                        echo "<td>
+                                                    <a href=index.php?p=meter_edit&no=$no><button type=button class='btn btn-outline-success btn-sm'>Ubah</button></a>
+                                                    <button type=button class='btn btn-outline-danger btn-sm' data-bs-toggle=modal data-bs-target=#myModal data_meter_no=$no>Hapus</button> 
+                                                    </td>";
+                                                    } else {
+                                                        echo "<td></td>";
+                                                    }
+                                                    echo "</tr>";
+                                        }
+                                        ?>
+                                        
+                                        
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
                     </div>
                 </main>
                 <footer class="py-4 bg-light mt-auto">
                     <div class="container-fluid px-4">
                         <div class="d-flex align-items-center justify-content-between small">
-                            <div class="text-muted">Copyright &copy; Your Website 2023</div>
+                            <div class="text-muted">Copyright &copy; Your Website <?php echo date("Y") ?></div>
                             <div>
                                 <a href="#">Privacy Policy</a>
                                 &middot;
