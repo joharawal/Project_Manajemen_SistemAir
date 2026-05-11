@@ -106,8 +106,8 @@ $(document).ready(function () {
       $(".modal-footer form .modal-hidden").remove();
       $(".modal-footer form").append(
         "<input type=hidden class='modal-hidden' name=id_tarif value=" +
-        id_tarif +
-        ">",
+          id_tarif +
+          ">",
       );
     });
   } else if (e[1] == "catat_meter" || e[1] == "meter_edit&no") {
@@ -133,7 +133,9 @@ $(document).ready(function () {
 
       //menambah element input hidden untuk username (karena select disabled tidak mengirim value)
       var selectedUsername = $("#meter_form select[name='username']").val();
-      $("#meter_form").append("<input type=hidden name=username value=" + selectedUsername + ">");
+      $("#meter_form").append(
+        "<input type=hidden name=username value=" + selectedUsername + ">",
+      );
     }
 
     if ($("alert-meter").hasClass("alert-danger")) {
@@ -154,7 +156,7 @@ $(document).ready(function () {
     var userLevel = $("#user_level").val();
     if (userLevel != "bendahara") {
       $(".datatable-dropdown").append(
-        "<button type='button' class='btn btn-outline-success float-start me-2'><i class='fa-solid fa-gauge fa-beat me-1'></i> Catat Meter</button>",
+        "<button type='button' class='btn btn-outline-success float-start me-2'><i class='fa-solid fa-square-plus fa-fade me-1'></i> Catat Meter</button>",
       );
 
       //menambahkan klik add meter
@@ -179,7 +181,9 @@ $(document).ready(function () {
     });
   } else if (e[1] == "lihat_pemakaian_warga") {
     //klik lihat pemakaian warga
-    $("#sumary, #chart, #form_user, #data_user, #form_tarif, #data_tarif, #form_meter, #data_meter").hide();
+    $(
+      "#sumary, #chart, #form_user, #data_user, #form_tarif, #data_tarif, #form_meter, #data_meter",
+    ).hide();
     $("#data_pemakaian").show();
 
     const datatablesSimple = document.getElementById("pemakaian_table");
@@ -190,6 +194,8 @@ $(document).ready(function () {
     //klik dashboard
     //id summary dan chart disembunyikan
     $("#sumary, #chart").show();
-    $("#form_user, #data_user, #form_tarif, #data_tarif, #data_meter, #form_meter, #data_pemakaian").hide();
+    $(
+      "#form_user, #data_user, #form_tarif, #data_tarif, #data_meter, #form_meter, #data_pemakaian",
+    ).hide();
   }
 });
