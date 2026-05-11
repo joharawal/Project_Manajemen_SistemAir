@@ -85,7 +85,7 @@ $level = $dt_user[2];
                             elseif($level=="bendahara") {
                             ?>
                                 <a class="nav-link" href="index.php?p=pembayaran_warga">
-                                <div class="sb-nav-link-icon"><i class="fa-solid fa-money-bill-1"></i></div>
+                                <div class="sb-nav-link-icon"><i class="fa-solid fa-money-bill-1 text-warning fa-fade"></i></div>
                                 Pembayaran Warga
                             </a>
                                 <a class="nav-link" href="index.php?p=catat_meter">
@@ -93,7 +93,7 @@ $level = $dt_user[2];
                                 Lihat Pemakaian Warga
                             </a>
                                 <a class="nav-link" href="index.php?p=tarif">
-                                <div class="sb-nav-link-icon"><i class="fa-solid fa-rupiah-sign me-1 text-success fa-fade"></i></div>
+                                <div class="sb-nav-link-icon"><i class="fa-solid fa-rupiah-sign me-1 text-primary fa-fade"></i></div>
                                 Manajemen Tarif Air
                             </a>
                                 <a class="nav-link" href="index.php?p=tagihan_warga_bendahara">
