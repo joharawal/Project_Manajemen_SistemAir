@@ -76,7 +76,7 @@ $level = $dt_user[2];
                                 Lihat Pemakaian Warga
                             </a>
                                 <a class="nav-link" href="index.php?p=pembayaran_warga">
-                                <div class="sb-nav-link-icon"><i class="fa-solid fa-money-bill-1 fa-fade text-warning"></i></div>
+                                <div class="sb-nav-link-icon"><i class="fa-solid fa-wallet fa-fade text-warning"></i></div>
                                 Pembayaran Warga
                             </a>
                              
@@ -85,21 +85,21 @@ $level = $dt_user[2];
                             elseif($level=="bendahara") {
                             ?>
                                 <a class="nav-link" href="index.php?p=pembayaran_warga">
-                                <div class="sb-nav-link-icon"><i class="fa-solid fa-money-bill-1 text-warning fa-fade"></i></div>
+                                <div class="sb-nav-link-icon"><i class="fa-solid fa-wallet text-warning fa-fade"></i></div>
                                 Pembayaran Warga
                             </a>
                                 <a class="nav-link" href="index.php?p=catat_meter">
                                 <div class="sb-nav-link-icon"><i class="fa-solid fa-house-flood-water text-danger fa-fade"></i></div>
-                                Lihat Pemakaian Warga
+                                Pemakaian Warga
                             </a>
                                 <a class="nav-link" href="index.php?p=tarif">
                                 <div class="sb-nav-link-icon"><i class="fa-solid fa-rupiah-sign me-1 text-primary fa-fade"></i></div>
                                 Manajemen Tarif Air
                             </a>
-                                <a class="nav-link" href="index.php?p=tagihan_warga_bendahara">
+                                <!-- <a class="nav-link" href="index.php?p=tagihan_warga_bendahara">
                                 <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt fa-spin text-success"></i></div>
-                                Lihat Tagihan Warga
-                            </a>
+                                Tagihan Warga
+                            </a> -->
                             <?php
                             }
                              elseif($level=="petugas") {
@@ -128,8 +128,8 @@ $level = $dt_user[2];
                         </div>
                     </div>
                     <div class="sb-sidenav-footer">
-                        <div class="small"><i class="fa-regular fa-user fa-flip text-warning"></i> Logged in as : <?php echo $dt_user[2]?></div>
-                        <?php echo $dt_user[0].' ('.$dt_user [3]. ')'; ?>
+                        <div class="small"><i class="fa-regular fa-circle-user fa-flip text-warning"></i> Logged in as : <?php echo $dt_user[2]?></div>
+                        <div class="small"><i class="fa-solid fa-droplet text-primary me-1"></i><?php echo $dt_user[0].' ('.$dt_user [3]. ')'; ?></div>
                     </div>
                 </nav>
             </div>
