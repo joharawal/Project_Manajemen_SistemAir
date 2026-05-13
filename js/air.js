@@ -190,17 +190,17 @@ $(document).ready(function () {
     if (datatablesSimple) {
       new simpleDatatables.DataTable(datatablesSimple);
     }
-  } else if (e[1] == "pembayaran_warga") {
-    //klik pembayaran warga - tampilkan data meter dengan status pembayaran
-    $(
-      "#sumary, #chart, #form_user, #data_user, #form_tarif, #data_tarif, #form_meter, #data_pemakaian",
-    ).hide();
-    $("#data_meter").show();
+  // } else if (e[1] == "pembayaran_warga") {
+  //   //klik pembayaran warga - tampilkan data meter dengan status pembayaran
+  //   $(
+  //     "#sumary, #chart, #form_user, #data_user, #form_tarif, #data_tarif, #form_meter, #data_pemakaian",
+  //   ).hide();
+  //   $("#data_meter").show();
 
-    const datatablesSimple = document.getElementById("meter_table");
-    if (datatablesSimple) {
-      new simpleDatatables.DataTable(datatablesSimple);
-    }
+  //   const datatablesSimple = document.getElementById("meter_table");
+  //   if (datatablesSimple) {
+  //     new simpleDatatables.DataTable(datatablesSimple);
+  //   }
   } else {
     //klik dashboard
     //id summary dan chart disembunyikan
