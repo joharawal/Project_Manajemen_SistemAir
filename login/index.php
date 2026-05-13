@@ -858,7 +858,7 @@ $level = $dt_user[2];
                                     </thead>
                                 
                                     <tbody>
-                                        <?php 
+                                       <?php 
                                         $q=mysqli_query($koneksi,"SELECT no,username,meter_awal,meter_akhir,pemakaian,tgl,waktu,tagihan,status FROM pemakaian ORDER BY tgl DESC, username ASC");
                                         while($d=mysqli_fetch_row($q)) {
                                             $no=$d[0];
@@ -867,7 +867,11 @@ $level = $dt_user[2];
                                             $meter_awal=$d[2];
                                             $meter_akhir=$d[3];
                                             $pemakaian=$d[4];
-                                            $tgl=$air->tgl_balik($d[5]);
+                                            
+                                            // CARA PALING SINGKAT: Buat array 1 baris, langsung panggil index-nya
+                                            $b = ['','Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+                                            $tgl = date('d-', strtotime($d[5])) . $b[date('n', strtotime($d[5]))] . date('-Y', strtotime($d[5]));
+                                            
                                             $waktu=$d[6];
                                             // $tagihan=$d[7];
                                             $status=$d[8];
@@ -877,8 +881,7 @@ $level = $dt_user[2];
                                             $tgl_sekarang = date_create ();
                                             $diff = date_diff( $tgl_tabel, $tgl_sekarang );
                                             $selisih = $diff->days;
-                            
-                                            
+
                                             // Tampilkan badge berdasarkan status
                                             if($status == "Belum Lunas") {
                                                 $badge = "<span class='badge bg-danger'>Belum Lunas</span>";
@@ -886,41 +889,39 @@ $level = $dt_user[2];
                                                 $badge = "<span class='badge bg-success'>Lunas</span>";
                                             }
                                             
-                                            echo " <tr> 
-                                                    <td>$nama</td>
-                                                    <td>$tgl $waktu | ". date("Y-m-d") . " $selisih hari</td>
-                                                    <td>$meter_awal</td>
-                                                    <td>$meter_akhir</td>
-                                                    <td>$pemakaian</td>
-                                                    <td>$badge</td>";
-                                                    // <td>$tagihan</td>
+                                                echo " <tr> 
+                                                <td>$nama</td>
+                                                <td>$tgl $waktu | ". date("Y-m-d") . " $selisih hari</td>
+                                                <td>$meter_awal</td>
+                                                <td>$meter_akhir</td>
+                                                <td>$pemakaian</td>
+                                                <td>$badge</td>";
+                                                // <td>$tagihan</td>
+                                                
+
+                                                if($level_login =="admin" || $level_login =="bendahara") {
+                                                    //berlaku untuk admin & bendahara
+                                                    echo "<td>
+                                                <a href=index.php?p=meter_edit&no=$no><button type=button class='btn btn-outline-success btn-sm'><i class='fa-solid fa-pen-to-square'></i>Ubah</button></a>
+                                                <button type=button class='btn btn-outline-danger btn-sm' data-bs-toggle=modal data-bs-target=#myModal data_no=$no><i class='fa-solid fa-trash'></i> Hapus</button> 
+                                                </td>";
+
+                                                }
+                                                else{
+                                                //berlaku untuk petugas
+                                                if ($selisih <= 30) {
+                                                    echo "<td>
+                                                <a href=index.php?p=meter_edit&no=$no><button type=button class='btn btn-outline-success btn-sm'><i class='fa-solid fa-pen-to-square'></i> Ubah</button></a>
+                                                <button type=button class='btn btn-outline-danger btn-sm' data-bs-toggle=modal data-bs-target=#myModal data_no=$no><i class='fa-solid fa-trash'></i> Hapus</button> 
+                                                </td>";
                                                     
-
-                                                    if($level_login =="admin" || $level_login =="bendahara") {
-                                                        //berlaku untuk admin & bendahara
-                                                        echo "<td>
-                                                    <a href=index.php?p=meter_edit&no=$no><button type=button class='btn btn-outline-success btn-sm'><i class='fa-solid fa-pen-to-square'></i> Ubah</button></a>
-                                                    <button type=button class='btn btn-outline-danger btn-sm' data-bs-toggle=modal data-bs-target=#myModal data_no=$no><i class='fa-solid fa-trash'></i> Hapus</button> 
-                                                    </td>";
-
-                                                    }
-                                                    else{
-                                                    //berlaku untuk petugas
-                                                    if ($selisih <= 30) {
-                                                        echo "<td>
-                                                    <a href=index.php?p=meter_edit&no=$no><button type=button class='btn btn-outline-success btn-sm'><i class='fa-solid fa-pen-to-square'></i> Ubah</button></a>
-                                                    <button type=button class='btn btn-outline-danger btn-sm' data-bs-toggle=modal data-bs-target=#myModal data_no=$no><i class='fa-solid fa-trash'></i> Hapus</button> 
-                                                    </td>";
-                                                        
-                                                    } else {
-                                                        echo "<td></td>";
-                                                    }
-                                                    }
-                                                    echo "</tr>";
-                                        }
+                                                } else {
+                                                    echo "<td></td>";
+                                                }
+                                                }
+                                                echo "</tr>";
+                                                }
                                         ?>
-                                        
-                                        
                                     </tbody>
                                 </table>
                             </div>
