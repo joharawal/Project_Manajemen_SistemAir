@@ -73,7 +73,7 @@ $level = $dt_user[2];
                             </a>
                                 <a class="nav-link" href="index.php?p=catat_meter">
                                 <div class="sb-nav-link-icon"><i class="fa-solid fa-house-flood-water text-danger fa-fade"></i></div>
-                                Lihat Pemakaian Warga
+                                Pemakaian Warga
                             </a>
                                 <a class="nav-link" href="index.php?p=pembayaran_warga">
                                 <div class="sb-nav-link-icon"><i class="fa-solid fa-wallet fa-fade text-warning"></i></div>
@@ -105,7 +105,7 @@ $level = $dt_user[2];
                              elseif($level=="petugas") {
                             ?>
                                 <a class="nav-link" href="index.php?p=catat_meter">
-                                <div class="sb-nav-link-icon"><i class="fa-solid fa-house-flood-water text-primary fa-fade"></i></div>
+                                <div class="sb-nav-link-icon"><i class="fa-solid fa-house-flood-water text-danger fa-fade"></i></div>
                                 Catat Meter Air
                             </a>
                                 <!-- <a class="nav-link" href="index.php?p=lihat_pemakaian_warga">
@@ -153,7 +153,7 @@ $level = $dt_user[2];
                                 $h1="Lihat Pembayaran Warga";
                                 $li="Lihat Data Pembayaran Air Warga";
                             }
-                            elseif($e[1]=="catat_meter" || $e[1]=="meter_edit&no") {
+                            elseif($e[1]=="catat_meter" || $e[1]=="\&no") {
                                 $h1="Pencatatan Meter";
                                 $li="Pencatatan Meter Air Warga";
                             }
