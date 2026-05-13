@@ -891,7 +891,7 @@ $level = $dt_user[2];
                                             
                                                 echo " <tr> 
                                                 <td>$nama</td>
-                                                <td>$tgl $waktu | ". date("Y-m-d") . " $selisih hari</td>
+                                                <td>$tgl ($waktu) <hr style='margin: 5px 0;'> ". date("Y-m-d") . " ($selisih hari)</td>
                                                 <td>$meter_awal</td>
                                                 <td>$meter_akhir</td>
                                                 <td>$pemakaian</td>
@@ -921,7 +921,7 @@ $level = $dt_user[2];
                                                 }
                                                 echo "</tr>";
                                                 }
-                                        ?>
+                                                ?>
                                     </tbody>
                                 </table>
                             </div>

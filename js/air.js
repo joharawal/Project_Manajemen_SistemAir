@@ -85,7 +85,7 @@ $(document).ready(function () {
 
     //menambhakan tombol add tarif
     $(".datatable-dropdown").append(
-      "<button type='button' class='btn btn-outline-success float-start me-2'><i class='fa-solid fa-money-bill-1-wave fa-fade'></i> Tarif</button>",
+      "<button type='button' class='btn btn-outline-success float-start me-2'><i class='fa-solid fa-money-bill-1 fa-fade'></i> Tarif</button>",
     );
 
     //menambahkan klik add tarif
