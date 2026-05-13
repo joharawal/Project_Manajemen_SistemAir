@@ -30,7 +30,7 @@ $(document).ready(function () {
 
     //menambhakan tombol add user
     $(".datatable-dropdown").append(
-      "<button type='button' class='btn btn-outline-success float-start me-2'><i class='fa-solid fa-user-plus'></i> User</button>",
+      "<button type='button' class='btn btn-outline-success float-start me-2'><i class='fa-solid fa-user-plus fa-fade'></i> User</button>",
     );
 
     //menambahkan klik add user
@@ -85,7 +85,7 @@ $(document).ready(function () {
 
     //menambhakan tombol add tarif
     $(".datatable-dropdown").append(
-      "<button type='button' class='btn btn-outline-success float-start me-2'><i class='fa-solid fa-money-bill-1-wave fa-beat'></i> Tarif</button>",
+      "<button type='button' class='btn btn-outline-success float-start me-2'><i class='fa-solid fa-money-bill-1-wave fa-fade'></i> Tarif</button>",
     );
 
     //menambahkan klik add tarif
@@ -106,8 +106,8 @@ $(document).ready(function () {
       $(".modal-footer form .modal-hidden").remove();
       $(".modal-footer form").append(
         "<input type=hidden class='modal-hidden' name=id_tarif value=" +
-        id_tarif +
-        ">",
+          id_tarif +
+          ">",
       );
     });
   } else if (e[1] == "catat_meter" || e[1] == "meter_edit&no") {

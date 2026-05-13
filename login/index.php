@@ -128,8 +128,8 @@ $level = $dt_user[2];
                         </div>
                     </div>
                     <div class="sb-sidenav-footer">
-                        <div class="small"><i class="fa-regular fa-circle-user fa-flip text-warning"></i> Logged in as : <?php echo $dt_user[2]?></div>
-                        <div class="small"><i class="fa-solid fa-droplet text-primary me-1"></i><?php echo $dt_user[0].' ('.$dt_user [3]. ')'; ?></div>
+                        <div class="small"><i class="fa-regular fa-circle-user fa-flip text-light"></i> Logged in as : <?php echo $dt_user[2]?></div>
+                        <div class="small"><i class="fa-solid fa-map-pin text-light fa-flip  me-1"></i><?php echo $dt_user[0].' ('.$dt_user [3]. ')'; ?></div>
                     </div>
                 </nav>
             </div>
@@ -153,7 +153,7 @@ $level = $dt_user[2];
                                 $h1="Lihat Pembayaran Warga";
                                 $li="Lihat Data Pembayaran Air Warga";
                             }
-                            elseif($e[1]=="catat_meter" || $e[1]=="\&no") {
+                            elseif($e[1]=="catat_meter" || $e[1]=="meter_edit&no") {
                                 $h1="Pencatatan Meter";
                                 $li="Pencatatan Meter Air Warga";
                             }
@@ -605,7 +605,7 @@ $level = $dt_user[2];
                                         ?>
                                     </select>
                                 </div>
-                                <button type="submit" class="btn btn-primary" name="tombol" value="<?php echo (($p ?? '')=='user_edit') ? 'user_edit' : 'user_add'; ?>">Simpan</button>
+                                <button type="submit"  class="btn btn-primary" name="tombol" value="<?php echo (($p ?? '')=='user_edit') ? 'user_edit' : 'user_add'; ?>"><i class="fa-solid fa-floppy-disk"></i> Simpan</button>
                                 </form>
                             </div>
                         </div>
@@ -651,7 +651,7 @@ $level = $dt_user[2];
                                     }
                                     ?>
                                     <div class="mt-3">
-                                    <button type="submit" class="btn btn-primary" name="tombol" value="<?php echo (($p ?? '')=='tarif_edit') ? 'tarif_edit' : 'tarif_add'; ?>">Simpan</button>
+                                    <button type="submit" class="btn btn-primary" name="tombol" value="<?php echo (($p ?? '')=='tarif_edit') ? 'tarif_edit' : 'tarif_add'; ?>"><i class="fa-solid fa-floppy-disk"></i> Simpan</button>
                                     </div>
                                 </form>
                             </div>
@@ -706,7 +706,7 @@ $level = $dt_user[2];
                                 </div>
                                 <?php } ?>
                                     <div class="mt-3">
-                                    <button type="submit" class="btn btn-primary" name="tombol" value="<?php echo (($p ?? '')=='meter_edit') ? 'meter_edit' : 'meter_add'; ?>">Simpan</button>
+                                    <button type="submit" class="btn btn-primary" name="tombol" value="<?php echo (($p ?? '')=='meter_edit') ? 'meter_edit' : 'meter_add'; ?>"><i class="fa-solid fa-floppy-disk"></i> Simpan</button>
                                     </div>
                                 </form>
                             </div>
@@ -740,7 +740,7 @@ $level = $dt_user[2];
                         </div>   
                         <div class="card mb-4" id="data_user">
                             <div class="card-header">
-                                <i class="fa-solid fa-users me-2 text-success fa-fade"></i>
+                                <i class="fa-solid fa-address-card me-1 text-success"></i>
                                 Data User
                             </div>
                             <div class="card-body">
@@ -782,8 +782,8 @@ $level = $dt_user[2];
                                                     <td>$tipe</td>
                                                     <td>$status</td>
                                                     <td>
-                                                    <a href=index.php?p=user_edit&user=$user><button type=button class='btn btn-outline-success btn-sm'>Ubah</button></a>
-                                                    <button type=button class='btn btn-outline-danger btn-sm' data-bs-toggle=modal data-bs-target=#myModal data_user=$user>Hapus</button> 
+                                                    <a href=index.php?p=user_edit&user=$user><button type=button class='btn btn-outline-success btn-sm'><i class='fa-solid fa-pen-to-square'></i> Ubah</button></a>
+                                                    <button type=button class='btn btn-outline-danger btn-sm' data-bs-toggle=modal data-bs-target=#myModal data_user=$user><i class='fa-solid fa-trash'></i> Hapus</button> 
                                                     </td>
                                                 </tr>";
                                         }
@@ -796,7 +796,7 @@ $level = $dt_user[2];
                         </div>
                         <div class="card mb-4" id="data_tarif">
                             <div class="card-header">
-                                <i class="fa-solid fa-users me-2 text-success fa-fade"></i>
+                                <i class="fa-solid fa-address-book me-1 text-success"></i>
                                 Data Tarif
                             </div>
                             <div class="card-body">
@@ -825,8 +825,8 @@ $level = $dt_user[2];
                                                     <td>$tipe_tarif</td>
                                                     <td>$status</td>                                                    
                                                     <td>
-                                                    <a href=index.php?p=tarif_edit&id_tarif=$id_tarif><button type=button class='btn btn-outline-success btn-sm'>Ubah</button></a>
-                                                    <button type=button class='btn btn-outline-danger btn-sm' data-bs-toggle=modal data-bs-target=#myModal data_id_tarif=$id_tarif>Hapus</button> 
+                                                    <a href=index.php?p=tarif_edit&id_tarif=$id_tarif><button type=button class='btn btn-outline-success btn-sm'><i class='fa-solid fa-pen-to-square'></i> Ubah</button></a>
+                                                    <button type=button class='btn btn-outline-danger btn-sm' data-bs-toggle=modal data-bs-target=#myModal data_id_tarif=$id_tarif><i class='fa-solid fa-trash'></i> Hapus</button> 
                                                     </td>
                                             
                                                 </tr>";
@@ -840,7 +840,7 @@ $level = $dt_user[2];
                         </div>
                         <div class="card mb-4" id="data_meter">
                             <div class="card-header">
-                                <i class="fa-solid fa-rupiah-sign me-1 text-success fa-fade"></i>
+                                <i class="fa-solid fa-rupiah-sign me-1 text-success"></i>
                                 Data Meter Warga
                             </div>
                             <div class="card-body">
@@ -891,10 +891,9 @@ $level = $dt_user[2];
 
                                                     if($level_login =="admin" || $level_login =="bendahara") {
                                                         //berlaku untuk admin & bendahara
-                                
                                                         echo "<td>
-                                                    <a href=index.php?p=meter_edit&no=$no><button type=button class='btn btn-outline-success btn-sm'>Ubah</button></a>
-                                                    <button type=button class='btn btn-outline-danger btn-sm' data-bs-toggle=modal data-bs-target=#myModal data_no=$no>Hapus</button> 
+                                                    <a href=index.php?p=meter_edit&no=$no><button type=button class='btn btn-outline-success btn-sm'><i class='fa-solid fa-pen-to-square'></i> Ubah</button></a>
+                                                    <button type=button class='btn btn-outline-danger btn-sm' data-bs-toggle=modal data-bs-target=#myModal data_no=$no><i class='fa-solid fa-trash'></i> Hapus</button> 
                                                     </td>";
 
                                                     }
@@ -902,8 +901,8 @@ $level = $dt_user[2];
                                                     //berlaku untuk petugas
                                                     if ($selisih <= 30) {
                                                         echo "<td>
-                                                    <a href=index.php?p=meter_edit&no=$no><button type=button class='btn btn-outline-success btn-sm'>Ubah</button></a>
-                                                    <button type=button class='btn btn-outline-danger btn-sm' data-bs-toggle=modal data-bs-target=#myModal data_no=$no>Hapus</button> 
+                                                    <a href=index.php?p=meter_edit&no=$no><button type=button class='btn btn-outline-success btn-sm'><i class='fa-solid fa-pen-to-square'></i> Ubah</button></a>
+                                                    <button type=button class='btn btn-outline-danger btn-sm' data-bs-toggle=modal data-bs-target=#myModal data_no=$no><i class='fa-solid fa-trash'></i> Hapus</button> 
                                                     </td>";
                                                         
                                                     } else {
