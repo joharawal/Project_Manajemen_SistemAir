@@ -129,7 +129,7 @@ $level = $dt_user[2];
                     </div>
                     <div class="sb-sidenav-footer">
                         <div class="small"><i class="fa-regular fa-circle-user fa-flip text-light"></i> Logged in as : <?php echo $dt_user[2]?></div>
-                        <div class="small"><i class="fa-solid fa-map-pin text-light fa-flip  me-1"></i><?php echo $dt_user[0].' ('.$dt_user [3]. ')'; ?></div>
+                        <div class="small"><i class="fa-solid fa-person text-light fa-flip  me-1"></i><?php echo $dt_user[0].' ('.$dt_user [3]. ')'; ?></div>
                     </div>
                 </nav>
             </div>
@@ -891,7 +891,7 @@ $level = $dt_user[2];
                                             
                                                 echo " <tr> 
                                                 <td>$nama</td>
-                                                <td>$tgl ($waktu) <hr style='margin: 5px 0;'> ". date("Y-m-d") . " ($selisih hari)</td>
+                                                <td>$tgl ($waktu) <hr style='margin: 5px 0;'> ". date("d-M-Y") . " ($selisih hari)</td>
                                                 <td>$meter_awal</td>
                                                 <td>$meter_akhir</td>
                                                 <td>$pemakaian</td>
