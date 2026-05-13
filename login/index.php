@@ -852,8 +852,8 @@ $level = $dt_user[2];
                                             <th>Meter Awal (m³)</th>
                                             <th>Meter Akhir (m³)</th>
                                             <th>Pemakaian (m³)</th>
-                                            <th>Tagihan (Rp)</th>
-                                            <th>Status</th>
+                                            <!-- <th>Tagihan (Rp)</th>
+                                            <th>Status</th> -->
                                             <th>Editing</th>
                                         </tr>
                                     </thead>
@@ -870,8 +870,8 @@ $level = $dt_user[2];
                                             $pemakaian=$d[4];
                                             $tgl=$air->tgl_balik($d[5]);
                                             $waktu=$d[6];
-                                            $tagihan=$d[7];
-                                            $status=$d[8];
+                                            // $tagihan=$d[7];
+                                            // $status=$d[8];
                                             $level_login=$dt_user[2];
 
                                             $tgl_tabel = date_create ($d[5]);
@@ -880,14 +880,14 @@ $level = $dt_user[2];
                                             $selisih = $diff->days;
                             
                                             
-                                            echo " <tr>
+                                            echo " <tr> 
                                                     <td>$nama</td>
                                                     <td>$tgl $waktu | ". date("Y-m-d") . " $selisih hari</td>
                                                     <td>$meter_awal</td>
                                                     <td>$meter_akhir</td>
-                                                    <td>$pemakaian</td>
-                                                    <td>$tagihan</td>
-                                                    <td>$status</td>";
+                                                    <td>$pemakaian</td>";
+                                                    // <td>$tagihan</td>
+                                                    // <td>$status</td>";
 
                                                     if($level_login =="admin" || $level_login =="bendahara") {
                                                         //berlaku untuk admin & bendahara
