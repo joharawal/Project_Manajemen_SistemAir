@@ -852,8 +852,7 @@ $level = $dt_user[2];
                                             <th>Meter Awal (m³)</th>
                                             <th>Meter Akhir (m³)</th>
                                             <th>Pemakaian (m³)</th>
-                                            <!-- <th>Tagihan (Rp)</th>
-                                            <th>Status</th> -->
+                                            <th>Status</th>
                                             <th>Editing</th>
                                         </tr>
                                     </thead>
@@ -871,7 +870,7 @@ $level = $dt_user[2];
                                             $tgl=$air->tgl_balik($d[5]);
                                             $waktu=$d[6];
                                             // $tagihan=$d[7];
-                                            // $status=$d[8];
+                                            $status=$d[8];
                                             $level_login=$dt_user[2];
 
                                             $tgl_tabel = date_create ($d[5]);
@@ -880,14 +879,22 @@ $level = $dt_user[2];
                                             $selisih = $diff->days;
                             
                                             
+                                            // Tampilkan badge berdasarkan status
+                                            if($status == "Belum Lunas") {
+                                                $badge = "<span class='badge bg-danger'>Belum Lunas</span>";
+                                            } else {
+                                                $badge = "<span class='badge bg-success'>Lunas</span>";
+                                            }
+                                            
                                             echo " <tr> 
                                                     <td>$nama</td>
                                                     <td>$tgl $waktu | ". date("Y-m-d") . " $selisih hari</td>
                                                     <td>$meter_awal</td>
                                                     <td>$meter_akhir</td>
-                                                    <td>$pemakaian</td>";
+                                                    <td>$pemakaian</td>
+                                                    <td>$badge</td>";
                                                     // <td>$tagihan</td>
-                                                    // <td>$status</td>";
+                                                    
 
                                                     if($level_login =="admin" || $level_login =="bendahara") {
                                                         //berlaku untuk admin & bendahara
@@ -951,6 +958,13 @@ $level = $dt_user[2];
                                             $dp_tagihan=$dp[7];
                                             $dp_status=$dp[8];
 
+                                            // Tampilkan badge berdasarkan status
+                                            if($dp_status == "Belum Lunas") {
+                                                $dp_badge = "<span class='badge bg-danger'>Belum Lunas</span>";
+                                            } else {
+                                                $dp_badge = "<span class='badge bg-success'>Lunas</span>";
+                                            }
+
                                             echo " <tr>
                                                     <td>$dp_nama</td>
                                                     <td>$dp_tgl $dp_waktu</td>
@@ -958,7 +972,7 @@ $level = $dt_user[2];
                                                     <td>$dp_meter_akhir</td>
                                                     <td>$dp_pemakaian</td>
                                                     <td>$dp_tagihan</td>
-                                                    <td>$dp_status</td>
+                                                    <td>$dp_badge</td>
                                                 </tr>";
                                         }
                                         ?>
