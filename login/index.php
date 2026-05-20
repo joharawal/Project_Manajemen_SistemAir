@@ -27,6 +27,28 @@ $level = $dt_user[2];
         <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
         <script src="../js/air.js"></script>
+        <style>
+            #meter_table thead th {
+                white-space: nowrap;
+                padding: 12px 8px !important;
+            }
+            #meter_table tbody td {
+                vertical-align: middle;
+            }
+            #meter_table .btn {
+                margin: 0 2px;
+            }
+            .badge-small {
+                font-size: 0.75rem !important;
+                padding: 0.35rem 0.65rem !important;
+            }
+            #meter_table .btn-group-custom {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 8px;
+                align-items: center;
+            }
+        </style>
 
     <body class="sb-nav-fixed">
         <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
@@ -782,8 +804,8 @@ $level = $dt_user[2];
                                                     <td>$tipe</td>
                                                     <td>$status</td>
                                                     <td>
-                                                    <a href=index.php?p=user_edit&user=$user><button type=button class='btn btn-outline-success btn-sm'><i class='fa-solid fa-pen-to-square'></i> Ubah</button></a>
-                                                    <button type=button class='btn btn-outline-danger btn-sm' data-bs-toggle=modal data-bs-target=#myModal data_user=$user><i class='fa-solid fa-trash'></i> Hapus</button> 
+                                                    <a href=index.php?p=user_edit&user=$user><button type=button class='btn btn-outline-success btn-sm'><i class='fa-solid fa-pen-to-square'></i></button></a>
+                                                    <button type=button class='btn btn-outline-danger btn-sm' data-bs-toggle=modal data-bs-target=#myModal data_user=$user><i class='fa-solid fa-trash'></i></button> 
                                                     </td>
                                                 </tr>";
                                         }
@@ -850,11 +872,11 @@ $level = $dt_user[2];
                                             <th>Nama Warga</th>
                                             <th>Tipe</th>
                                             <th>Tanggal & Waktu</th>
-                                            <th>Meter Awal(m³)</th>
-                                            <th>Meter Akhir(m³)</th>
-                                            <th>Pemakaian(m³)</th>
+                                            <th>Meter Awal</th>
+                                            <th>Meter Akhir</th>
+                                            <th>Pemakaian</th>
                                             <?php if($dt_user[2] != "petugas") { ?>
-                                            <th>Tagihan(Rp)</th>
+                                            <th>Tagihan</th>
                                             <?php } ?>
                                             <th>Status</th>
                                             <th>Editing</th>
@@ -872,10 +894,7 @@ $level = $dt_user[2];
                                             $meter_awal=$d[2];
                                             $meter_akhir=$d[3];
                                             $pemakaian=$d[4];
-                                            // CARA PALING SINGKAT: Buat array 1 baris, langsung panggil index-nya
-                                            //$b = ['','Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
-                                            //$tgl = date('d-', strtotime($d[5])) . $b[date('n', strtotime($d[5]))] . date('-Y', strtotime($d[5]));
-                                            $tgl = $air->tgl_balik($d[5]);
+                                            $tgl = $air->tgl_balik_indo($d[5]);
                                             $waktu=$d[6];
                                             $tagihan=$d[7];
                                             $status=$d[8];
@@ -888,36 +907,46 @@ $level = $dt_user[2];
 
                                             // Tampilkan badge berdasarkan status
                                             if($status == "Belum Lunas") {
-                                                $badge = "<span class='badge bg-danger'>Belum Lunas</span>";
+                                                $badge = "<span class='badge bg-danger badge-small'><i class='fas fa-exclamation-triangle'></i> <strong>Belum Lunas</strong></span>";
                                             } else {
-                                                $badge = "<span class='badge bg-success'>Lunas</span>";
+                                                $badge = "<span class='badge bg-success badge-small'><i class='fas fa-check-circle'></i> <strong>Lunas</strong></span>";
                                             }
                                             
-                                                $tagihan_cell = ($level_login != "petugas") ? "<td>" . number_format($tagihan, 0, ',', '.') . "</td>" : "";
+                                                $tagihan_cell = ($level_login != "petugas") ? "<td>Rp. " . number_format($tagihan, 0, ',', '.') . "</td>" : "";
+                                                
+                                                $tgl_waktu_display = "<div style='line-height: 1.6;'>
+                                                    <div><i class='fas fa-calendar-alt' style='color: #007bff; margin-right: 5px;'></i><strong>$tgl</strong></div>
+                                                    <div style='margin-top: 5px;'><i class='fas fa-clock' style='color: #28a745; margin-right: 5px;'></i>$waktu</div>
+                                                    <div style='margin-top: 8px; padding-top: 5px; border-top: 1px solid #ddd;'><small style='color: #6c757d;'><i class='fas fa-hourglass-half' style='margin-right: 4px;'></i>$selisih hari lalu</small></div>
+                                                </div>";
                                                 
                                                 echo " <tr> 
                                                 <td>$nama</td>
                                                 <td>$tipe</td>
-                                                <td>$tgl ($waktu) | ($selisih hari)</td>
-                                                <td>$meter_awal</td>
-                                                <td>$meter_akhir</td>
-                                                <td>$pemakaian</td>
+                                                <td>$tgl_waktu_display</td>
+                                                <td>$meter_awal (m<sup>3</sup>)</td>
+                                                <td>$meter_akhir (m<sup>3</sup>)</td>
+                                                <td>$pemakaian (m<sup>3</sup>)</td>
                                                 $tagihan_cell
                                                 <td>$badge</td>";
 
                                                 if($level_login =="admin" || $level_login =="bendahara") {
                                                     //berlaku untuk admin & bendahara
                                                     echo "<td>
+                                                <div class='btn-group-custom'>
                                                 <a href=index.php?p=meter_edit&no=$no><button type=button class='btn btn-outline-success btn-sm'><i class='fa-solid fa-pen-to-square'></i>Ubah</button></a>
-                                                <button type=button class='btn btn-outline-danger btn-sm' data-bs-toggle=modal data-bs-target=#myModal data_no=$no><i class='fa-solid fa-trash'></i> Hapus</button> 
+                                                <button type=button class='btn btn-outline-danger btn-sm' data-bs-toggle=modal data-bs-target=#myModal data_no=$no><i class='fa-solid fa-trash'></i> Hapus</button>
+                                                </div>
                                                 </td>";
 
                                                 } else{
                                                 //berlaku untuk petugas
                                                 if ($selisih <= 30) {
                                                     echo "<td>
+                                                <div class='btn-group-custom'>
                                                 <a href=index.php?p=meter_edit&no=$no><button type=button class='btn btn-outline-success btn-sm'><i class='fa-solid fa-pen-to-square'></i>Ubah</button></a>
-                                                <button type=button class='btn btn-outline-danger btn-sm' data-bs-toggle=modal data-bs-target=#myModal data_no=$no><i class='fa-solid fa-trash'></i>Hapus</button> 
+                                                <button type=button class='btn btn-outline-danger btn-sm' data-bs-toggle=modal data-bs-target=#myModal data_no=$no><i class='fa-solid fa-trash'></i>Hapus</button>
+                                                </div>
                                                 </td>";
                                                     
                                                 } else {
@@ -943,10 +972,10 @@ $level = $dt_user[2];
                                             <th>Nama Warga</th>
                                             <th>Tipe</th>
                                             <th>Tanggal & Waktu</th>
-                                            <th>Meter Awal (m³)</th>
-                                            <th>Meter Akhir (m³)</th>
-                                            <th>Pemakaian (m³)</th>
-                                            <th>Tagihan (Rp)</th>
+                                            <th>Meter Awal</th>
+                                            <th>Meter Akhir</th>
+                                            <th>Pemakaian</th>
+                                            <th>Tagihan</th>
                                             <th>Status</th>
                                         </tr>
                                     </thead>
@@ -961,27 +990,28 @@ $level = $dt_user[2];
                                             $dp_meter_awal=$dp[2];
                                             $dp_meter_akhir=$dp[3];
                                             $dp_pemakaian=$dp[4];
-                                            $dp_tgl=$air->tgl_balik($dp[5]);
+                                            $dp_tgl=$air->tgl_balik_indo($dp[5]);
                                             $dp_waktu=$dp[6];
                                             $dp_tagihan=$dp[7];
                                             $dp_status=$dp[8];
 
                                             // Tampilkan badge berdasarkan status
                                             if($dp_status == "Belum Lunas") {
-                                                $dp_badge = "<span class='badge bg-danger'>Belum Lunas</span>";
+                                                $badge = "<span class='badge bg-danger badge-small'><i class='fas fa-exclamation-triangle'></i> <strong>Belum Lunas</strong></span>";
                                             } else {
-                                                $dp_badge = "<span class='badge bg-success'>Lunas</span>";
+                                                $badge = "<span class='badge bg-success badge-small'><i class='fas fa-check-circle'></i> <strong>Lunas</strong></span>";
                                             }
+                                            
 
                                             echo " <tr>
                                                     <td>$dp_nama</td>
                                                     <td>$dp_tipe</td>
                                                     <td>$dp_tgl $dp_waktu</td>
-                                                    <td>$dp_meter_awal</td>
-                                                    <td>$dp_meter_akhir</td>
-                                                    <td>$dp_pemakaian</td>
-                                                    <td>$dp_tagihan</td>
-                                                    <td>$dp_badge</td>
+                                                    <td>$dp_meter_awal (m<sup>3</sup>)</td>
+                                                    <td>$dp_meter_akhir (m<sup>3</sup>)</td>
+                                                    <td>$dp_pemakaian (m<sup>3</sup>)</td>
+                                                    <td>Rp. " . number_format($dp_tagihan, 0, ',', '.') . "</td>
+                                                    <td>$badge</td>
                                                 </tr>";
                                         }
                                         ?>

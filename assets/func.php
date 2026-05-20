@@ -60,9 +60,16 @@ class klas_air {
         return $d[0] ?? 0;
     }
 
-    public function tgl_balik($tgl) {
+    // public function tgl_balik($tgl) {
+    //     $e = explode("-", $tgl);
+    //     $tgl_baru = "$e[2]-$e[1]-$e[0]";
+    //     return $tgl_baru;
+    // }
+
+    public function tgl_balik_indo ($tgl) {
         $e = explode("-", $tgl);
-        $tgl_baru = "$e[2]-$e[1]-$e[0]";
+        $bulan = ["01" => "Januari", "02" => "Februari", "03" => "Maret", "04" => "April", "05" => "Mei", "06" => "Juni", "07" => "Juli", "08" => "Agustus", "09" => "September", "10" => "Oktober", "11" => "November", "12" => "Desember"];
+        $tgl_baru = "$e[2] {$bulan[$e[1]]} $e[0]";
         return $tgl_baru;
     }
 
