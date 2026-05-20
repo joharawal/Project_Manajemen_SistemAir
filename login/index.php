@@ -106,10 +106,10 @@ $level = $dt_user[2];
                             } 
                             elseif($level=="bendahara") {
                             ?>
-                                <a class="nav-link" href="index.php?p=pembayaran_warga">
+                                <!-- <a class="nav-link" href="index.php?p=pembayaran_warga">
                                 <div class="sb-nav-link-icon"><i class="fa-solid fa-wallet text-warning fa-fade"></i></div>
                                 Pembayaran Warga
-                            </a>
+                            </a> -->
                                 <a class="nav-link" href="index.php?p=catat_meter">
                                 <div class="sb-nav-link-icon"><i class="fa-solid fa-house-flood-water text-danger fa-fade"></i></div>
                                 Pemakaian Warga
