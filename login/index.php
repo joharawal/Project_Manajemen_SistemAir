@@ -97,9 +97,9 @@ $level = $dt_user[2];
                                 <div class="sb-nav-link-icon"><i class="fa-solid fa-house-flood-water text-danger fa-fade"></i></div>
                                 Pemakaian Warga
                             </a>
-                                <a class="nav-link" href="index.php?p=pembayaran_warga">
+                                <a class="nav-link" href="index.php?p=tarif">
                                 <div class="sb-nav-link-icon"><i class="fa-solid fa-wallet fa-fade text-warning"></i></div>
-                                Pembayaran Warga
+                                Manajemen Tarif Air
                             </a>
                              
                             <?php 

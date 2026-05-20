@@ -106,8 +106,8 @@ $(document).ready(function () {
       $(".modal-footer form .modal-hidden").remove();
       $(".modal-footer form").append(
         "<input type=hidden class='modal-hidden' name=id_tarif value=" +
-          id_tarif +
-          ">",
+        id_tarif +
+        ">",
       );
     });
   } else if (e[1] == "catat_meter" || e[1] == "meter_edit&no") {
