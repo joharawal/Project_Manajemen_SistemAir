@@ -429,11 +429,40 @@ $level = $dt_user[2];
                                 }
                             } elseif ($t == "meter_add") {
                                 $username=$_POST['username'];
-                                $meter_awal=$_POST['meter_awal'];
                                 $meter_akhir=$_POST['meter_akhir'];
                                 $id_tarif=$air->user_to_idtarif($username);
                                 $tarif=$air->idtarif_to_tarif($id_tarif);
-                           
+
+                                        // Ambil data meter terakhir warga ini
+                                        $q_last = mysqli_query($koneksi, "SELECT meter_akhir, tgl FROM pemakaian WHERE username='$username' ORDER BY tgl DESC, no DESC LIMIT 1");
+                                        $d_last = mysqli_fetch_row($q_last);
+
+                                        if ($d_last) {
+                                            // Ada data sebelumnya: meter_awal = meter_akhir terakhir
+                                            $meter_awal = $d_last[0];
+                                            $tgl_terakhir = $d_last[1]; // format: YYYY-MM-DD
+
+                                            // Cek apakah sudah melewati 1 bulan (30 hari)
+                                            $tgl_terakhir_obj = date_create($tgl_terakhir);
+                                            $tgl_sekarang_obj = date_create();
+                                            $diff_add = date_diff($tgl_terakhir_obj, $tgl_sekarang_obj);
+                                            $selisih_hari_add = $diff_add->days;
+
+                                            if ($level == "petugas" && $selisih_hari_add < 30) {
+                                                $nama_bulan_terakhir = date('F Y', strtotime($tgl_terakhir));
+                                                echo "<div class='alert alert-warning alert-dismissible fade show' id=alert-meter>
+                                                        <button type=button class=btn-close data-bs-dismiss=alert></button>
+                                                        <strong>Belum 1 Bulan!</strong> Data meter warga ini sudah diinput pada $tgl_terakhir.
+                                                </div>";
+                                                $meter_awal = null; // reset agar tidak lanjut insert
+                                                $meter_akhir = null;
+                                            }
+                                        } else {
+                                            // Belum ada data sebelumnya: meter_awal dari input form
+                                            $meter_awal = $_POST['meter_awal'];
+                                        }
+
+                                        if (!is_null($meter_awal) && !is_null($meter_akhir)) {
                                         //cek meter awal harus lebih kecil dari meter akhir
                                         $pemakaian=$meter_akhir-$meter_awal;
                                         $tagihan = $tarif * $pemakaian;
@@ -458,6 +487,7 @@ $level = $dt_user[2];
                                                         <strong>Data</strong> Gagal Disimpan
                                                 </div>";
                                             }
+                                        }
                                         }
                             } elseif ($t == "meter_edit") {
                                 $no=$_POST['no'];
@@ -549,6 +579,14 @@ $level = $dt_user[2];
                                 $id_tarif=$d[7];
                                 $tarif=$air->idtarif_to_tarif($id_tarif);
                                 $status_meter=$d[9];
+                            }
+                          } else if ($p=="catat_meter" && $level=="petugas") {
+                            // Untuk petugas saat menambah meter baru:
+                            // Siapkan data meter_akhir terakhir per warga untuk diisi otomatis via JS
+                            $meter_awal_per_warga = array();
+                            $q_all_last = mysqli_query($koneksi, "SELECT username, meter_akhir FROM pemakaian WHERE (username, tgl) IN (SELECT username, MAX(tgl) FROM pemakaian GROUP BY username)");
+                            while ($d_aw = mysqli_fetch_row($q_all_last)) {
+                                $meter_awal_per_warga[$d_aw[0]] = $d_aw[1];
                             }
                           }
                         }                             
@@ -688,16 +726,24 @@ $level = $dt_user[2];
                                 <?php
                                 if ($e[1] == "meter_edit&no") $dis='disabled';
                                 else $dis="";
+                                // Siapkan data meter_awal per warga untuk petugas (mode tambah baru)
+                                $is_petugas_tambah = ($level == "petugas" && ($p ?? '') == 'catat_meter');
+                                if ($is_petugas_tambah && !empty($meter_awal_per_warga)) {
+                                    $meter_awal_json = json_encode($meter_awal_per_warga);
+                                } else {
+                                    $meter_awal_json = '{}';
+                                }
                                 ?>
+
                                 <form method="post" class="need-validation" id="meter_form">
                                     <div class="mb-3">
                                     <label for="username" class="form-label">Nama Warga :</label>
-                                    <select class="form-select" name="username" required <?php echo $dis; ?>>
+                                    <select class="form-select" name="username" id="select_warga" required <?php echo $dis; ?>>
                                         <option value="">Nama Warga</option>
                                         <?php
                                         $qw=mysqli_query($koneksi,"SELECT username, nama FROM user WHERE level='warga'");
                                         while($dw=mysqli_fetch_row($qw)) {
-                                            if($username==$dw[0]) $sel="SELECTED";
+                                            if(($username ?? '')==$dw[0]) $sel="SELECTED";
                                             else $sel="";
                                             echo "<option value='$dw[0]' $sel>$dw[1]</option>";
                                         }
@@ -731,6 +777,32 @@ $level = $dt_user[2];
                                     <button type="submit" class="btn btn-primary" name="tombol" value="<?php echo (($p ?? '')=='meter_edit') ? 'meter_edit' : 'meter_add'; ?>"><i class="fa-solid fa-floppy-disk"></i> Simpan</button>
                                     </div>
                                 </form>
+                                <?php if ($is_petugas_tambah): ?>
+                                <!-- Script: isi meter_awal otomatis berdasarkan warga yang dipilih -->
+                                <script>
+                                var meterAwalData = <?php echo $meter_awal_json; ?>;
+                                document.getElementById('select_warga').addEventListener('change', function() {
+                                    var selectedUser = this.value;
+                                    var inputMeterAwal = document.getElementById('meter_awal');
+                                    if (selectedUser && meterAwalData[selectedUser] !== undefined) {
+                                        // Warga sudah punya data: isi otomatis & jadikan readonly
+                                        inputMeterAwal.value = meterAwalData[selectedUser];
+                                        inputMeterAwal.setAttribute('readonly', 'readonly');
+                                        inputMeterAwal.placeholder = 'Enter Meter Awal';
+                                    } else {
+                                        // Warga belum punya data: kosongkan & bisa diisi manual
+                                        inputMeterAwal.value = '';
+                                        inputMeterAwal.removeAttribute('readonly');
+                                        inputMeterAwal.placeholder = 'Enter Meter Awal';
+                                    }
+                                });
+                                // Trigger saat load jika warga sudah terpilih
+                                window.addEventListener('load', function() {
+                                    var sel = document.getElementById('select_warga');
+                                    if (sel && sel.value) sel.dispatchEvent(new Event('change'));
+                                });
+                                </script>
+                                <?php endif; ?>
                             </div>
                         </div>
                         <!-- The Modal -->
