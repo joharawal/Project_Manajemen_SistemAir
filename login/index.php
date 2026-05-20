@@ -690,7 +690,7 @@ $level = $dt_user[2];
                                     <label for="meter_akhir" class="form-label">Meter Akhir (m<sup>3</sup>) :</label>
                                     <input type="text" class="form-control" id="meter_akhir" placeholder="Enter Meter Akhir" name="meter_akhir" value="<?php echo $meter_akhir ?? ''; ?>" required>
                                 </div>
-                                <?php if(($p ?? '') == 'meter_edit') { ?>
+                                <?php if(($p ?? '') == 'meter_edit' || ($p ?? '') == 'catat_meter'){ ?>
                                 <div class="mb-3">
                                     <label for="status_meter" class="form-label">Status :</label>
                                     <select class="form-select" name="status_meter">
@@ -848,10 +848,14 @@ $level = $dt_user[2];
                                     <thead>
                                         <tr>
                                             <th>Nama Warga</th>
+                                            <th>Tipe</th>
                                             <th>Tanggal & Waktu</th>
-                                            <th>Meter Awal (m³)</th>
-                                            <th>Meter Akhir (m³)</th>
-                                            <th>Pemakaian (m³)</th>
+                                            <th>Meter Awal(m³)</th>
+                                            <th>Meter Akhir(m³)</th>
+                                            <th>Pemakaian(m³)</th>
+                                            <?php if($dt_user[2] != "petugas") { ?>
+                                            <th>Tagihan(Rp)</th>
+                                            <?php } ?>
                                             <th>Status</th>
                                             <th>Editing</th>
                                         </tr>
@@ -864,16 +868,16 @@ $level = $dt_user[2];
                                             $no=$d[0];
                                             $dt_user2=$air->dt_user($d[1]); 
                                             $nama=$dt_user2 ? $dt_user2[0] : $d[1];
+                                            $tipe=$dt_user2 ? $dt_user2[1] : $d[1];
                                             $meter_awal=$d[2];
                                             $meter_akhir=$d[3];
                                             $pemakaian=$d[4];
-                                            
                                             // CARA PALING SINGKAT: Buat array 1 baris, langsung panggil index-nya
-                                            $b = ['','Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
-                                            $tgl = date('d-', strtotime($d[5])) . $b[date('n', strtotime($d[5]))] . date('-Y', strtotime($d[5]));
-                                            
+                                            //$b = ['','Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+                                            //$tgl = date('d-', strtotime($d[5])) . $b[date('n', strtotime($d[5]))] . date('-Y', strtotime($d[5]));
+                                            $tgl = $air->tgl_balik($d[5]);
                                             $waktu=$d[6];
-                                            // $tagihan=$d[7];
+                                            $tagihan=$d[7];
                                             $status=$d[8];
                                             $level_login=$dt_user[2];
 
@@ -889,15 +893,17 @@ $level = $dt_user[2];
                                                 $badge = "<span class='badge bg-success'>Lunas</span>";
                                             }
                                             
+                                                $tagihan_cell = ($level_login != "petugas") ? "<td>" . number_format($tagihan, 0, ',', '.') . "</td>" : "";
+                                                
                                                 echo " <tr> 
                                                 <td>$nama</td>
-                                                <td>$tgl ($waktu) <hr style='margin: 5px 0;'> ". date("d-M-Y") . " ($selisih hari)</td>
+                                                <td>$tipe</td>
+                                                <td>$tgl ($waktu) | ($selisih hari)</td>
                                                 <td>$meter_awal</td>
                                                 <td>$meter_akhir</td>
                                                 <td>$pemakaian</td>
+                                                $tagihan_cell
                                                 <td>$badge</td>";
-                                                // <td>$tagihan</td>
-                                                
 
                                                 if($level_login =="admin" || $level_login =="bendahara") {
                                                     //berlaku untuk admin & bendahara
@@ -906,13 +912,12 @@ $level = $dt_user[2];
                                                 <button type=button class='btn btn-outline-danger btn-sm' data-bs-toggle=modal data-bs-target=#myModal data_no=$no><i class='fa-solid fa-trash'></i> Hapus</button> 
                                                 </td>";
 
-                                                }
-                                                else{
+                                                } else{
                                                 //berlaku untuk petugas
                                                 if ($selisih <= 30) {
                                                     echo "<td>
-                                                <a href=index.php?p=meter_edit&no=$no><button type=button class='btn btn-outline-success btn-sm'><i class='fa-solid fa-pen-to-square'></i> Ubah</button></a>
-                                                <button type=button class='btn btn-outline-danger btn-sm' data-bs-toggle=modal data-bs-target=#myModal data_no=$no><i class='fa-solid fa-trash'></i> Hapus</button> 
+                                                <a href=index.php?p=meter_edit&no=$no><button type=button class='btn btn-outline-success btn-sm'><i class='fa-solid fa-pen-to-square'></i>Ubah</button></a>
+                                                <button type=button class='btn btn-outline-danger btn-sm' data-bs-toggle=modal data-bs-target=#myModal data_no=$no><i class='fa-solid fa-trash'></i>Hapus</button> 
                                                 </td>";
                                                     
                                                 } else {
@@ -936,6 +941,7 @@ $level = $dt_user[2];
                                     <thead>
                                         <tr>
                                             <th>Nama Warga</th>
+                                            <th>Tipe</th>
                                             <th>Tanggal & Waktu</th>
                                             <th>Meter Awal (m³)</th>
                                             <th>Meter Akhir (m³)</th>
@@ -951,6 +957,7 @@ $level = $dt_user[2];
                                         while($dp=mysqli_fetch_row($q_pemakaian)) {
                                             $dp_dt_user=$air->dt_user($dp[1]); 
                                             $dp_nama=$dp_dt_user ? $dp_dt_user[0] : $dp[1];
+                                            $dp_tipe=$dp_dt_user ? $dp_dt_user[1] : $dp[1];
                                             $dp_meter_awal=$dp[2];
                                             $dp_meter_akhir=$dp[3];
                                             $dp_pemakaian=$dp[4];
@@ -968,6 +975,7 @@ $level = $dt_user[2];
 
                                             echo " <tr>
                                                     <td>$dp_nama</td>
+                                                    <td>$dp_tipe</td>
                                                     <td>$dp_tgl $dp_waktu</td>
                                                     <td>$dp_meter_awal</td>
                                                     <td>$dp_meter_akhir</td>
