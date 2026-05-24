@@ -45,7 +45,7 @@ $level = $dt_user[2];
             #meter_table .btn-group-custom {
                 display: flex;
                 flex-wrap: wrap;
-                gap: 8px;
+                gap: 3px;
                 align-items: center;
             }
         </style>
@@ -1007,7 +1007,7 @@ $level = $dt_user[2];
                                                     echo "<td>
                                                 <div class='btn-group-custom'>
                                                 <a href=index.php?p=meter_edit&no=$no><button type=button class='btn btn-outline-success btn-sm'><i class='fa-solid fa-pen-to-square'></i>Ubah</button></a>
-                                                <button type=button class='btn btn-outline-danger btn-sm' data-bs-toggle=modal data-bs-target=#myModal data_no=$no><i class='fa-solid fa-trash'></i> Hapus</button>
+                                                <button type=button class='btn btn-outline-danger btn-sm' data-bs-toggle=modal data-bs-target=#myModal data_no=$no><i class='fa-solid fa-trash'></i>Hapus</button>
                                                 </div>
                                                 </td>";
 
