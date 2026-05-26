@@ -291,19 +291,19 @@ $level = $dt_user[2];
                                 if (empty($qj)) {
                                         mysqli_query($koneksi,"INSERT INTO user (username, password, level, tipe, status, nama, alamat, kota, tlp) VALUES ('$user','$pass','$level','$tipe','$status',\"$nama\",'$alamat','$kota','$tlp')");
                                         if (mysqli_affected_rows($koneksi) > 0) {
-                                            echo "<div class='alert alert-success alert-dismissible fade show'>
+                                            echo "<div class='alert alert-success alert-dismissible fade show' id=alert-user>
                                                     <button type=button class=btn-close data-bs-dismiss=alert></button>
                                                     <strong>Data</strong> Berhasil Disimpan
                                             </div>";
                                         }
                                         else {
-                                            echo "<div class='alert alert-danger alert-dismissible fade show'>
+                                            echo "<div class='alert alert-danger alert-dismissible fade show' id=alert-user>
                                                     <button type=button class=btn-close data-bs-dismiss=alert></button>
                                                     <strong>Data</strong> Gagal Disimpan
                                             </div>";
                                         }
                                 }else { //username sudah ada
-                                    echo "<div class='alert alert-danger alert-dismissible fade show'>
+                                    echo "<div class='alert alert-danger alert-dismissible fade show' id=alert-user>
                                             <button type=button class=btn-close data-bs-dismiss=alert></button>
                                             <strong>Username $user</strong> Sudah Ada
                                     </div>";
@@ -335,13 +335,13 @@ $level = $dt_user[2];
                                     mysqli_query($koneksi,"UPDATE user SET password='$pass2', nama= \"$nama\", alamat='$alamat', kota='$kota', tlp='$tlp', level='$level', tipe='$tipe', status='$status' WHERE username='$user'");
                                 }
                                         if (mysqli_affected_rows($koneksi) > 0) {
-                                            echo "<div class='alert alert-success alert-dismissible fade show'>
+                                            echo "<div class='alert alert-success alert-dismissible fade show' id=alert-user>
                                                     <button type=button class=btn-close data-bs-dismiss=alert></button>
                                                     <strong>Data</strong> Berhasil Diupdate
                                             </div>";
                                         }
                                         else {
-                                            echo "<div class='alert alert-primary alert-dismissible fade show'>
+                                            echo "<div class='alert alert-primary alert-dismissible fade show' id=alert-user>
                                                     <button type=button class=btn-close data-bs-dismiss=alert></button>
                                                     <strong>Data</strong> Tidak Ada Perubahan
                                             </div>";
@@ -351,14 +351,14 @@ $level = $dt_user[2];
                                 $user=$_POST['user'];
                                 mysqli_query($koneksi,"DELETE FROM user WHERE username='$user'");
                                 if (mysqli_affected_rows($koneksi) > 0) {
-                                    echo "<div class='alert alert-success alert-dismissible fade show'>
+                                    echo "<div class='alert alert-success alert-dismissible fade show' id=alert-user>
                                             <button type=button class=btn-close data-bs-dismiss=alert></button>
                                             <strong>Data</strong> Berhasil Dihapus
                                     </div>";
                                     echo "<meta http-equiv='refresh' content='1.5;url=index.php?p=user'>";
                                 }
                                 else {
-                                    echo "<div class='alert alert-danger alert-dismissible fade show'>
+                                    echo "<div class='alert alert-danger alert-dismissible fade show' id=alert-user>
                                             <button type=button class=btn-close data-bs-dismiss=alert></button>
                                             <strong>Data</strong> Gagal Dihapus
                                     </div>";
@@ -448,7 +448,7 @@ $level = $dt_user[2];
                                             $diff_add = date_diff($tgl_terakhir_obj, $tgl_sekarang_obj);
                                             $selisih_hari_add = $diff_add->days;
 
-                                            if ($level == "petugas" && $selisih_hari_add < 30) {
+                                            if ($level == "petugas" || $level == "admin" && $selisih_hari_add < 30) {
                                                 $nama_bulan_terakhir = date('F Y', strtotime($tgl_terakhir));
                                                 echo "<div class='alert alert-warning alert-dismissible fade show' id=alert-meter>
                                                         <button type=button class=btn-close data-bs-dismiss=alert></button>

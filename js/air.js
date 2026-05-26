@@ -40,6 +40,16 @@ $(document).ready(function () {
       $("#data_user").hide();
     });
 
+    if ($("alert-user").hasClass("alert-danger")) {
+      // entry meter gagal
+      $("#form_user").show();
+      $("#data_user").hide();
+    } else if ($("alert-user").hasClass("alert-success")) {
+      // entry meter berhasil
+      $("#form_user").hide();
+      $("#data_user").show();
+    }
+
     //konfirmasi hapus data user dengan modal
     $("button[data-bs-toggle='modal'][data_user]").click(function () {
       console.log("Tombol Hapus Di Klik");
@@ -106,8 +116,8 @@ $(document).ready(function () {
       $(".modal-footer form .modal-hidden").remove();
       $(".modal-footer form").append(
         "<input type=hidden class='modal-hidden' name=id_tarif value=" +
-        id_tarif +
-        ">",
+          id_tarif +
+          ">",
       );
     });
   } else if (e[1] == "catat_meter" || e[1] == "meter_edit&no") {
