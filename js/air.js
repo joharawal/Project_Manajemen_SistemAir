@@ -30,7 +30,7 @@ $(document).ready(function () {
 
     //menambhakan tombol add user
     $(".datatable-dropdown").append(
-      "<button type='button' class='btn btn-outline-success float-start me-2'><i class='fa-solid fa-user-plus fa-fade'></i> User</button>",
+      "<button type='button' class='btn btn-outline-primary float-start me-2'><i class='fa-solid fa-user-plus fa-fade'></i> User</button>",
     );
 
     //menambahkan klik add user
@@ -166,7 +166,7 @@ $(document).ready(function () {
     var userLevel = $("#user_level").val();
     if (userLevel != "bendahara") {
       $(".datatable-dropdown").append(
-        "<button type='button' class='btn btn-outline-success float-start me-2'><i class='fa-solid fa-square-plus fa-fade me-1'></i> Catat Meter</button>",
+        "<button type='button' class='btn btn-outline-danger float-start me-2'><i class='fa-solid fa-square-plus fa-fade me-1'></i> Catat Meter</button>",
       );
 
       //menambahkan klik add meter
@@ -238,7 +238,7 @@ $(document).ready(function () {
             $("#val_lunas").text(d.warga_lunas);
             $("#val_belum_lunas").text(d.warga_belum_lunas);
           } else if (userLevel == 'warga') {
-            $("#val_waktu_pencatatan").html(d.waktu_pencatatan);
+            $("#val_waktu_pencatatan").text(d.waktu_pencatatan);
             $("#val_pemakaian_warga").text(d.pemakaian);
             $("#val_tagihan_warga").text(d.tagihan);
             $("#val_status_warga").text(d.status);

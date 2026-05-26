@@ -90,7 +90,7 @@ $level = $dt_user[2];
                     <div class="nav">
                         <div class="sb-sidenav-menu-heading">Core</div>
                         <a class="nav-link" href="index.php">
-                            <div class="sb-nav-link-icon"><i class="fa-solid fa-house-chimney fa-fade text-success"></i></div>
+                            <div class="sb-nav-link-icon"><i class="fa-solid fa-house-chimney fa-fade text-warning"></i></div>
                             Dashboard
                         </a>
                         <?php
@@ -105,7 +105,7 @@ $level = $dt_user[2];
                                 Pemakaian Warga
                             </a>
                             <a class="nav-link" href="index.php?p=tarif">
-                                <div class="sb-nav-link-icon"><i class="fa-solid fa-wallet fa-fade text-warning"></i></div>
+                                <div class="sb-nav-link-icon"><i class="fa-solid fa-rupiah-sign me-1 text-success fa-fade"></i></div>
                                 Manajemen Tarif Air
                             </a>
 
@@ -121,7 +121,7 @@ $level = $dt_user[2];
                                 Pemakaian Warga
                             </a>
                             <a class="nav-link" href="index.php?p=tarif">
-                                <div class="sb-nav-link-icon"><i class="fa-solid fa-rupiah-sign me-1 text-primary fa-fade"></i></div>
+                                <div class="sb-nav-link-icon"><i class="fa-solid fa-rupiah-sign me-1 text-success fa-fade"></i></div>
                                 Manajemen Tarif Air
                             </a>
                             <!-- <a class="nav-link" href="index.php?p=tagihan_warga_bendahara">
@@ -144,7 +144,7 @@ $level = $dt_user[2];
                         } elseif ($level == "warga") {
                         ?>
                             <a class="nav-link" href="index.php?p=lihat_pemakaian_warga">
-                                <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt fa-spin text-success"></i></div>
+                                <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt fa-fade text-primary"></i></div>
                                 Lihat Pemakaian
                             </a>
 
@@ -933,9 +933,9 @@ $level = $dt_user[2];
                         </div>
                     </div>
                     <div class="card mb-4" id="data_user">
-                        <div class="card-header">
-                            <i class="fa-solid fa-address-card me-1 text-success"></i>
-                            Data User
+                        <div class="card-header bg-primary">
+                            <i class="fa-solid fa-fade fa-address-card me-1 text-light"></i>
+                            <i class="text-light fw-bold">Data User</i>
                         </div>
                         <div class="card-body">
                             <table id="datatablesSimple">
@@ -989,9 +989,9 @@ $level = $dt_user[2];
                         </div>
                     </div>
                     <div class="card mb-4" id="data_tarif">
-                        <div class="card-header">
-                            <i class="fa-solid fa-address-book me-1 text-success"></i>
-                            Data Tarif
+                        <div class="card-header bg-success">
+                            <i class="fa-solid fa-fade fa-address-book me-1 text-light"></i>
+                            <i class="text-light fw-bold">Data Tarif</i>
                         </div>
                         <div class="card-body">
                             <table id="tarif_table">
@@ -1033,9 +1033,9 @@ $level = $dt_user[2];
                         </div>
                     </div>
                     <div class="card mb-4" id="data_meter">
-                        <div class="card-header">
-                            <i class="fa-solid fa-rupiah-sign me-1 text-success"></i>
-                            Data Meter Warga
+                        <div class="card-header bg-danger">
+                            <i class="fa-solid fa-fade fa-house-flood-water me-1 text-light"></i>
+                            <i class="text-light fw-bold">Data Meter Warga</i>
                         </div>
                         <div class="card-body">
                             <table id="meter_table">
@@ -1131,9 +1131,9 @@ $level = $dt_user[2];
                         </div>
                     </div>
                     <div class="card mb-4" id="data_pemakaian">
-                        <div class="card-header">
-                            <i class="fa-solid fa-users me-2 text-success fa-fade"></i>
-                            Data Pemakaian & Tagihan Air
+                        <div class="card-header bg-primary">
+                            <i class="fa-solid fa-users me-2 text-light fa-fade"></i>
+                            <i class="text-light fw-bold">Data Pemakaian & Tagihan Air</i>
                         </div>
                         <div class="card-body">
                             <table id="pemakaian_table">
