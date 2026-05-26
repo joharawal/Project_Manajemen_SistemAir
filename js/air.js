@@ -7,13 +7,13 @@ $(document).ready(function () {
 
   if (e[1] == "user" || e[1] == "user_edit&user") {
     $(
-      "#sumary, #chart, #form_user, #form_tarif, #data_tarif, #form_meter, #data_meter, #data_pemakaian",
+      "#pilih_waktu, #sumary, #chart, #form_user, #form_tarif, #data_tarif, #form_meter, #data_meter, #data_pemakaian",
     ).hide();
     if (e[1] == "user") {
       //id summary dan chart disembunyikan
-      $("#sumary, #chart, #form_user").hide();
+      $("#pilih_waktu, #sumary, #chart, #form_user").hide();
     } else {
-      $("#sumary, #chart, #data_user").hide();
+      $("#pilih_waktu, #sumary, #chart, #data_user").hide();
       $("#form_user").show();
 
       //reset value tombol user_add jadi user_edit
@@ -65,7 +65,7 @@ $(document).ready(function () {
     });
   } else if (e[1] == "tarif" || e[1] == "tarif_edit&id_tarif") {
     $(
-      "#sumary, #chart, #form_user, #data_user, #form_meter, #data_meter, #data_pemakaian",
+      "#pilih_waktu, #sumary, #chart, #form_user, #data_user, #form_meter, #data_meter, #data_pemakaian",
     ).hide();
 
     if (e[1] == "tarif") {
@@ -73,7 +73,7 @@ $(document).ready(function () {
       $("#form_tarif").hide();
       $("#data_tarif").show();
     } else {
-      $("#sumary, #chart, #data_tarif").hide();
+      $("#pilih_waktu, #sumary, #chart, #data_tarif").hide();
       $("#form_tarif").show();
 
       //reset value tombol user_add jadi user_edit
@@ -116,20 +116,20 @@ $(document).ready(function () {
       $(".modal-footer form .modal-hidden").remove();
       $(".modal-footer form").append(
         "<input type=hidden class='modal-hidden' name=id_tarif value=" +
-          id_tarif +
-          ">",
+        id_tarif +
+        ">",
       );
     });
   } else if (e[1] == "catat_meter" || e[1] == "meter_edit&no") {
     $(
-      "#sumary, #chart, #form_user, #data_user, #form_tarif, #data_tarif, #data_pemakaian",
+      "#pilih_waktu, #sumary, #chart, #form_user, #data_user, #form_tarif, #data_tarif, #data_pemakaian",
     ).hide();
 
     if (e[1] == "catat_meter") {
       //id summary dan chart disembunyikan
       $("#form_meter").hide();
     } else {
-      $("#sumary, #chart, #data_meter").hide();
+      $("#pilih_waktu, #sumary, #chart, #data_meter").hide();
       $("#form_meter").show();
 
       //reset value tombol user_add jadi user_edit
@@ -192,7 +192,7 @@ $(document).ready(function () {
   } else if (e[1] == "lihat_pemakaian_warga") {
     //klik lihat pemakaian warga
     $(
-      "#sumary, #chart, #form_user, #data_user, #form_tarif, #data_tarif, #form_meter, #data_meter",
+      "#pilih_waktu, #sumary, #chart, #form_user, #data_user, #form_tarif, #data_tarif, #form_meter, #data_meter",
     ).hide();
     $("#data_pemakaian").show();
 
@@ -203,7 +203,7 @@ $(document).ready(function () {
   } else if (e[1] == "pembayaran_warga") {
     //klik pembayaran warga - tampilkan data meter dengan status pembayaran
     $(
-      "#sumary, #chart, #form_user, #data_user, #form_tarif, #data_tarif, #form_meter, #data_pemakaian",
+      "#pilih_waktu, #sumary, #chart, #form_user, #data_user, #form_tarif, #data_tarif, #form_meter, #data_pemakaian",
     ).hide();
     $("#data_meter").show();
 
@@ -214,9 +214,40 @@ $(document).ready(function () {
   } else {
     //klik dashboard
     //id summary dan chart disembunyikan
-    $("#sumary, #chart").show();
-    $(
-      "#form_user, #data_user, #form_tarif, #data_tarif, #data_meter, #form_meter, #data_pemakaian",
-    ).hide();
+    $("#pilih_waktu, #sumary, #chart").show();
+    $("#pilih_waktu select[name='pilih_waktu']").on("change", function () {
+      bln = $(this).val();
+      var userLevel = $("#user_level").val();
+      console.log("bulan yang dipilih: " + bln + ", level: " + userLevel);
+
+      $.ajax({
+        type: "post",
+        url: "../assets/ajax.php",
+        data: { p: "sumary", t: bln, level: userLevel },
+        dataType: "json"
+      })
+        .done(function (d) {
+          if (userLevel == 'admin' || userLevel == 'petugas') {
+            $("#val_pelanggan").text(d.jml_pelanggan);
+            $("#val_pemakaian").text(d.jml_pemakaian);
+            $("#val_tercatat").text(d.tercatat);
+            $("#val_belum_tercatat").text(d.belum_tercatat);
+          } else if (userLevel == 'bendahara') {
+            $("#val_pelanggan").text(d.jml_pelanggan);
+            $("#val_pemasukan").text(d.total_pemasukan);
+            $("#val_lunas").text(d.warga_lunas);
+            $("#val_belum_lunas").text(d.warga_belum_lunas);
+          } else if (userLevel == 'warga') {
+            $("#val_waktu_pencatatan").html(d.waktu_pencatatan);
+            $("#val_pemakaian_warga").text(d.pemakaian);
+            $("#val_tagihan_warga").text(d.tagihan);
+            $("#val_status_warga").text(d.status);
+          }
+        })
+        .fail(function () {
+          console.log("AJAX gagal")
+        })
+    })
+    $("#form_user, #data_user, #form_tarif, #data_tarif, #data_meter, #form_meter, #data_pemakaian",).hide();
   }
 });
