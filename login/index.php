@@ -1079,9 +1079,9 @@ $level = $dt_user[2];
 
                                         // Tampilkan badge berdasarkan status
                                         if ($status == "Belum Lunas") {
-                                            $badge = "<span class='badge bg-danger badge-small'><i class='fas fa-exclamation-triangle'></i> <strong>Belum Lunas</strong></span>";
+                                            $badge = "<span class='badge bg-danger badge-small d-block w-100'><i class='fas fa-exclamation-triangle'></i> <strong>Belum Lunas</strong></span>";
                                         } else {
-                                            $badge = "<span class='badge bg-success badge-small'><i class='fas fa-check-circle'></i> <strong>Lunas</strong></span>";
+                                            $badge = "<span class='badge bg-success badge-small d-block w-100'><i class='fas fa-check-circle'></i> <strong>Lunas</strong></span>";
                                         }
 
                                         $tagihan_cell = ($level_login != "petugas") ? "<td>Rp. " . number_format($tagihan, 0, ',', '.') . "</td>" : "";
@@ -1167,9 +1167,9 @@ $level = $dt_user[2];
 
                                         // Tampilkan badge berdasarkan status
                                         if ($dp_status == "Belum Lunas") {
-                                            $badge = "<span class='badge bg-danger badge-small'><i class='fas fa-exclamation-triangle'></i> <strong>Belum Lunas</strong></span>";
+                                            $badge = "<span class='badge bg-danger badge-small d-block w-100'><i class='fas fa-exclamation-triangle'></i> <strong>Belum Lunas</strong></span>";
                                         } else {
-                                            $badge = "<span class='badge bg-success badge-small'><i class='fas fa-check-circle'></i> <strong>Lunas</strong></span>";
+                                            $badge = "<span class='badge bg-success badge-small d-block w-100'><i class='fas fa-check-circle'></i> <strong>Lunas</strong></span>";
                                         }
 
 
@@ -1185,8 +1185,6 @@ $level = $dt_user[2];
                                                 </tr>";
                                     }
                                     ?>
-
-
                                 </tbody>
                             </table>
                         </div>
@@ -1216,5 +1214,4 @@ $level = $dt_user[2];
     <script src="../js/datatables-simple-demo.js"></script>
     </head>
 </body>
-
 </html>

@@ -238,7 +238,7 @@ $(document).ready(function () {
             $("#val_lunas").text(d.warga_lunas);
             $("#val_belum_lunas").text(d.warga_belum_lunas);
           } else if (userLevel == 'warga') {
-            $("#val_waktu_pencatatan").text(d.waktu_pencatatan);
+            $("#val_waktu_pencatatan").html(d.waktu_pencatatan);
             $("#val_pemakaian_warga").text(d.pemakaian);
             $("#val_tagihan_warga").text(d.tagihan);
             $("#val_status_warga").text(d.status);
