@@ -694,9 +694,9 @@ $level = $dt_user[2];
                     ?>
 
                     <div class="card mb-4" id="form_user">
-                        <div class="card-header">
-                            <i class="fa-solid fa-user-plus me-2 text-success fa-fade"></i>
-                            User
+                        <div class="card-header bg-primary">
+                            <i class="fa-solid fa-user-plus me-2 text-light fa-fade"></i>
+                            <i class="text-light fw-bold">User</i>
                         </div>
                         <div class="card-body">
                             <form method="post" class="need-validation" id="user_form">
@@ -766,14 +766,14 @@ $level = $dt_user[2];
                                         ?>
                                     </select>
                                 </div>
-                                <button type="submit" class="btn btn-primary" name="tombol" value="<?php echo (($p ?? '') == 'user_edit') ? 'user_edit' : 'user_add'; ?>"><i class="fa-solid fa-floppy-disk"></i> Simpan</button>
+                                <button type="submit" class="btn btn-outline-primary" name="tombol" value="<?php echo (($p ?? '') == 'user_edit') ? 'user_edit' : 'user_add'; ?>"><i class="fa-solid fa-floppy-disk"></i> Simpan</button>
                             </form>
                         </div>
                     </div>
                     <div class="card mb-4" id="form_tarif">
-                        <div class="card-header">
-                            <i class="fa-solid fa-user-plus me-2 text-success fa-fade"></i>
-                            Tarif
+                        <div class="card-header bg-success">
+                            <i class="fa-solid fa-rupiah-sign me-2 text-light fa-fade"></i>
+                            <i class="text-light fw-bold"> Tarif</i>
                         </div>
                         <div class="card-body">
                             <form method="post" class="need-validation" id="tarif_form">
@@ -812,15 +812,15 @@ $level = $dt_user[2];
                                 }
                                 ?>
                                 <div class="mt-3">
-                                    <button type="submit" class="btn btn-primary" name="tombol" value="<?php echo (($p ?? '') == 'tarif_edit') ? 'tarif_edit' : 'tarif_add'; ?>"><i class="fa-solid fa-floppy-disk"></i> Simpan</button>
+                                    <button type="submit" class="btn btn-outline-success" name="tombol" value="<?php echo (($p ?? '') == 'tarif_edit') ? 'tarif_edit' : 'tarif_add'; ?>"><i class="fa-solid fa-floppy-disk"></i> Simpan</button>
                                 </div>
                             </form>
                         </div>
                     </div>
                     <div class="card mb-4" id="form_meter">
-                        <div class="card-header">
-                            <i class="fa-solid fa-user-plus me-2 text-success fa-fade"></i>
-                            Meter
+                        <div class="card-header bg-danger">
+                            <i class="fa-solid fa-water me-2 text-light fa-fade"></i>
+                            <i class="text-light fw-bold"> Meter</i>
                         </div>
                         <div class="card-body">
                             <?php
@@ -863,7 +863,7 @@ $level = $dt_user[2];
                                         <label for="status_meter" class="form-label">Status :</label>
                                         <select class="form-select" name="status_meter">
                                             <?php
-                                            $st_meter = array("Belum Lunas", "Lunas");
+                                            $st_meter = array("BLM LUNAS", "LUNAS");
                                             foreach ($st_meter as $st2) {
                                                 if (($status_meter ?? '') == $st2) $sel = "SELECTED";
                                                 else $sel = "";
@@ -874,7 +874,7 @@ $level = $dt_user[2];
                                     </div>
                                 <?php } ?>
                                 <div class="mt-3">
-                                    <button type="submit" class="btn btn-primary" name="tombol" value="<?php echo (($p ?? '') == 'meter_edit') ? 'meter_edit' : 'meter_add'; ?>"><i class="fa-solid fa-floppy-disk"></i> Simpan</button>
+                                    <button type="submit" class="btn btn-outline-danger" name="tombol" value="<?php echo (($p ?? '') == 'meter_edit') ? 'meter_edit' : 'meter_add'; ?>"><i class="fa-solid fa-floppy-disk"></i> Simpan</button>
                                 </div>
                             </form>
                             <?php if ($is_petugas_tambah): ?>
@@ -1078,10 +1078,10 @@ $level = $dt_user[2];
                                         $selisih = $diff->days;
 
                                         // Tampilkan badge berdasarkan status
-                                        if ($status == "Belum Lunas") {
-                                            $badge = "<span class='badge bg-danger badge-small d-block w-100'><i class='fas fa-exclamation-triangle'></i> <strong>Belum Lunas</strong></span>";
+                                        if ($status == "BLM LUNAS") {
+                                            $badge = "<span class='badge bg-danger badge-small d-block w-100'><i class='fas fa-exclamation-triangle'></i> <strong>BELUM LUNAS</strong></span>";
                                         } else {
-                                            $badge = "<span class='badge bg-success badge-small d-block w-100'><i class='fas fa-check-circle'></i> <strong>Lunas</strong></span>";
+                                            $badge = "<span class='badge bg-success badge-small d-block w-100'><i class='fas fa-check-circle'></i> <strong>LUNAS</strong></span>";
                                         }
 
                                         $tagihan_cell = ($level_login != "petugas") ? "<td>Rp. " . number_format($tagihan, 0, ',', '.') . "</td>" : "";
@@ -1166,17 +1166,17 @@ $level = $dt_user[2];
                                         $dp_status = $dp[8];
 
                                         // Tampilkan badge berdasarkan status
-                                        if ($dp_status == "Belum Lunas") {
-                                            $badge = "<span class='badge bg-danger badge-small d-block w-100'><i class='fas fa-exclamation-triangle'></i> <strong>Belum Lunas</strong></span>";
+                                        if ($dp_status == "BLM LUNAS") {
+                                            $badge = "<span class='badge bg-danger badge-small d-block w-100'><i class='fas fa-exclamation-triangle'></i> <strong>BELUM LUNAS</strong></span>";
                                         } else {
-                                            $badge = "<span class='badge bg-success badge-small d-block w-100'><i class='fas fa-check-circle'></i> <strong>Lunas</strong></span>";
+                                            $badge = "<span class='badge bg-success badge-small d-block w-100'><i class='fas fa-check-circle'></i> <strong>LUNAS</strong></span>";
                                         }
 
 
                                         echo " <tr>
                                                     <td>$dp_nama</td>
                                                     <td>$dp_tipe</td>
-                                                    <td>$dp_tgl $dp_waktu</td>
+                                                    <td>$dp_tgl | $dp_waktu</td>
                                                     <td>$dp_meter_awal (m<sup>3</sup>)</td>
                                                     <td>$dp_meter_akhir (m<sup>3</sup>)</td>
                                                     <td>$dp_pemakaian (m<sup>3</sup>)</td>
@@ -1214,4 +1214,5 @@ $level = $dt_user[2];
     <script src="../js/datatables-simple-demo.js"></script>
     </head>
 </body>
+
 </html>

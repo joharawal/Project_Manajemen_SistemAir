@@ -56,7 +56,7 @@ if (isset($_POST['p'])) {
                 $data['waktu_pencatatan'] = '<h1 class="display-5 mb-0">-</h1>';
                 $data['pemakaian'] = "0";
                 $data['tagihan'] = "0";
-                $data['status'] = "Belum Dicatat";
+                $data['status'] = "-";
             }
         }
 
