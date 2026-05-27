@@ -90,25 +90,24 @@ $level = $dt_user[2];
                     <div class="nav">
                         <div class="sb-sidenav-menu-heading">Core</div>
                         <a class="nav-link" href="index.php">
-                            <div class="sb-nav-link-icon"><i class="fa-solid fa-house-chimney fa-fade text-warning"></i></div>
+                            <div class="sb-nav-link-icon"><i class="fa-solid fa-house-chimney fa-beat text-warning"></i></div>
                             Dashboard
                         </a>
                         <?php
                         if ($level == "admin") {
                         ?>
                             <a class="nav-link" href="index.php?p=user">
-                                <div class="sb-nav-link-icon"><i class="fa-solid fa-address-card fa-fade text-primary"></i></div>
+                                <div class="sb-nav-link-icon"><i class="fa-solid fa-address-card fa-beat text-primary"></i></div>
                                 Manajemen User
                             </a>
-                            <a class="nav-link" href="index.php?p=catat_meter">
-                                <div class="sb-nav-link-icon"><i class="fa-solid fa-house-flood-water text-danger fa-fade"></i></div>
-                                Pemakaian Warga
-                            </a>
                             <a class="nav-link" href="index.php?p=tarif">
-                                <div class="sb-nav-link-icon"><i class="fa-solid fa-rupiah-sign me-1 text-success fa-fade"></i></div>
+                                <div class="sb-nav-link-icon"><i class="fa-solid fa-rupiah-sign me-1 text-success fa-beat"></i></div>
                                 Manajemen Tarif Air
                             </a>
-
+                            <a class="nav-link" href="index.php?p=catat_meter">
+                                <div class="sb-nav-link-icon"><i class="fa-solid fa-house-flood-water text-danger fa-beat"></i></div>
+                                Pemakaian Warga
+                            </a>
                         <?php
                         } elseif ($level == "bendahara") {
                         ?>
@@ -116,13 +115,13 @@ $level = $dt_user[2];
                                 <div class="sb-nav-link-icon"><i class="fa-solid fa-wallet text-warning fa-fade"></i></div>
                                 Pembayaran Warga
                             </a> -->
-                            <a class="nav-link" href="index.php?p=catat_meter">
-                                <div class="sb-nav-link-icon"><i class="fa-solid fa-house-flood-water text-danger fa-fade"></i></div>
-                                Pemakaian Warga
-                            </a>
                             <a class="nav-link" href="index.php?p=tarif">
-                                <div class="sb-nav-link-icon"><i class="fa-solid fa-rupiah-sign me-1 text-success fa-fade"></i></div>
+                                <div class="sb-nav-link-icon"><i class="fa-solid fa-rupiah-sign me-1 text-success fa-beat"></i></div>
                                 Manajemen Tarif Air
+                            </a>
+                            <a class="nav-link" href="index.php?p=catat_meter">
+                                <div class="sb-nav-link-icon"><i class="fa-solid fa-house-flood-water text-danger fa-beat"></i></div>
+                                Pemakaian Warga
                             </a>
                             <!-- <a class="nav-link" href="index.php?p=tagihan_warga_bendahara">
                                 <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt fa-spin text-success"></i></div>
@@ -132,7 +131,7 @@ $level = $dt_user[2];
                         } elseif ($level == "petugas") {
                         ?>
                             <a class="nav-link" href="index.php?p=catat_meter">
-                                <div class="sb-nav-link-icon"><i class="fa-solid fa-house-flood-water text-danger fa-fade"></i></div>
+                                <div class="sb-nav-link-icon"><i class="fa-solid fa-house-flood-water text-danger fa-beat"></i></div>
                                 Catat Meter Air
                             </a>
                             <!-- <a class="nav-link" href="index.php?p=lihat_pemakaian_warga">
@@ -144,7 +143,7 @@ $level = $dt_user[2];
                         } elseif ($level == "warga") {
                         ?>
                             <a class="nav-link" href="index.php?p=lihat_pemakaian_warga">
-                                <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt fa-fade text-primary"></i></div>
+                                <div class="sb-nav-link-icon"><i class="fa-solid fa-gauge-high text-primary fa-beat"></i></div>
                                 Lihat Pemakaian
                             </a>
 
@@ -154,8 +153,8 @@ $level = $dt_user[2];
                     </div>
                 </div>
                 <div class="sb-sidenav-footer">
-                    <div class="small"><i class="fa-regular fa-circle-user fa-flip text-light"></i> Logged in as : <?php echo $dt_user[2] ?></div>
-                    <div class="small"><i class="fa-solid fa-person text-warning fa-flip me-1"></i><span class="text-warning"><?php echo $dt_user[0] . ' (' . $dt_user[3] . ')'; ?></span></div>
+                    <div class="small"><i class="fa-regular fa-circle-user fa-bounce text-light"></i> Logged in as : <?php echo $dt_user[2] ?></div>
+                    <div class="small"><i class="fa-regular fa-id-badge text-warning fa-shake me-1"></i><span class="text-warning"><?php echo $dt_user[0] . ' (' . $dt_user[3] . ')'; ?></span></div>
                 </div>
             </nav>
         </div>
