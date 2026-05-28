@@ -204,6 +204,7 @@ $level = $dt_user[2];
                     // echo "sesi user: " . $_SESSION['user'] . " sesi pass: " . $_SESSION['pass']; 
                     ?>
                     <input type="hidden" id="user_level" value="<?php echo $dt_user[2]; ?>">
+                    <input type="hidden" id="yuser" value="<?php echo $_SESSION['user'] ?? ''; ?>">
                     <div class="row mb-3" id="pilih_waktu">
                         <div class="col-xl-3 col-md-12">
                             <label for="sel1" class="form-label">Pilih Waktu : </label>
@@ -363,19 +364,19 @@ $level = $dt_user[2];
                         <div class="col-xl-6">
                             <div class="card mb-4">
                                 <div class="card-header">
-                                    <i class="fas fa-chart-area me-1"></i>
-                                    Area Chart Example
+                                    <i class="fas fa-chart-bar me-1"></i>
+                                    Grafik Pemakaian Air (m<sup>3</sup>) <span id="tot_pemakaian" class="float-end fw-bold"></span>
                                 </div>
-                                <div class="card-body"><canvas id="myAreaChart" width="100%" height="40"></canvas></div>
+                                <div class="card-body"><canvas id="myBarChart" width="100%" height="40"></canvas></div>
                             </div>
                         </div>
                         <div class="col-xl-6">
                             <div class="card mb-4">
                                 <div class="card-header">
-                                    <i class="fas fa-chart-bar me-1"></i>
-                                    Bar Chart Example
+                                    <i class="fas fa-chart-area me-1"></i>
+                                    Grafik Tagihan Air (Rp) <span id="tot_tagihan" class="float-end fw-bold"></span>
                                 </div>
-                                <div class="card-body"><canvas id="myBarChart" width="100%" height="40"></canvas></div>
+                                <div class="card-body"><canvas id="myAreaChart" width="100%" height="40"></canvas></div>
                             </div>
                         </div>
                     </div>
@@ -1138,9 +1139,8 @@ $level = $dt_user[2];
                             <table id="pemakaian_table">
                                 <thead>
                                     <tr>
-                                        <th>Nama Warga</th>
-                                        <th>Tipe</th>
-                                        <th>Tanggal & Waktu</th>
+                                        <th>Waktu Pencatatan Meter</th>
+                                        <th>Kode Tarif</th>
                                         <th>Meter Awal</th>
                                         <th>Meter Akhir</th>
                                         <th>Pemakaian</th>
@@ -1156,6 +1156,9 @@ $level = $dt_user[2];
                                         $dp_dt_user = $air->dt_user($dp[1]);
                                         $dp_nama = $dp_dt_user ? $dp_dt_user[0] : $dp[1];
                                         $dp_tipe = $dp_dt_user ? $dp_dt_user[1] : $dp[1];
+                                        $dp_id_tarif = $air->user_to_idtarif($dp[1]);
+                                        $dp_nominal_tarif = $air->idtarif_to_tarif($dp_id_tarif);
+                                        $dp_kode_tarif = "Rp. " . number_format((float)$dp_nominal_tarif, 0, ',', '.');
                                         $dp_meter_awal = $dp[2];
                                         $dp_meter_akhir = $dp[3];
                                         $dp_pemakaian = $dp[4];
@@ -1173,9 +1176,8 @@ $level = $dt_user[2];
 
 
                                         echo " <tr>
-                                                    <td>$dp_nama</td>
-                                                    <td>$dp_tipe</td>
                                                     <td>$dp_tgl | $dp_waktu</td>
+                                                    <td>$dp_kode_tarif</td>
                                                     <td>$dp_meter_awal (m<sup>3</sup>)</td>
                                                     <td>$dp_meter_akhir (m<sup>3</sup>)</td>
                                                     <td>$dp_pemakaian (m<sup>3</sup>)</td>
@@ -1207,8 +1209,8 @@ $level = $dt_user[2];
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
     <script src="../js/scripts.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
-    <script src="../assets/demo/chart-area-demo.js"></script>
-    <script src="../assets/demo/chart-bar-demo.js"></script>
+    <!-- <script src="../assets/demo/chart-area-demo.js"></script>
+    <script src="../assets/demo/chart-bar-demo.js"></script> -->
     <script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js" crossorigin="anonymous"></script>
     <script src="../js/datatables-simple-demo.js"></script>
     </head>

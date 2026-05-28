@@ -212,42 +212,170 @@ $(document).ready(function () {
       new simpleDatatables.DataTable(datatablesSimple);
     }
   } else {
-    //klik dashboard
-    //id summary dan chart disembunyikan
-    $("#pilih_waktu, #sumary, #chart").show();
+    //diklik dashboard
+    $("#sumary,#chart").show();
     $("#pilih_waktu select[name='pilih_waktu']").on("change", function () {
       bln = $(this).val();
-      var userLevel = $("#user_level").val();
-      console.log("bulan yang dipilih: " + bln + ", level: " + userLevel);
-
+      var level = $("#user_level").val();
+      var user = $("#yuser").val();
+      
+      // console.log("bulan dipilih: "+bln+" level: "+level);
       $.ajax({
-        type: "post",
-        url: "../assets/ajax.php",
-        data: { p: "sumary", t: bln, level: userLevel },
-        dataType: "json"
+          type: "post",
+          url: "../assets/ajax.php",
+          data: {p:"sumary",t:bln,l:level,u:user},
+          dataType: "json"
       })
-        .done(function (d) {
-          if (userLevel == 'admin' || userLevel == 'petugas') {
-            $("#val_pelanggan").text(d.jml_pelanggan);
-            $("#val_pemakaian").text(d.jml_pemakaian);
-            $("#val_tercatat").text(d.tercatat);
-            $("#val_belum_tercatat").text(d.belum_tercatat);
-          } else if (userLevel == 'bendahara') {
-            $("#val_pelanggan").text(d.jml_pelanggan);
-            $("#val_pemasukan").text(d.total_pemasukan);
-            $("#val_lunas").text(d.warga_lunas);
-            $("#val_belum_lunas").text(d.warga_belum_lunas);
-          } else if (userLevel == 'warga') {
-            $("#val_waktu_pencatatan").html(d.waktu_pencatatan);
-            $("#val_pemakaian_warga").text(d.pemakaian);
-            $("#val_tagihan_warga").text(d.tagihan);
-            $("#val_status_warga").text(d.status);
+      .done(function(d){
+          // console.log("data: "+d[0].jml_pelanggan+" level: "+level)
+          if(level=="admin" || level=="petugas") {
+              blm_dicatat=d[0].jml_pelanggan-d[2].tercatat;
+              $("#sumary .bg-primary h1").text(d[0].jml_pelanggan);
+              
+              pemakaian = new Intl.NumberFormat('en-ID', { style: 'decimal' }).format(d[1].pemakaian);
+              $("#sumary .bg-warning h1").text(pemakaian);
+              $("#sumary .bg-success h1").text(d[2].tercatat);
+              $("#sumary .bg-danger h1").text(blm_dicatat);
+          } else if(level=="bendahara") {
+              blm_lunas=d[0].jml_pelanggan-d[2].lunas;
+              $("#sumary .bg-primary h1").text(d[0].jml_pelanggan);
+              
+              pemasukan = new Intl.NumberFormat('en-ID', { style: 'decimal' }).format(d[1].pemasukan);
+              $("#sumary .bg-warning h1").text(pemasukan);
+              $("#sumary .bg-warning .me-2").text("Rp. ");
+              $("#sumary .bg-warning .small").text("Pemasukan");
+
+              $("#sumary .bg-success h1").text(d[2].lunas);
+              $("#sumary .bg-success .small").text("Sudah Lunas");
+
+              $("#sumary .bg-danger h1").text(blm_lunas);
+              $("#sumary .bg-danger .small").text("Belum Bayar");
+          } else {
+              $("#sumary .bg-primary h1").text(d[0].tgl);
+              if ($("#sumary .bg-primary .ms-2").length === 0) {
+                  $("#val_waktu_pencatatan").append('<div class="ms-2 mt-2"></div>');
+              }
+              $("#sumary .bg-primary .ms-2").text(d[0].waktu);
+              $("#sumary .bg-primary .small").text("Waktu Pencatatan");
+
+              $("#sumary .bg-warning h1").text(d[0].pemakaian);
+              
+              tagihan = new Intl.NumberFormat('en-ID', { style: 'decimal' }).format(d[0].tagihan);
+              $("#sumary .bg-success h1").text(tagihan);
+              $("#sumary .bg-success .me-2").text("Rp. ");
+              $("#sumary .bg-success .small").text("Tagihan");
+
+              stat=d[0].status;
+              $("#sumary .bg-danger h1").text(stat);
+              $("#sumary .bg-danger .small").text("Status Tagihan");
           }
-        })
-        .fail(function () {
-          console.log("AJAX gagal")
-        })
-    })
-    $("#form_user, #data_user, #form_tarif, #data_tarif, #data_meter, #form_meter, #data_pemakaian",).hide();
+      })
+      .fail(function () {
+        console.log("AJAX gagal")
+      })
+
+      // Panggil Grafik Pemakaian (Bar Chart)
+      $.ajax ({
+          type : "post",
+          url : "../assets/ajax.php",
+          data : {p:"chart_bar", u:$("#yuser").val(), l:$("#user_level").val()},
+          dataType : "json"  
+      })
+      .done(function(respon) {
+          Chart.defaults.global.defaultFontFamily = '-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
+          Chart.defaults.global.defaultFontColor = '#292b2c';
+
+          sumbuX = respon.filter((num, index) => index % 2 == 0);
+          sumbuY = respon.filter((num, index) => index % 2 != 0);
+
+          if (document.getElementById("myBarChart")) {
+              var ctx = document.getElementById("myBarChart");
+              if (window.myBarChartInstance) { window.myBarChartInstance.destroy(); }
+              window.myBarChartInstance = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                  labels: sumbuX,
+                  datasets: [{
+                    label: "Pemakaian",
+                    backgroundColor: "rgba(2,117,216,1)",
+                    borderColor: "rgba(2,117,216,1)",
+                    data: sumbuY,
+                  }],
+                },
+                options: {
+                  scales: {
+                    xAxes: [{
+                      time: { unit: 'month' },
+                      gridLines: { display: false },
+                      ticks: { maxTicksLimit: 6 }
+                    }],
+                    yAxes: [{
+                      ticks: { min: 0, maxTicksLimit: 5 },
+                      gridLines: { display: true }
+                    }],
+                  },
+                  legend: { display: false }
+                }
+              });
+              let tot = sumbuY.reduce((a, b) => Number(a) + Number(b), 0);
+              $("#tot_pemakaian").text(tot + " m3");
+          }
+      });
+
+      // Panggil Grafik Tagihan (Area/Line Chart)
+      $.ajax ({
+          type : "post",
+          url : "../assets/ajax.php",
+          data : {p:"chart_line", u:$("#yuser").val(), l:$("#user_level").val()},
+          dataType : "json"  
+      })
+      .done(function(respon) {
+          Chart.defaults.global.defaultFontFamily = '-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
+          Chart.defaults.global.defaultFontColor = '#292b2c';
+
+          sumbuX = respon.filter((num, index) => index % 2 == 0);
+          sumbuY = respon.filter((num, index) => index % 2 != 0);
+
+          if (document.getElementById("myAreaChart")) {
+              var ctx = document.getElementById("myAreaChart");
+              if (window.myAreaChartInstance) { window.myAreaChartInstance.destroy(); }
+              window.myAreaChartInstance = new Chart(ctx, {
+                type: 'line',
+                data: {
+                  labels: sumbuX,
+                  datasets: [{
+                    label: "Tagihan (Rp)",
+                    backgroundColor: "rgba(2,117,216,0.2)",
+                    borderColor: "rgba(2,117,216,1)",
+                    pointBackgroundColor: "rgba(2,117,216,1)",
+                    pointBorderColor: "rgba(255,255,255,0.8)",
+                    pointHoverBackgroundColor: "rgba(2,117,216,1)",
+                    pointHitRadius: 50,
+                    pointBorderWidth: 2,
+                    data: sumbuY,
+                  }],
+                },
+                options: {
+                  scales: {
+                    xAxes: [{
+                      time: { unit: 'date' },
+                      gridLines: { display: false },
+                      ticks: { maxTicksLimit: 7 }
+                    }],
+                    yAxes: [{
+                      ticks: { min: 0, maxTicksLimit: 5 },
+                      gridLines: { color: "rgba(0, 0, 0, .125)" }
+                    }],
+                  },
+                  legend: { display: false }
+                }
+              });
+              let tot = sumbuY.reduce((a, b) => Number(a) + Number(b), 0);
+              $("#tot_tagihan").text("Rp " + new Intl.NumberFormat('en-ID', { style: 'decimal' }).format(tot));
+          }
+      });
+    }).trigger("change"); // Memicu auto-load ringkasan dan grafik saat pertama kali dimuat
+
+    $("#form_user, #data_user, #form_tarif, #data_tarif, #data_meter, #form_meter, #data_pemakaian").hide();
   }
 });
