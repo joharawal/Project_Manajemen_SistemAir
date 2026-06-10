@@ -1,12 +1,14 @@
 <?php
-class klas_air {
+class klas_air
+{
 
     private $host;
     private $user;
     private $pass;
     private $db;
 
-    public function __construct() {
+    public function __construct()
+    {
         // cek apakah di localhost atau hosting
         if ($_SERVER['SERVER_NAME'] == 'localhost') {
             // LOCAL (XAMPP)
@@ -23,7 +25,8 @@ class klas_air {
         }
     }
 
-    public function koneksi() {
+    public function koneksi()
+    {
         $koneksi = mysqli_connect($this->host, $this->user, $this->pass, $this->db);
         if (!$koneksi) {
             die("Koneksi database gagal: " . mysqli_connect_error());
@@ -31,13 +34,15 @@ class klas_air {
         return $koneksi;
     }
 
-    public function dt_user($username) {
+    public function dt_user($username)
+    {
         $q = mysqli_query($this->koneksi(), "SELECT nama, tipe, level, kota FROM user WHERE username = '$username'");
         $d = mysqli_fetch_row($q);
         return $d;
     }
 
-    public function user_to_idtarif($username) {
+    public function user_to_idtarif($username)
+    {
         $q = mysqli_query($this->koneksi(), "SELECT tipe FROM user WHERE username = '$username'");
         $d = mysqli_fetch_row($q);
         $tipe = $d[0];
@@ -46,13 +51,15 @@ class klas_air {
         return $id_tarif ?? 0;
     }
 
-    public function tipe_to_idtarif($tipe) {
+    public function tipe_to_idtarif($tipe)
+    {
         $q = mysqli_query($this->koneksi(), "SELECT id_tarif FROM tarif WHERE tipe = '$tipe' AND status = 'AKTIF'");
         $d = mysqli_fetch_row($q);
         return $d[0] ?? 0;
     }
 
-    public function idtarif_to_tarif($id_tarif) {
+    public function idtarif_to_tarif($id_tarif)
+    {
         $q = mysqli_query($this->koneksi(), "SELECT tarif FROM tarif WHERE id_tarif = '$id_tarif' AND status = 'AKTIF'");
         $d = mysqli_fetch_row($q);
         return $d[0] ?? 0;
@@ -64,14 +71,16 @@ class klas_air {
     //     return $tgl_baru;
     // }
 
-    public function tgl_balik_indo ($tgl) {
+    public function tgl_balik_indo($tgl)
+    {
         $e = explode("-", $tgl);
         $bulan = ["01" => "Januari", "02" => "Februari", "03" => "Maret", "04" => "April", "05" => "Mei", "06" => "Juni", "07" => "Juli", "08" => "Agustus", "09" => "September", "10" => "Oktober", "11" => "November", "12" => "Desember"];
         $tgl_baru = "$e[2] {$bulan[$e[1]]} $e[0]";
         return $tgl_baru;
     }
 
-    public function bln($no) {
+    public function bln($no)
+    {
         if ($no == 1) $bln = "Januari";
         elseif ($no == 2) $bln = "Februari";
         elseif ($no == 3) $bln = "Maret";
@@ -86,6 +95,4 @@ class klas_air {
         else $bln = "Desember";
         return $bln;
     }
-
-}  
-?>         
+}

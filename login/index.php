@@ -201,7 +201,17 @@ $level = $dt_user[2];
                         <li class="breadcrumb-item active"><?php echo $li ?></li>
                     </ol>
                     <?php
-                    // echo "sesi user: " . $_SESSION['user'] . " sesi pass: " . $_SESSION['pass']; 
+                    // echo "sesi user: " . $_SESSION['user'] . " sesi pass: " . $_SESSION['pass'];
+
+                    // Ambil bulan terakhir dari database berdasarkan level user
+                    $user_sesi = $_SESSION['user'] ?? '';
+                    if ($level == 'warga' && !empty($user_sesi)) {
+                        $q_max_bln = mysqli_query($koneksi, "SELECT MAX(DATE_FORMAT(tgl, '%Y-%m')) as max_bln FROM pemakaian WHERE username='$user_sesi'");
+                    } else {
+                        $q_max_bln = mysqli_query($koneksi, "SELECT MAX(DATE_FORMAT(tgl, '%Y-%m')) as max_bln FROM pemakaian");
+                    }
+                    $d_max_bln = mysqli_fetch_assoc($q_max_bln);
+                    $bulan_terakhir = $d_max_bln['max_bln'] ?? date('Y-m');
                     ?>
                     <input type="hidden" id="user_level" value="<?php echo $dt_user[2]; ?>">
                     <input type="hidden" id="yuser" value="<?php echo $_SESSION['user'] ?? ''; ?>">
@@ -209,13 +219,14 @@ $level = $dt_user[2];
                         <div class="col-xl-3 col-md-12">
                             <label for="sel1" class="form-label">Pilih Waktu : </label>
                             <select class="form-select" id="sel1" name="pilih_waktu">
-                                <option value="">Bulan</option>
                                 <?php
                                 for ($i = 1; $i <= 12; $i++) {
                                     if ($i < 10) {
                                         $i = "0" . $i;
                                     }
-                                    echo "<option value=" . date("Y") . "-" . $i . ">" . $air->bln($i) . " " . date("Y") . "</option>";
+                                    $val = date("Y") . "-" . $i;
+                                    $selected = ($val == $bulan_terakhir) ? " selected" : "";
+                                    echo "<option value=\"$val\"$selected>" . $air->bln($i) . " " . date("Y") . "</option>";
                                 }
                                 ?>
                             </select>
