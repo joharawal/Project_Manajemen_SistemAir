@@ -219,6 +219,7 @@ $level = $dt_user[2];
                         <div class="col-xl-3 col-md-12">
                             <label for="sel1" class="form-label">Pilih Waktu : </label>
                             <select class="form-select" id="sel1" name="pilih_waktu">
+                                <option value="">Bulan</option>
                                 <?php
                                 for ($i = 1; $i <= 12; $i++) {
                                     if ($i < 10) {
