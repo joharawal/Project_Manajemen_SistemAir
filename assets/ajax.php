@@ -67,31 +67,174 @@ if (isset($_POST['p'])) {
     } elseif ($p == "chart_bar") {
         $user = $_POST['u'] ?? '';
         $level = $_POST['l'] ?? '';
+
+        // Ambil rentang bulan min-max dari tabel pemakaian
         if ($level != 'warga' || $user == '') {
-            $q = mysqli_query($koneksi, "SELECT MONTH(tgl) as bln, SUM(pemakaian) as pemakaian FROM pemakaian GROUP BY MONTH(tgl) ORDER BY tgl ASC");
+            $q_range = mysqli_query($koneksi, "SELECT MIN(MONTH(tgl)) as bln_min, MAX(MONTH(tgl)) as bln_max FROM pemakaian");
+            $q = mysqli_query($koneksi, "SELECT MONTH(tgl) as bln, SUM(pemakaian) as pemakaian FROM pemakaian GROUP BY MONTH(tgl)");
         } else {
-            $q = mysqli_query($koneksi, "SELECT MONTH(tgl) as bln, pemakaian FROM pemakaian WHERE username='$user' ORDER BY tgl ASC");
+            $q_range = mysqli_query($koneksi, "SELECT MIN(MONTH(tgl)) as bln_min, MAX(MONTH(tgl)) as bln_max FROM pemakaian WHERE username='$user'");
+            $q = mysqli_query($koneksi, "SELECT MONTH(tgl) as bln, pemakaian FROM pemakaian WHERE username='$user'");
         }
+        $range = mysqli_fetch_assoc($q_range);
+        $bln_min = (int)($range['bln_min'] ?? 1);
+        $bln_max = (int)($range['bln_max'] ?? 1);
+
+        $data_db = [];
+        while ($d = mysqli_fetch_assoc($q)) { $data_db[(int)$d['bln']] = $d['pemakaian']; }
+
         $response = [];
-        while ($d = mysqli_fetch_assoc($q)) {
-            $response[] = $air->bln($d['bln']);
-            $response[] = $d['pemakaian'];
+        for ($i = $bln_min; $i <= $bln_max; $i++) {
+            $response[] = $air->bln($i);
+            $response[] = isset($data_db[$i]) ? $data_db[$i] : 0;
         }
         echo json_encode($response);
 
     } elseif ($p == "chart_line") {
         $user = $_POST['u'] ?? '';
         $level = $_POST['l'] ?? '';
+
+        // Ambil rentang bulan min-max dari tabel pemakaian
         if ($level != 'warga' || $user == '') {
-            $q = mysqli_query($koneksi, "SELECT MONTH(tgl) as bln, SUM(tagihan) as tagihan FROM pemakaian GROUP BY MONTH(tgl) ORDER BY tgl ASC");
+            $q_range = mysqli_query($koneksi, "SELECT MIN(MONTH(tgl)) as bln_min, MAX(MONTH(tgl)) as bln_max FROM pemakaian");
+            $q = mysqli_query($koneksi, "SELECT MONTH(tgl) as bln, SUM(tagihan) as tagihan FROM pemakaian GROUP BY MONTH(tgl)");
         } else {
-            $q = mysqli_query($koneksi, "SELECT MONTH(tgl) as bln, tagihan FROM pemakaian WHERE username='$user' ORDER BY tgl ASC");
+            $q_range = mysqli_query($koneksi, "SELECT MIN(MONTH(tgl)) as bln_min, MAX(MONTH(tgl)) as bln_max FROM pemakaian WHERE username='$user'");
+            $q = mysqli_query($koneksi, "SELECT MONTH(tgl) as bln, tagihan FROM pemakaian WHERE username='$user'");
         }
+        $range = mysqli_fetch_assoc($q_range);
+        $bln_min = (int)($range['bln_min'] ?? 1);
+        $bln_max = (int)($range['bln_max'] ?? 1);
+
+        $data_db = [];
+        while ($d = mysqli_fetch_assoc($q)) { $data_db[(int)$d['bln']] = $d['tagihan']; }
+
         $response = [];
-        while ($d = mysqli_fetch_assoc($q)) {
-            $response[] = $air->bln($d['bln']);
-            $response[] = $d['tagihan'];
+        for ($i = $bln_min; $i <= $bln_max; $i++) {
+            $response[] = $air->bln($i);
+            $response[] = isset($data_db[$i]) ? $data_db[$i] : 0;
         }
         echo json_encode($response);
+
+    // =====================================================================
+    // CHART UNTUK ROLE ADMIN
+    // =====================================================================
+
+    } elseif ($p == "chart_pie_tipe") {
+        // Pie chart: Perbandingan jumlah pelanggan RT vs Kos
+        $response = [];
+        $tipe_list = ['RT', 'Kos'];
+        foreach ($tipe_list as $tipe) {
+            $q = mysqli_query($koneksi, "SELECT COUNT(username) as jml FROM user WHERE level='warga' AND tipe='$tipe'");
+            $d = mysqli_fetch_assoc($q);
+            $response[$tipe] = (int)$d['jml'];
+        }
+        echo json_encode($response);
+
+    } elseif ($p == "chart_line_pemasukan") {
+        // Line chart: Total pemasukan (tagihan lunas) per bulan untuk Admin
+        // Rentang bulan mengikuti min-max data di tabel pemakaian (semua status)
+        $q_range = mysqli_query($koneksi, "SELECT MIN(MONTH(tgl)) as bln_min, MAX(MONTH(tgl)) as bln_max FROM pemakaian");
+        $range = mysqli_fetch_assoc($q_range);
+        $bln_min = (int)($range['bln_min'] ?? 1);
+        $bln_max = (int)($range['bln_max'] ?? 1);
+
+        $q = mysqli_query($koneksi, "SELECT MONTH(tgl) as bln, SUM(tagihan) as pemasukan FROM pemakaian WHERE status='Lunas' GROUP BY MONTH(tgl)");
+        $data_db = [];
+        while ($d = mysqli_fetch_assoc($q)) { $data_db[(int)$d['bln']] = $d['pemasukan']; }
+
+        $response = [];
+        for ($i = $bln_min; $i <= $bln_max; $i++) {
+            $response[] = $air->bln($i);
+            $response[] = isset($data_db[$i]) ? $data_db[$i] : 0;
+        }
+        echo json_encode($response);
+
+    } elseif ($p == "chart_bar_sdh_dicatat") {
+        // Bar chart: Jumlah pelanggan yang sudah dicatat per bulan
+        // Rentang bulan mengikuti min-max data di tabel pemakaian
+        $q_range = mysqli_query($koneksi, "SELECT MIN(MONTH(tgl)) as bln_min, MAX(MONTH(tgl)) as bln_max FROM pemakaian");
+        $range = mysqli_fetch_assoc($q_range);
+        $bln_min = (int)($range['bln_min'] ?? 1);
+        $bln_max = (int)($range['bln_max'] ?? 1);
+
+        $q = mysqli_query($koneksi, "SELECT MONTH(tgl) as bln, COUNT(username) as jml FROM pemakaian GROUP BY MONTH(tgl)");
+        $data_db = [];
+        while ($d = mysqli_fetch_assoc($q)) { $data_db[(int)$d['bln']] = (int)$d['jml']; }
+
+        $response = [];
+        for ($i = $bln_min; $i <= $bln_max; $i++) {
+            $response[] = $air->bln($i);
+            $response[] = isset($data_db[$i]) ? $data_db[$i] : 0;
+        }
+        echo json_encode($response);
+
+    } elseif ($p == "chart_bar_blm_dicatat") {
+        // Bar chart: Jumlah pelanggan yang belum dicatat per bulan
+        // Rentang bulan mengikuti min-max data di tabel pemakaian
+        $q_total = mysqli_query($koneksi, "SELECT COUNT(username) as total FROM user WHERE level='warga'");
+        $d_total = mysqli_fetch_assoc($q_total);
+        $total_warga = (int)$d_total['total'];
+
+        $q_range = mysqli_query($koneksi, "SELECT MIN(MONTH(tgl)) as bln_min, MAX(MONTH(tgl)) as bln_max FROM pemakaian");
+        $range = mysqli_fetch_assoc($q_range);
+        $bln_min = (int)($range['bln_min'] ?? 1);
+        $bln_max = (int)($range['bln_max'] ?? 1);
+
+        $q = mysqli_query($koneksi, "SELECT MONTH(tgl) as bln, COUNT(username) as sdh FROM pemakaian GROUP BY MONTH(tgl)");
+        $data_db = [];
+        while ($d = mysqli_fetch_assoc($q)) { $data_db[(int)$d['bln']] = (int)$d['sdh']; }
+
+        $response = [];
+        for ($i = $bln_min; $i <= $bln_max; $i++) {
+            $response[] = $air->bln($i);
+            $response[] = max(0, $total_warga - (isset($data_db[$i]) ? $data_db[$i] : 0));
+        }
+        echo json_encode($response);
+
+    } elseif ($p == "chart_bar_sdh_lunas") {
+        // Bar chart: Jumlah warga yang sudah lunas per bulan
+        // Rentang bulan mengikuti min-max data di tabel pemakaian
+        $q_range = mysqli_query($koneksi, "SELECT MIN(MONTH(tgl)) as bln_min, MAX(MONTH(tgl)) as bln_max FROM pemakaian");
+        $range = mysqli_fetch_assoc($q_range);
+        $bln_min = (int)($range['bln_min'] ?? 1);
+        $bln_max = (int)($range['bln_max'] ?? 1);
+
+        $q = mysqli_query($koneksi, "SELECT MONTH(tgl) as bln, COUNT(username) as jml FROM pemakaian WHERE status='Lunas' GROUP BY MONTH(tgl)");
+        $data_db = [];
+        while ($d = mysqli_fetch_assoc($q)) { $data_db[(int)$d['bln']] = (int)$d['jml']; }
+
+        $response = [];
+        for ($i = $bln_min; $i <= $bln_max; $i++) {
+            $response[] = $air->bln($i);
+            $response[] = isset($data_db[$i]) ? $data_db[$i] : 0;
+        }
+        echo json_encode($response);
+
+    } elseif ($p == "chart_bar_blm_lunas") {
+        // Bar chart: Jumlah warga yang belum lunas per bulan
+        // Rentang bulan mengikuti min-max data di tabel pemakaian
+        $q_range = mysqli_query($koneksi, "SELECT MIN(MONTH(tgl)) as bln_min, MAX(MONTH(tgl)) as bln_max FROM pemakaian");
+        $range = mysqli_fetch_assoc($q_range);
+        $bln_min = (int)($range['bln_min'] ?? 1);
+        $bln_max = (int)($range['bln_max'] ?? 1);
+
+        $q = mysqli_query($koneksi, "SELECT MONTH(tgl) as bln, COUNT(username) as jml FROM pemakaian WHERE status='Belum Lunas' GROUP BY MONTH(tgl)");
+        $data_db = [];
+        while ($d = mysqli_fetch_assoc($q)) { $data_db[(int)$d['bln']] = (int)$d['jml']; }
+
+        $response = [];
+        for ($i = $bln_min; $i <= $bln_max; $i++) {
+            $response[] = $air->bln($i);
+            $response[] = isset($data_db[$i]) ? $data_db[$i] : 0;
+        }
+        echo json_encode($response);
+
+    } elseif ($p == "chart_warga_blm_lunas") {
+        // Nominal tagihan belum lunas milik warga yang sedang login
+        $user = $_POST['u'] ?? '';
+        $q = mysqli_query($koneksi, "SELECT COALESCE(SUM(tagihan), 0) as blm_lunas FROM pemakaian WHERE username='$user' AND status='Belum Lunas'");
+        $d = mysqli_fetch_assoc($q);
+        echo json_encode(['blm_lunas' => (float)$d['blm_lunas']]);
     }
 }

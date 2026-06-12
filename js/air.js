@@ -251,21 +251,32 @@ $(document).ready(function () {
               $("#sumary .bg-danger h1").text(blm_lunas);
               $("#sumary .bg-danger .small").text("Belum Bayar");
           } else {
-              $("#sumary .bg-primary h1").text(d[0].tgl);
-              if ($("#sumary .bg-primary .ms-2").length === 0) {
-                  $("#val_waktu_pencatatan").append('<div class="ms-2 mt-2"></div>');
+              // ===== ROLE WARGA =====
+              if (bln === "" || bln === undefined) {
+                  // Mode default: tampilkan tanggal terakhir (sudah diisi PHP di HTML)
+                  // Pastikan kembali ke mode default jika user ganti ke "Bulan"
+                  $("#val_waktu_default").removeClass("d-none");
+                  $("#val_waktu_pencatatan").addClass("d-none");
+                  var tglTerakhir = $("#warga_tgl_terakhir").val();
+                  var waktuTerakhir = $("#warga_waktu_terakhir").val();
+                  $("#val_waktu_default h1").text(tglTerakhir || '-');                  $("#label_waktu_pencatatan").text(waktuTerakhir ? "Pencatatan Terakhir: " + waktuTerakhir : "Waktu Pencatatan");
+              } else {
+                  // Mode setelah pilih bulan: tampilkan hari + jam
+                  $("#val_waktu_default").addClass("d-none");
+                  $("#val_waktu_pencatatan").removeClass("d-none");
+                  $("#val_hari_pencatatan").text(d[0].tgl);
+                  $("#val_jam_pencatatan").text(d[0].waktu);
+                  $("#label_waktu_pencatatan").text("Waktu Pencatatan");
               }
-              $("#sumary .bg-primary .ms-2").text(d[0].waktu);
-              $("#sumary .bg-primary .small").text("Waktu Pencatatan");
 
               $("#sumary .bg-warning h1").text(d[0].pemakaian);
-              
+
               tagihan = new Intl.NumberFormat('en-ID', { style: 'decimal' }).format(d[0].tagihan);
               $("#sumary .bg-success h1").text(tagihan);
               $("#sumary .bg-success .me-2").text("Rp. ");
               $("#sumary .bg-success .small").text("Tagihan");
 
-              stat=d[0].status;
+              stat = d[0].status;
               $("#sumary .bg-danger h1").text(stat);
               $("#sumary .bg-danger .small").text("Status Tagihan");
           }
@@ -274,106 +285,581 @@ $(document).ready(function () {
         console.log("AJAX gagal")
       })
 
-      // Panggil Grafik Pemakaian (Bar Chart)
-      $.ajax ({
-          type : "post",
-          url : "../assets/ajax.php",
-          data : {p:"chart_bar", u:$("#yuser").val(), l:$("#user_level").val()},
-          dataType : "json"  
-      })
-      .done(function(respon) {
-          Chart.defaults.global.defaultFontFamily = '-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
-          Chart.defaults.global.defaultFontColor = '#292b2c';
+      // ================================================================
+      // CHART UNTUK ROLE ADMIN DAN BENDAHARA
+      // ================================================================
+      if (level == "admin" || level == "bendahara") {
 
-          sumbuX = respon.filter((num, index) => index % 2 == 0);
-          sumbuY = respon.filter((num, index) => index % 2 != 0);
-
-          if (document.getElementById("myBarChart")) {
-              var ctx = document.getElementById("myBarChart");
-              if (window.myBarChartInstance) { window.myBarChartInstance.destroy(); }
-              window.myBarChartInstance = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                  labels: sumbuX,
-                  datasets: [{
-                    label: "Pemakaian",
-                    backgroundColor: "rgba(2,117,216,1)",
-                    borderColor: "rgba(2,117,216,1)",
-                    data: sumbuY,
-                  }],
+        // --- Chart 1 (Baris 1 Kiri): Total Pemakaian Air/Bulan (Line) ---
+        $.ajax({
+          type: "post",
+          url: "../assets/ajax.php",
+          data: {p: "chart_bar", u: user, l: level},
+          dataType: "json"
+        })
+        .done(function(respon) {
+          var sumbuX = respon.filter(function(v, i) { return i % 2 === 0; });
+          var sumbuY = respon.filter(function(v, i) { return i % 2 !== 0; });
+          var ctx = document.getElementById("myLineChart");
+          if (ctx) {
+            if (window.myLineChartInstance) { window.myLineChartInstance.destroy(); }
+            window.myLineChartInstance = new Chart(ctx, {
+              type: 'line',
+              data: {
+                labels: sumbuX,
+                datasets: [{
+                  label: "Pemakaian (m³)",
+                  backgroundColor: "rgba(2,117,216,0.15)",
+                  borderColor: "rgba(2,117,216,1)",
+                  pointBackgroundColor: "rgba(2,117,216,1)",
+                  pointBorderColor: "rgba(255,255,255,0.8)",
+                  pointHoverBackgroundColor: "rgba(2,117,216,1)",
+                  pointHitRadius: 50,
+                  pointBorderWidth: 2,
+                  fill: true,
+                  data: sumbuY,
+                }]
+              },
+              options: {
+                scales: {
+                  xAxes: [{ gridLines: { display: false }, ticks: { maxTicksLimit: 12 } }],
+                  yAxes: [{ ticks: { min: 0, maxTicksLimit: 5 }, gridLines: { color: "rgba(0,0,0,.125)" } }]
                 },
-                options: {
-                  scales: {
-                    xAxes: [{
-                      time: { unit: 'month' },
-                      gridLines: { display: false },
-                      ticks: { maxTicksLimit: 6 }
-                    }],
-                    yAxes: [{
-                      ticks: { min: 0, maxTicksLimit: 5 },
-                      gridLines: { display: true }
-                    }],
-                  },
-                  legend: { display: false }
-                }
-              });
-              let tot = sumbuY.reduce((a, b) => Number(a) + Number(b), 0);
-              $("#tot_pemakaian").text(tot + " m3");
+                legend: { display: false }
+              }
+            });
+            var tot = sumbuY.reduce(function(a, b) { return Number(a) + Number(b); }, 0);
+            $("#tot_pemakaian").text(tot + " m³");
           }
-      });
+        });
 
-      // Panggil Grafik Tagihan (Area/Line Chart)
-      $.ajax ({
-          type : "post",
-          url : "../assets/ajax.php",
-          data : {p:"chart_line", u:$("#yuser").val(), l:$("#user_level").val()},
-          dataType : "json"  
-      })
-      .done(function(respon) {
-          Chart.defaults.global.defaultFontFamily = '-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
-          Chart.defaults.global.defaultFontColor = '#292b2c';
+        // --- Chart 2 (Baris 1 Kanan): Pie RT vs Kos ---
+        $.ajax({
+          type: "post",
+          url: "../assets/ajax.php",
+          data: {p: "chart_pie_tipe"},
+          dataType: "json"
+        })
+        .done(function(respon) {
+          var ctx = document.getElementById("myPieChart");
+          if (ctx) {
+            if (window.myPieChartInstance) { window.myPieChartInstance.destroy(); }
+            window.myPieChartInstance = new Chart(ctx, {
+              type: 'pie',
+              data: {
+                labels: ["Rumah Tinggal", "Kos"],
+                datasets: [{
+                  data: [respon["RT"] || 0, respon["Kos"] || 0],
+                  backgroundColor: ["rgba(255, 42, 0, 0.85)", "rgba(2,117,216,0.85)"],
+                  borderColor: ["rgba(255, 42, 0, 0.85)", "rgba(2,117,216,0.85)"],
+                  borderWidth: 2
+                }]
+              },
+              options: {
+                legend: { position: 'bottom' },
+                tooltips: {
+                  callbacks: {
+                    label: function(item, data) {
+                      var label = data.labels[item.index];
+                      var val = data.datasets[0].data[item.index];
+                      var total = data.datasets[0].data.reduce(function(a, b){ return a + b; }, 0);
+                      var pct = total > 0 ? Math.round(val / total * 100) : 0;
+                      return label + ": " + val + " orang (" + pct + "%)";
+                    }
+                  }
+                }
+              }
+            });
+          }
+        });
 
-          sumbuX = respon.filter((num, index) => index % 2 == 0);
-          sumbuY = respon.filter((num, index) => index % 2 != 0);
-
-          if (document.getElementById("myAreaChart")) {
-              var ctx = document.getElementById("myAreaChart");
-              if (window.myAreaChartInstance) { window.myAreaChartInstance.destroy(); }
-              window.myAreaChartInstance = new Chart(ctx, {
-                type: 'line',
-                data: {
-                  labels: sumbuX,
-                  datasets: [{
-                    label: "Tagihan (Rp)",
-                    backgroundColor: "rgba(2,117,216,0.2)",
-                    borderColor: "rgba(2,117,216,1)",
-                    pointBackgroundColor: "rgba(2,117,216,1)",
-                    pointBorderColor: "rgba(255,255,255,0.8)",
-                    pointHoverBackgroundColor: "rgba(2,117,216,1)",
-                    pointHitRadius: 50,
-                    pointBorderWidth: 2,
-                    data: sumbuY,
-                  }],
+        // --- Chart 3 (Baris 2 Kiri): Total Tagihan/Bulan (Line) ---
+        $.ajax({
+          type: "post",
+          url: "../assets/ajax.php",
+          data: {p: "chart_line", u: user, l: level},
+          dataType: "json"
+        })
+        .done(function(respon) {
+          var sumbuX = respon.filter(function(v, i) { return i % 2 === 0; });
+          var sumbuY = respon.filter(function(v, i) { return i % 2 !== 0; });
+          var ctx = document.getElementById("myAreaChart");
+          if (ctx) {
+            if (window.myAreaChartInstance) { window.myAreaChartInstance.destroy(); }
+            window.myAreaChartInstance = new Chart(ctx, {
+              type: 'line',
+              data: {
+                labels: sumbuX,
+                datasets: [{
+                  label: "Tagihan (Rp)",
+                  backgroundColor: "rgba(255,165,0,0.15)",
+                  borderColor: "rgba(255,165,0,1)",
+                  pointBackgroundColor: "rgba(255,165,0,1)",
+                  pointBorderColor: "rgba(255,255,255,0.8)",
+                  pointHoverBackgroundColor: "rgba(255,165,0,1)",
+                  pointHitRadius: 50,
+                  pointBorderWidth: 2,
+                  fill: true,
+                  data: sumbuY,
+                }]
+              },
+              options: {
+                scales: {
+                  xAxes: [{ gridLines: { display: false }, ticks: { maxTicksLimit: 12 } }],
+                  yAxes: [{ ticks: { min: 0, maxTicksLimit: 5 }, gridLines: { color: "rgba(0,0,0,.125)" } }]
                 },
-                options: {
-                  scales: {
-                    xAxes: [{
-                      time: { unit: 'date' },
-                      gridLines: { display: false },
-                      ticks: { maxTicksLimit: 7 }
-                    }],
-                    yAxes: [{
-                      ticks: { min: 0, maxTicksLimit: 5 },
-                      gridLines: { color: "rgba(0, 0, 0, .125)" }
-                    }],
-                  },
-                  legend: { display: false }
-                }
-              });
-              let tot = sumbuY.reduce((a, b) => Number(a) + Number(b), 0);
-              $("#tot_tagihan").text("Rp " + new Intl.NumberFormat('en-ID', { style: 'decimal' }).format(tot));
+                legend: { display: false }
+              }
+            });
+            var tot = sumbuY.reduce(function(a, b) { return Number(a) + Number(b); }, 0);
+            $("#tot_tagihan").text("Rp " + new Intl.NumberFormat('en-ID', { style: 'decimal' }).format(tot));
           }
-      });
+        });
+
+        // --- Chart 4 (Baris 2 Kanan): Total Pemasukan/Bulan (Line) ---
+        $.ajax({
+          type: "post",
+          url: "../assets/ajax.php",
+          data: {p: "chart_line_pemasukan"},
+          dataType: "json"
+        })
+        .done(function(respon) {
+          var sumbuX = respon.filter(function(v, i) { return i % 2 === 0; });
+          var sumbuY = respon.filter(function(v, i) { return i % 2 !== 0; });
+          var ctx = document.getElementById("myPemasukanChart");
+          if (ctx) {
+            if (window.myPemasukanChartInstance) { window.myPemasukanChartInstance.destroy(); }
+            window.myPemasukanChartInstance = new Chart(ctx, {
+              type: 'line',
+              data: {
+                labels: sumbuX,
+                datasets: [{
+                  label: "Pemasukan (Rp)",
+                  backgroundColor: "rgba(40,167,69,0.15)",
+                  borderColor: "rgba(40,167,69,1)",
+                  pointBackgroundColor: "rgba(40,167,69,1)",
+                  pointBorderColor: "rgba(255,255,255,0.8)",
+                  pointHoverBackgroundColor: "rgba(40,167,69,1)",
+                  pointHitRadius: 50,
+                  pointBorderWidth: 2,
+                  fill: true,
+                  data: sumbuY,
+                }]
+              },
+              options: {
+                scales: {
+                  xAxes: [{ gridLines: { display: false }, ticks: { maxTicksLimit: 12 } }],
+                  yAxes: [{ ticks: { min: 0, maxTicksLimit: 5 }, gridLines: { color: "rgba(0,0,0,.125)" } }]
+                },
+                legend: { display: false }
+              }
+            });
+            var tot = sumbuY.reduce(function(a, b) { return Number(a) + Number(b); }, 0);
+            $("#tot_pemasukan").text("Rp " + new Intl.NumberFormat('en-ID', { style: 'decimal' }).format(tot));
+          }
+        })
+        .fail(function(xhr) { console.log("[DEBUG] chart_line_pemasukan FAIL:", xhr.responseText); });
+
+        // --- Chart 5 (Baris 3 Kiri): Pelanggan Sudah Dicatat/Bulan (Bar) ---
+        $.ajax({
+          type: "post",
+          url: "../assets/ajax.php",
+          data: {p: "chart_bar_sdh_dicatat"},
+          dataType: "json"
+        })
+        .done(function(respon) {
+          var sumbuX = respon.filter(function(v, i) { return i % 2 === 0; });
+          var sumbuY = respon.filter(function(v, i) { return i % 2 !== 0; });
+          var ctx = document.getElementById("mySdhDicatatChart");
+          if (ctx) {
+            if (window.mySdhDicatatChartInstance) { window.mySdhDicatatChartInstance.destroy(); }
+            window.mySdhDicatatChartInstance = new Chart(ctx, {
+              type: 'bar',
+              data: {
+                labels: sumbuX,
+                datasets: [{
+                  label: "Sudah Dicatat",
+                  backgroundColor: "rgba(40,167,69,0.85)",
+                  borderColor: "rgba(40,167,69,1)",
+                  data: sumbuY,
+                }]
+              },
+              options: {
+                scales: {
+                  xAxes: [{ gridLines: { display: false }, ticks: { maxTicksLimit: 12 } }],
+                  yAxes: [{ ticks: { min: 0, maxTicksLimit: 5, stepSize: 1 }, gridLines: { display: true } }]
+                },
+                legend: { display: false }
+              }
+            });
+          }
+        });
+
+        // --- Chart 6 (Baris 3 Kanan): Pelanggan Belum Dicatat/Bulan (Bar) ---
+        $.ajax({
+          type: "post",
+          url: "../assets/ajax.php",
+          data: {p: "chart_bar_blm_dicatat"},
+          dataType: "json"
+        })
+        .done(function(respon) {
+          var sumbuX = respon.filter(function(v, i) { return i % 2 === 0; });
+          var sumbuY = respon.filter(function(v, i) { return i % 2 !== 0; });
+          var ctx = document.getElementById("myBlmDicatatChart");
+          if (ctx) {
+            if (window.myBlmDicatatChartInstance) { window.myBlmDicatatChartInstance.destroy(); }
+            window.myBlmDicatatChartInstance = new Chart(ctx, {
+              type: 'bar',
+              data: {
+                labels: sumbuX,
+                datasets: [{
+                  label: "Belum Dicatat",
+                  backgroundColor: "rgba(220,53,69,0.85)",
+                  borderColor: "rgba(220,53,69,1)",
+                  data: sumbuY,
+                }]
+              },
+              options: {
+                scales: {
+                  xAxes: [{ gridLines: { display: false }, ticks: { maxTicksLimit: 12 } }],
+                  yAxes: [{ ticks: { min: 0, maxTicksLimit: 5, stepSize: 1 }, gridLines: { display: true } }]
+                },
+                legend: { display: false }
+              }
+            });
+          }
+        });
+
+        // --- Chart 7 (Baris 4 Kiri): Tagihan Sudah Lunas/Bulan (Bar) ---
+        $.ajax({
+          type: "post",
+          url: "../assets/ajax.php",
+          data: {p: "chart_bar_sdh_lunas"},
+          dataType: "json"
+        })
+        .done(function(respon) {
+          var sumbuX = respon.filter(function(v, i) { return i % 2 === 0; });
+          var sumbuY = respon.filter(function(v, i) { return i % 2 !== 0; });
+          var ctx = document.getElementById("mySdhLunasChart");
+          if (ctx) {
+            if (window.mySdhLunasChartInstance) { window.mySdhLunasChartInstance.destroy(); }
+            window.mySdhLunasChartInstance = new Chart(ctx, {
+              type: 'bar',
+              data: {
+                labels: sumbuX,
+                datasets: [{
+                  label: "Sudah Lunas",
+                  backgroundColor: "rgba(2,117,216,0.85)",
+                  borderColor: "rgba(2,117,216,1)",
+                  data: sumbuY,
+                }]
+              },
+              options: {
+                scales: {
+                  xAxes: [{ gridLines: { display: false }, ticks: { maxTicksLimit: 12 } }],
+                  yAxes: [{ ticks: { min: 0, maxTicksLimit: 5, stepSize: 1 }, gridLines: { display: true } }]
+                },
+                legend: { display: false }
+              }
+            });
+          }
+        });
+
+        // --- Chart 8 (Baris 4 Kanan): Tagihan Belum Lunas/Bulan (Bar) ---
+        $.ajax({
+          type: "post",
+          url: "../assets/ajax.php",
+          data: {p: "chart_bar_blm_lunas"},
+          dataType: "json"
+        })
+        .done(function(respon) {
+          var sumbuX = respon.filter(function(v, i) { return i % 2 === 0; });
+          var sumbuY = respon.filter(function(v, i) { return i % 2 !== 0; });
+          var ctx = document.getElementById("myBlmLunasChart");
+          if (ctx) {
+            if (window.myBlmLunasChartInstance) { window.myBlmLunasChartInstance.destroy(); }
+            window.myBlmLunasChartInstance = new Chart(ctx, {
+              type: 'bar',
+              data: {
+                labels: sumbuX,
+                datasets: [{
+                  label: "Belum Lunas",
+                  backgroundColor: "rgba(255,165,0,0.85)",
+                  borderColor: "rgba(255,165,0,1)",
+                  data: sumbuY,
+                }]
+              },
+              options: {
+                scales: {
+                  xAxes: [{ gridLines: { display: false }, ticks: { maxTicksLimit: 12 } }],
+                  yAxes: [{ ticks: { min: 0, maxTicksLimit: 5, stepSize: 1 }, gridLines: { display: true } }]
+                },
+                legend: { display: false }
+              }
+            });
+          }
+        });
+
+      } else if (level == "petugas") {
+        // ================================================================
+        // CHART UNTUK ROLE PETUGAS
+        // ================================================================
+
+        // --- Chart 1 (Baris 1 Kiri): Total Pemakaian Air/Bulan (Line) ---
+        $.ajax({
+          type: "post",
+          url: "../assets/ajax.php",
+          data: {p: "chart_bar", u: user, l: level},
+          dataType: "json"
+        })
+        .done(function(respon) {
+          var sumbuX = respon.filter(function(v, i) { return i % 2 === 0; });
+          var sumbuY = respon.filter(function(v, i) { return i % 2 !== 0; });
+          var ctx = document.getElementById("myLineChart");
+          if (ctx) {
+            if (window.myLineChartInstance) { window.myLineChartInstance.destroy(); }
+            window.myLineChartInstance = new Chart(ctx, {
+              type: 'line',
+              data: {
+                labels: sumbuX,
+                datasets: [{
+                  label: "Pemakaian (m³)",
+                  backgroundColor: "rgba(2,117,216,0.15)",
+                  borderColor: "rgba(2,117,216,1)",
+                  pointBackgroundColor: "rgba(2,117,216,1)",
+                  pointBorderColor: "rgba(255,255,255,0.8)",
+                  pointHoverBackgroundColor: "rgba(2,117,216,1)",
+                  pointHitRadius: 50,
+                  pointBorderWidth: 2,
+                  fill: true,
+                  data: sumbuY,
+                }]
+              },
+              options: {
+                scales: {
+                  xAxes: [{ gridLines: { display: false }, ticks: { maxTicksLimit: 12 } }],
+                  yAxes: [{ ticks: { min: 0, maxTicksLimit: 5 }, gridLines: { color: "rgba(0,0,0,.125)" } }]
+                },
+                legend: { display: false }
+              }
+            });
+            var tot = sumbuY.reduce(function(a, b) { return Number(a) + Number(b); }, 0);
+            $("#tot_pemakaian").text(tot + " m³");
+          }
+        });
+
+        // --- Chart 2 (Baris 1 Kanan): Pie RT vs Kos ---
+        $.ajax({
+          type: "post",
+          url: "../assets/ajax.php",
+          data: {p: "chart_pie_tipe"},
+          dataType: "json"
+        })
+        .done(function(respon) {
+          var ctx = document.getElementById("myPieChart");
+          if (ctx) {
+            if (window.myPieChartInstance) { window.myPieChartInstance.destroy(); }
+            window.myPieChartInstance = new Chart(ctx, {
+              type: 'pie',
+              data: {
+                labels: ["Rumah Tinggal", "Kos"],
+                datasets: [{
+                  data: [respon["RT"] || 0, respon["Kos"] || 0],
+                  backgroundColor: ["rgba(255, 42, 0, 0.85)", "rgba(2,117,216,0.85)"],
+                  borderColor: ["rgba(255, 42, 0, 0.85)", "rgba(2,117,216,0.85)"],
+                  borderWidth: 2
+                }]
+              },
+              options: {
+                legend: { position: 'bottom' },
+                tooltips: {
+                  callbacks: {
+                    label: function(item, data) {
+                      var label = data.labels[item.index];
+                      var val = data.datasets[0].data[item.index];
+                      var total = data.datasets[0].data.reduce(function(a, b){ return a + b; }, 0);
+                      var pct = total > 0 ? Math.round(val / total * 100) : 0;
+                      return label + ": " + val + " orang (" + pct + "%)";
+                    }
+                  }
+                }
+              }
+            });
+          }
+        });
+
+        // --- Chart 3 (Baris 2 Kiri): Pelanggan Sudah Dicatat/Bulan (Bar) ---
+        $.ajax({
+          type: "post",
+          url: "../assets/ajax.php",
+          data: {p: "chart_bar_sdh_dicatat"},
+          dataType: "json"
+        })
+        .done(function(respon) {
+          var sumbuX = respon.filter(function(v, i) { return i % 2 === 0; });
+          var sumbuY = respon.filter(function(v, i) { return i % 2 !== 0; });
+          var ctx = document.getElementById("mySdhDicatatChart");
+          if (ctx) {
+            if (window.mySdhDicatatChartInstance) { window.mySdhDicatatChartInstance.destroy(); }
+            window.mySdhDicatatChartInstance = new Chart(ctx, {
+              type: 'bar',
+              data: {
+                labels: sumbuX,
+                datasets: [{
+                  label: "Sudah Dicatat",
+                  backgroundColor: "rgba(40,167,69,0.85)",
+                  borderColor: "rgba(40,167,69,1)",
+                  data: sumbuY,
+                }]
+              },
+              options: {
+                scales: {
+                  xAxes: [{ gridLines: { display: false }, ticks: { maxTicksLimit: 12 } }],
+                  yAxes: [{ ticks: { min: 0, maxTicksLimit: 5, stepSize: 1 }, gridLines: { display: true } }]
+                },
+                legend: { display: false }
+              }
+            });
+          }
+        });
+
+        // --- Chart 4 (Baris 2 Kanan): Pelanggan Belum Dicatat/Bulan (Bar) ---
+        $.ajax({
+          type: "post",
+          url: "../assets/ajax.php",
+          data: {p: "chart_bar_blm_dicatat"},
+          dataType: "json"
+        })
+        .done(function(respon) {
+          var sumbuX = respon.filter(function(v, i) { return i % 2 === 0; });
+          var sumbuY = respon.filter(function(v, i) { return i % 2 !== 0; });
+          var ctx = document.getElementById("myBlmDicatatChart");
+          if (ctx) {
+            if (window.myBlmDicatatChartInstance) { window.myBlmDicatatChartInstance.destroy(); }
+            window.myBlmDicatatChartInstance = new Chart(ctx, {
+              type: 'bar',
+              data: {
+                labels: sumbuX,
+                datasets: [{
+                  label: "Belum Dicatat",
+                  backgroundColor: "rgba(220,53,69,0.85)",
+                  borderColor: "rgba(220,53,69,1)",
+                  data: sumbuY,
+                }]
+              },
+              options: {
+                scales: {
+                  xAxes: [{ gridLines: { display: false }, ticks: { maxTicksLimit: 12 } }],
+                  yAxes: [{ ticks: { min: 0, maxTicksLimit: 5, stepSize: 1 }, gridLines: { display: true } }]
+                },
+                legend: { display: false }
+              }
+            });
+          }
+        });
+
+      } else {
+        // ================================================================
+        // CHART UNTUK ROLE WARGA
+        // ================================================================
+
+        // --- Chart 1 (Kiri): Total Pemakaian Air/Bulan milik warga (Bar) ---
+        $.ajax({
+          type: "post",
+          url: "../assets/ajax.php",
+          data: {p: "chart_bar", u: user, l: level},
+          dataType: "json"
+        })
+        .done(function(respon) {
+          var sumbuX = respon.filter(function(v, i) { return i % 2 === 0; });
+          var sumbuY = respon.filter(function(v, i) { return i % 2 !== 0; });
+          var ctx = document.getElementById("myBarChart");
+          if (ctx) {
+            if (window.myBarChartInstance) { window.myBarChartInstance.destroy(); }
+            window.myBarChartInstance = new Chart(ctx, {
+              type: 'bar',
+              data: {
+                labels: sumbuX,
+                datasets: [{
+                  label: "Pemakaian (m³)",
+                  backgroundColor: "rgba(2,117,216,0.85)",
+                  borderColor: "rgba(2,117,216,1)",
+                  data: sumbuY,
+                }]
+              },
+              options: {
+                scales: {
+                  xAxes: [{ gridLines: { display: false }, ticks: { maxTicksLimit: 12 } }],
+                  yAxes: [{ ticks: { min: 0, maxTicksLimit: 5 }, gridLines: { display: true } }]
+                },
+                legend: { display: false }
+              }
+            });
+            var tot = sumbuY.reduce(function(a, b) { return Number(a) + Number(b); }, 0);
+            $("#tot_pemakaian").text(tot + " m³");
+          }
+        });
+
+        // --- Chart 2 (Kanan): Tagihan Air/Bulan milik warga (Line/Area) + BLM LUNAS ---
+        $.ajax({
+          type: "post",
+          url: "../assets/ajax.php",
+          data: {p: "chart_line", u: user, l: level},
+          dataType: "json"
+        })
+        .done(function(respon) {
+          var sumbuX = respon.filter(function(v, i) { return i % 2 === 0; });
+          var sumbuY = respon.filter(function(v, i) { return i % 2 !== 0; });
+          var ctx = document.getElementById("myAreaChart");
+          if (ctx) {
+            if (window.myAreaChartInstance) { window.myAreaChartInstance.destroy(); }
+            window.myAreaChartInstance = new Chart(ctx, {
+              type: 'line',
+              data: {
+                labels: sumbuX,
+                datasets: [{
+                  label: "Tagihan (Rp)",
+                  backgroundColor: "rgba(2,117,216,0.2)",
+                  borderColor: "rgba(2,117,216,1)",
+                  pointBackgroundColor: "rgba(2,117,216,1)",
+                  pointBorderColor: "rgba(255,255,255,0.8)",
+                  pointHoverBackgroundColor: "rgba(2,117,216,1)",
+                  pointHitRadius: 50,
+                  pointBorderWidth: 2,
+                  fill: true,
+                  data: sumbuY,
+                }]
+              },
+              options: {
+                scales: {
+                  xAxes: [{ gridLines: { display: false }, ticks: { maxTicksLimit: 12 } }],
+                  yAxes: [{ ticks: { min: 0, maxTicksLimit: 5 }, gridLines: { color: "rgba(0,0,0,.125)" } }]
+                },
+                legend: { display: false }
+              }
+            });
+            var tot = sumbuY.reduce(function(a, b) { return Number(a) + Number(b); }, 0);
+            $("#tot_tagihan").text("Rp " + new Intl.NumberFormat('en-ID', { style: 'decimal' }).format(tot));
+          }
+        });
+
+        // --- Hitung total tagihan BLM LUNAS milik warga ---
+        $.ajax({
+          type: "post",
+          url: "../assets/ajax.php",
+          data: {p: "chart_warga_blm_lunas", u: user},
+          dataType: "json"
+        })
+        .done(function(respon) {
+          if (respon.blm_lunas > 0) {
+            $("#tot_blm_lunas").text("| BLM LUNAS: Rp " + new Intl.NumberFormat('en-ID', { style: 'decimal' }).format(respon.blm_lunas));
+          } else {
+            $("#tot_blm_lunas").text("");
+          }
+        });
+
+      } // end if level == admin/bendahara | petugas | warga
+
     }).trigger("change"); // Memicu auto-load ringkasan dan grafik saat pertama kali dimuat
 
     $("#form_user, #data_user, #form_tarif, #data_tarif, #data_meter, #form_meter, #data_pemakaian").hide();

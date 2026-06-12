@@ -212,9 +212,27 @@ $level = $dt_user[2];
                     }
                     $d_max_bln = mysqli_fetch_assoc($q_max_bln);
                     $bulan_terakhir = $d_max_bln['max_bln'] ?? date('Y-m');
+
+                    // Untuk warga: ambil data pencatatan terakhir (tanggal + waktu)
+                    $warga_tgl_terakhir = '';
+                    $warga_waktu_terakhir = '';
+                    if ($level == 'warga' && !empty($user_sesi)) {
+                        $q_last = mysqli_query($koneksi, "SELECT tgl, waktu FROM pemakaian WHERE username='$user_sesi' ORDER BY tgl DESC, waktu DESC LIMIT 1");
+                        $d_last = mysqli_fetch_assoc($q_last);
+                        if ($d_last) {
+                            // Format tanggal jadi DD-MM-YYYY
+                            $tgl_parts = explode('-', $d_last['tgl']);
+                            $warga_tgl_terakhir = $tgl_parts[2] . '-' . $tgl_parts[1] . '-' . $tgl_parts[0];
+                            $warga_waktu_terakhir = $d_last['waktu'];
+                        }
+                    }
                     ?>
                     <input type="hidden" id="user_level" value="<?php echo $dt_user[2]; ?>">
                     <input type="hidden" id="yuser" value="<?php echo $_SESSION['user'] ?? ''; ?>">
+                    <?php if ($level == 'warga') { ?>
+                    <input type="hidden" id="warga_tgl_terakhir" value="<?php echo $warga_tgl_terakhir; ?>">
+                    <input type="hidden" id="warga_waktu_terakhir" value="<?php echo $warga_waktu_terakhir; ?>">
+                    <?php } ?>
                     <div class="row mb-3" id="pilih_waktu">
                         <div class="col-xl-3 col-md-12">
                             <label for="sel1" class="form-label">Pilih Waktu : </label>
@@ -226,7 +244,8 @@ $level = $dt_user[2];
                                         $i = "0" . $i;
                                     }
                                     $val = date("Y") . "-" . $i;
-                                    $selected = ($val == $bulan_terakhir) ? " selected" : "";
+                                    // Warga: default selalu "Bulan", role lain: auto-pilih bulan terakhir
+                                    $selected = ($level != 'warga' && $val == $bulan_terakhir) ? " selected" : "";
                                     echo "<option value=\"$val\"$selected>" . $air->bln($i) . " " . date("Y") . "</option>";
                                 }
                                 ?>
@@ -328,13 +347,23 @@ $level = $dt_user[2];
                         <?php } elseif ($level == "warga") { ?>
                             <div class="col-xl-3 col-md-6">
                                 <div class="card bg-primary text-white mb-4">
-                                    <div class="card-body d-flex justify-content-center align-items-center">
-                                        <div id="val_waktu_pencatatan" class="d-flex align-items-start">
-                                            <h1 class="display-5 mb-0">-</h1>
+                                    <div class="card-body d-flex justify-content-center align-items-center py-3">
+                                        <!-- Mode default: tampil tanggal terakhir penuh (DD-MM-YYYY) -->
+                                        <div id="val_waktu_default" class="text-center w-100">
+                                            <h1 class="mb-0 text-white">
+                                                <?php echo $warga_tgl_terakhir ?: '-'; ?>
+                                            </h1>
+                                        </div>
+                                        <!-- Mode setelah pilih bulan: tampil hari + jam -->
+                                        <div id="val_waktu_pencatatan" class="d-flex align-items-center d-none">
+                                            <h1 class="display-5 mb-0" id="val_hari_pencatatan">-</h1>
+                                            <div class="ms-2 mt-2 small" id="val_jam_pencatatan" style="font-size:1rem;"></div>
                                         </div>
                                     </div>
                                     <div class="card-footer d-flex align-items-center justify-content-center">
-                                        <div class="small text-white">Waktu Pencatatan</div>
+                                        <div class="small text-white" id="label_waktu_pencatatan">
+                                            <?php echo $warga_waktu_terakhir ? 'Pencatatan Terakhir: ' . $warga_waktu_terakhir : 'Waktu Pencatatan'; ?>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -373,11 +402,147 @@ $level = $dt_user[2];
                         <?php } ?>
                     </div>
                     <div class="row" id="chart">
+
+                        <?php if ($level == "admin" || $level == "bendahara") { ?>
+                        <!-- ===== BARIS 1: Total Pemakaian (Line) + Pie RT vs Kos ===== -->
+                        <div class="col-xl-6">
+                            <div class="card mb-4">
+                                <div class="card-header">
+                                    <i class="fas fa-chart-line me-1"></i>
+                                    Total Pemakaian Air
+                                    <span id="tot_pemakaian" class="float-end fw-bold"></span>
+                                </div>
+                                <div class="card-body"><canvas id="myLineChart" width="100%" height="40"></canvas></div>
+                            </div>
+                        </div>
+                        <div class="col-xl-6">
+                            <div class="card mb-4">
+                                <div class="card-header">
+                                    <i class="fas fa-chart-pie me-1"></i>
+                                    Jumlah Rumas Kos dan Rumah tinggal
+                                </div>
+                                <div class="card-body d-flex justify-content-center">
+                                    <canvas id="myPieChart" width="100%" height="40"></canvas>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ===== BARIS 2: Total Tagihan (Line) + Total Pemasukan (Line) ===== -->
+                        <div class="col-xl-6">
+                            <div class="card mb-4">
+                                <div class="card-header">
+                                    <i class="fas fa-chart-line me-1"></i>
+                                    Total Tagihan Air
+                                    <span id="tot_tagihan" class="float-end fw-bold"></span>
+                                </div>
+                                <div class="card-body"><canvas id="myAreaChart" width="100%" height="40"></canvas></div>
+                            </div>
+                        </div>
+                        <div class="col-xl-6">
+                            <div class="card mb-4">
+                                <div class="card-header">
+                                    <i class="fas fa-chart-line me-1"></i>
+                                    Total Pemasukan 
+                                    <span id="tot_pemasukan" class="float-end fw-bold"></span>
+                                </div>
+                                <div class="card-body"><canvas id="myPemasukanChart" width="100%" height="40"></canvas></div>
+                            </div>
+                        </div>
+
+                        <!-- ===== BARIS 3: Sudah Dicatat (Bar) + Belum Dicatat (Bar) ===== -->
                         <div class="col-xl-6">
                             <div class="card mb-4">
                                 <div class="card-header">
                                     <i class="fas fa-chart-bar me-1"></i>
-                                    Grafik Pemakaian Air (m<sup>3</sup>) <span id="tot_pemakaian" class="float-end fw-bold"></span>
+                                    Jumlah Warga Tercatat
+                                </div>
+                                <div class="card-body"><canvas id="mySdhDicatatChart" width="100%" height="40"></canvas></div>
+                            </div>
+                        </div>
+                        <div class="col-xl-6">
+                            <div class="card mb-4">
+                                <div class="card-header">
+                                    <i class="fas fa-chart-bar me-1"></i>
+                                    Jumlah Warga Belum Tercatat
+                                </div>
+                                <div class="card-body"><canvas id="myBlmDicatatChart" width="100%" height="40"></canvas></div>
+                            </div>
+                        </div>
+
+                        <!-- ===== BARIS 4: Tagihan Sudah Lunas (Bar) + Tagihan Belum Lunas (Bar) ===== -->
+                        <div class="col-xl-6">
+                            <div class="card mb-4">
+                                <div class="card-header">
+                                    <i class="fas fa-chart-bar me-1"></i>
+                                    Jumlah warga Sudah LUNAS
+                                </div>
+                                <div class="card-body"><canvas id="mySdhLunasChart" width="100%" height="40"></canvas></div>
+                            </div>
+                        </div>
+                        <div class="col-xl-6">
+                            <div class="card mb-4">
+                                <div class="card-header">
+                                    <i class="fas fa-chart-bar me-1"></i>
+                                    Jumlah warga belum LUNAS
+                                </div>
+                                <div class="card-body"><canvas id="myBlmLunasChart" width="100%" height="40"></canvas></div>
+                            </div>
+                        </div>
+
+                        <?php } elseif ($level == "petugas") { ?>
+                        <!-- ===== CHART UNTUK ROLE PETUGAS ===== -->
+
+                        <!-- ===== BARIS 1: Total Pemakaian (Line) + Pie RT vs Kos ===== -->
+                        <div class="col-xl-6">
+                            <div class="card mb-4">
+                                <div class="card-header">
+                                    <i class="fas fa-chart-line me-1"></i>
+                                    Total Pemakaian Air
+                                    <span id="tot_pemakaian" class="float-end fw-bold"></span>
+                                </div>
+                                <div class="card-body"><canvas id="myLineChart" width="100%" height="40"></canvas></div>
+                            </div>
+                        </div>
+                        <div class="col-xl-6">
+                            <div class="card mb-4">
+                                <div class="card-header">
+                                    <i class="fas fa-chart-pie me-1"></i>
+                                    Jumlah Rumah Tinggal dan Kos
+                                </div>
+                                <div class="card-body d-flex justify-content-center">
+                                    <canvas id="myPieChart" width="100%" height="40"></canvas>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ===== BARIS 2: Sudah Dicatat (Bar) + Belum Dicatat (Bar) ===== -->
+                        <div class="col-xl-6">
+                            <div class="card mb-4">
+                                <div class="card-header">
+                                    <i class="fas fa-chart-bar me-1"></i>
+                                   Jumlah warga Tercatat
+                                </div>
+                                <div class="card-body"><canvas id="mySdhDicatatChart" width="100%" height="40"></canvas></div>
+                            </div>
+                        </div>
+                        <div class="col-xl-6">
+                            <div class="card mb-4">
+                                <div class="card-header">
+                                    <i class="fas fa-chart-bar me-1"></i>
+                                    Jumlah Warga Belum tercatat
+                                </div>
+                                <div class="card-body"><canvas id="myBlmDicatatChart" width="100%" height="40"></canvas></div>
+                            </div>
+                        </div>
+
+                        <?php } else { ?>
+                        <!-- ===== CHART UNTUK ROLE WARGA ===== -->
+                        <div class="col-xl-6">
+                            <div class="card mb-4">
+                                <div class="card-header">
+                                    <i class="fas fa-chart-bar me-1"></i>
+                                    Total Pemakaian Air
+                                    <span id="tot_pemakaian" class="float-end fw-bold"></span>
                                 </div>
                                 <div class="card-body"><canvas id="myBarChart" width="100%" height="40"></canvas></div>
                             </div>
@@ -386,11 +551,15 @@ $level = $dt_user[2];
                             <div class="card mb-4">
                                 <div class="card-header">
                                     <i class="fas fa-chart-area me-1"></i>
-                                    Grafik Tagihan Air (Rp) <span id="tot_tagihan" class="float-end fw-bold"></span>
+                                    Total Pembayaran Air
+                                    <span id="tot_tagihan" class="float-end fw-bold"></span>
+                                    <span id="tot_blm_lunas" class="float-end fw-bold text-danger me-3"></span>
                                 </div>
                                 <div class="card-body"><canvas id="myAreaChart" width="100%" height="40"></canvas></div>
                             </div>
                         </div>
+                        <?php } ?>
+
                     </div>
 
                     <?php
@@ -566,7 +735,8 @@ $level = $dt_user[2];
                                 $diff_add = date_diff($tgl_terakhir_obj, $tgl_sekarang_obj);
                                 $selisih_hari_add = $diff_add->days;
 
-                                if ($level == "petugas" || $level == "admin" && $selisih_hari_add < 30) {
+                                // Blok insert jika belum melewati 30 hari (berlaku untuk admin dan petugas)
+                                if (($level == "petugas" || $level == "admin") && $selisih_hari_add < 30) {
                                     $nama_bulan_terakhir = date('F Y', strtotime($tgl_terakhir));
                                     echo "<div class='alert alert-warning alert-dismissible fade show' id=alert-meter>
                                                         <button type=button class=btn-close data-bs-dismiss=alert></button>
