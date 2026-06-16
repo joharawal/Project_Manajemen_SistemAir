@@ -45,11 +45,11 @@ if (isset($_POST['p'])) {
             $d1 = mysqli_fetch_assoc($q1);
             $data[] = array('jml_pelanggan' => $d1['jml_pelanggan']);
 
-            $q2 = mysqli_query($koneksi, "SELECT COALESCE(SUM(tagihan), 0) as tagihan FROM pemakaian WHERE tgl LIKE '$bln%' AND status='Lunas'");
+            $q2 = mysqli_query($koneksi, "SELECT COALESCE(SUM(tagihan), 0) as tagihan FROM pemakaian WHERE tgl LIKE '$bln%' AND LOWER(status)='lunas'");
             $d2 = mysqli_fetch_assoc($q2);
             $data[] = array('pemasukan' => $d2['tagihan']);
 
-            $q3 = mysqli_query($koneksi, "SELECT COUNT(username) as warga_lunas FROM pemakaian WHERE tgl LIKE '$bln%' AND status='Lunas'");
+            $q3 = mysqli_query($koneksi, "SELECT COUNT(username) as warga_lunas FROM pemakaian WHERE tgl LIKE '$bln%' AND LOWER(status)='lunas'");
             $d3 = mysqli_fetch_assoc($q3);
             $data[] = array('lunas' => $d3['warga_lunas']);
         } else {
@@ -139,7 +139,7 @@ if (isset($_POST['p'])) {
         $bln_min = (int)($range['bln_min'] ?? 1);
         $bln_max = (int)($range['bln_max'] ?? 1);
 
-        $q = mysqli_query($koneksi, "SELECT MONTH(tgl) as bln, SUM(tagihan) as pemasukan FROM pemakaian WHERE status='Lunas' GROUP BY MONTH(tgl)");
+        $q = mysqli_query($koneksi, "SELECT MONTH(tgl) as bln, SUM(tagihan) as pemasukan FROM pemakaian WHERE LOWER(status)='lunas' GROUP BY MONTH(tgl)");
         $data_db = [];
         while ($d = mysqli_fetch_assoc($q)) { $data_db[(int)$d['bln']] = $d['pemasukan']; }
 
@@ -194,13 +194,13 @@ if (isset($_POST['p'])) {
 
     } elseif ($p == "chart_bar_sdh_lunas") {
         // Bar chart: Jumlah warga yang sudah lunas per bulan
-        // Rentang bulan mengikuti min-max data di tabel pemakaian
+        // Pakai LOWER() agar case-insensitive (hosting bisa beda case dengan lokal)
         $q_range = mysqli_query($koneksi, "SELECT MIN(MONTH(tgl)) as bln_min, MAX(MONTH(tgl)) as bln_max FROM pemakaian");
         $range = mysqli_fetch_assoc($q_range);
         $bln_min = (int)($range['bln_min'] ?? 1);
         $bln_max = (int)($range['bln_max'] ?? 1);
 
-        $q = mysqli_query($koneksi, "SELECT MONTH(tgl) as bln, COUNT(username) as jml FROM pemakaian WHERE status='Lunas' GROUP BY MONTH(tgl)");
+        $q = mysqli_query($koneksi, "SELECT MONTH(tgl) as bln, COUNT(username) as jml FROM pemakaian WHERE LOWER(status)='lunas' GROUP BY MONTH(tgl)");
         $data_db = [];
         while ($d = mysqli_fetch_assoc($q)) { $data_db[(int)$d['bln']] = (int)$d['jml']; }
 
@@ -213,13 +213,13 @@ if (isset($_POST['p'])) {
 
     } elseif ($p == "chart_bar_blm_lunas") {
         // Bar chart: Jumlah warga yang belum lunas per bulan
-        // Rentang bulan mengikuti min-max data di tabel pemakaian
+        // Kebalikan dari lunas: semua status yang LOWER-nya bukan 'lunas'
         $q_range = mysqli_query($koneksi, "SELECT MIN(MONTH(tgl)) as bln_min, MAX(MONTH(tgl)) as bln_max FROM pemakaian");
         $range = mysqli_fetch_assoc($q_range);
         $bln_min = (int)($range['bln_min'] ?? 1);
         $bln_max = (int)($range['bln_max'] ?? 1);
 
-        $q = mysqli_query($koneksi, "SELECT MONTH(tgl) as bln, COUNT(username) as jml FROM pemakaian WHERE status='Belum Lunas' GROUP BY MONTH(tgl)");
+        $q = mysqli_query($koneksi, "SELECT MONTH(tgl) as bln, COUNT(username) as jml FROM pemakaian WHERE LOWER(status) != 'lunas' GROUP BY MONTH(tgl)");
         $data_db = [];
         while ($d = mysqli_fetch_assoc($q)) { $data_db[(int)$d['bln']] = (int)$d['jml']; }
 
@@ -233,7 +233,7 @@ if (isset($_POST['p'])) {
     } elseif ($p == "chart_warga_blm_lunas") {
         // Nominal tagihan belum lunas milik warga yang sedang login
         $user = $_POST['u'] ?? '';
-        $q = mysqli_query($koneksi, "SELECT COALESCE(SUM(tagihan), 0) as blm_lunas FROM pemakaian WHERE username='$user' AND status='Belum Lunas'");
+        $q = mysqli_query($koneksi, "SELECT COALESCE(SUM(tagihan), 0) as blm_lunas FROM pemakaian WHERE username='$user' AND LOWER(status) != 'lunas'");
         $d = mysqli_fetch_assoc($q);
         echo json_encode(['blm_lunas' => (float)$d['blm_lunas']]);
     }
