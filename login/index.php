@@ -230,8 +230,8 @@ $level = $dt_user[2];
                     <input type="hidden" id="user_level" value="<?php echo $dt_user[2]; ?>">
                     <input type="hidden" id="yuser" value="<?php echo $_SESSION['user'] ?? ''; ?>">
                     <?php if ($level == 'warga') { ?>
-                    <input type="hidden" id="warga_tgl_terakhir" value="<?php echo $warga_tgl_terakhir; ?>">
-                    <input type="hidden" id="warga_waktu_terakhir" value="<?php echo $warga_waktu_terakhir; ?>">
+                        <input type="hidden" id="warga_tgl_terakhir" value="<?php echo $warga_tgl_terakhir; ?>">
+                        <input type="hidden" id="warga_waktu_terakhir" value="<?php echo $warga_waktu_terakhir; ?>">
                     <?php } ?>
                     <div class="row mb-3" id="pilih_waktu">
                         <div class="col-xl-3 col-md-12">
@@ -404,160 +404,160 @@ $level = $dt_user[2];
                     <div class="row" id="chart">
 
                         <?php if ($level == "admin" || $level == "bendahara") { ?>
-                        <!-- ===== BARIS 1: Total Pemakaian (Line) + Pie RT vs Kos ===== -->
-                        <div class="col-xl-6">
-                            <div class="card mb-4">
-                                <div class="card-header">
-                                    <i class="fas fa-chart-line me-1"></i>
-                                    Total Pemakaian Air
-                                    <span id="tot_pemakaian" class="float-end fw-bold"></span>
-                                </div>
-                                <div class="card-body"><canvas id="myLineChart" width="100%" height="40"></canvas></div>
-                            </div>
-                        </div>
-                        <div class="col-xl-6">
-                            <div class="card mb-4">
-                                <div class="card-header">
-                                    <i class="fas fa-chart-pie me-1"></i>
-                                    Jumlah Rumas Kos dan Rumah tinggal
-                                </div>
-                                <div class="card-body d-flex justify-content-center">
-                                    <canvas id="myPieChart" width="100%" height="40"></canvas>
+                            <!-- ===== BARIS 1: Total Pemakaian (Line) + Pie RT vs Kos ===== -->
+                            <div class="col-xl-6">
+                                <div class="card mb-4">
+                                    <div class="card-header">
+                                        <i class="fas fa-chart-line me-1"></i>
+                                        Total Pemakaian Air
+                                        <span id="tot_pemakaian" class="float-end fw-bold"></span>
+                                    </div>
+                                    <div class="card-body"><canvas id="myLineChart" width="100%" height="40"></canvas></div>
                                 </div>
                             </div>
-                        </div>
+                            <div class="col-xl-6">
+                                <div class="card mb-4">
+                                    <div class="card-header">
+                                        <i class="fas fa-chart-pie me-1"></i>
+                                        Jumlah Rumah Kos dan Rumah Tinggal
+                                    </div>
+                                    <div class="card-body d-flex justify-content-center">
+                                        <canvas id="myPieChart" width="100%" height="40"></canvas>
+                                    </div>
+                                </div>
+                            </div>
 
-                        <!-- ===== BARIS 2: Total Tagihan (Line) + Total Pemasukan (Line) ===== -->
-                        <div class="col-xl-6">
-                            <div class="card mb-4">
-                                <div class="card-header">
-                                    <i class="fas fa-chart-line me-1"></i>
-                                    Total Tagihan Air
-                                    <span id="tot_tagihan" class="float-end fw-bold"></span>
+                            <!-- ===== BARIS 2: Total Tagihan (Line) + Total Pemasukan (Line) ===== -->
+                            <div class="col-xl-6">
+                                <div class="card mb-4">
+                                    <div class="card-header">
+                                        <i class="fas fa-chart-line me-1"></i>
+                                        Total Tagihan Air
+                                        <span id="tot_tagihan" class="float-end fw-bold"></span>
+                                    </div>
+                                    <div class="card-body"><canvas id="myAreaChart" width="100%" height="40"></canvas></div>
                                 </div>
-                                <div class="card-body"><canvas id="myAreaChart" width="100%" height="40"></canvas></div>
                             </div>
-                        </div>
-                        <div class="col-xl-6">
-                            <div class="card mb-4">
-                                <div class="card-header">
-                                    <i class="fas fa-chart-line me-1"></i>
-                                    Total Pemasukan 
-                                    <span id="tot_pemasukan" class="float-end fw-bold"></span>
+                            <div class="col-xl-6">
+                                <div class="card mb-4">
+                                    <div class="card-header">
+                                        <i class="fas fa-chart-line me-1"></i>
+                                        Total Pemasukan
+                                        <span id="tot_pemasukan" class="float-end fw-bold"></span>
+                                    </div>
+                                    <div class="card-body"><canvas id="myPemasukanChart" width="100%" height="40"></canvas></div>
                                 </div>
-                                <div class="card-body"><canvas id="myPemasukanChart" width="100%" height="40"></canvas></div>
                             </div>
-                        </div>
 
-                        <!-- ===== BARIS 3: Sudah Dicatat (Bar) + Belum Dicatat (Bar) ===== -->
-                        <div class="col-xl-6">
-                            <div class="card mb-4">
-                                <div class="card-header">
-                                    <i class="fas fa-chart-bar me-1"></i>
-                                    Jumlah Warga Tercatat
+                            <!-- ===== BARIS 3: Sudah Dicatat (Bar) + Belum Dicatat (Bar) ===== -->
+                            <div class="col-xl-6">
+                                <div class="card mb-4">
+                                    <div class="card-header">
+                                        <i class="fas fa-chart-bar me-1"></i>
+                                        Jumlah Warga Tercatat
+                                    </div>
+                                    <div class="card-body"><canvas id="mySdhDicatatChart" width="100%" height="40"></canvas></div>
                                 </div>
-                                <div class="card-body"><canvas id="mySdhDicatatChart" width="100%" height="40"></canvas></div>
                             </div>
-                        </div>
-                        <div class="col-xl-6">
-                            <div class="card mb-4">
-                                <div class="card-header">
-                                    <i class="fas fa-chart-bar me-1"></i>
-                                    Jumlah Warga Belum Tercatat
+                            <div class="col-xl-6">
+                                <div class="card mb-4">
+                                    <div class="card-header">
+                                        <i class="fas fa-chart-bar me-1"></i>
+                                        Jumlah Warga Belum Tercatat
+                                    </div>
+                                    <div class="card-body"><canvas id="myBlmDicatatChart" width="100%" height="40"></canvas></div>
                                 </div>
-                                <div class="card-body"><canvas id="myBlmDicatatChart" width="100%" height="40"></canvas></div>
                             </div>
-                        </div>
 
-                        <!-- ===== BARIS 4: Tagihan Sudah Lunas (Bar) + Tagihan Belum Lunas (Bar) ===== -->
-                        <div class="col-xl-6">
-                            <div class="card mb-4">
-                                <div class="card-header">
-                                    <i class="fas fa-chart-bar me-1"></i>
-                                    Jumlah warga Sudah LUNAS
+                            <!-- ===== BARIS 4: Tagihan Sudah Lunas (Bar) + Tagihan Belum Lunas (Bar) ===== -->
+                            <div class="col-xl-6">
+                                <div class="card mb-4">
+                                    <div class="card-header">
+                                        <i class="fas fa-chart-bar me-1"></i>
+                                        Jumlah warga Sudah LUNAS
+                                    </div>
+                                    <div class="card-body"><canvas id="mySdhLunasChart" width="100%" height="40"></canvas></div>
                                 </div>
-                                <div class="card-body"><canvas id="mySdhLunasChart" width="100%" height="40"></canvas></div>
                             </div>
-                        </div>
-                        <div class="col-xl-6">
-                            <div class="card mb-4">
-                                <div class="card-header">
-                                    <i class="fas fa-chart-bar me-1"></i>
-                                    Jumlah warga belum LUNAS
+                            <div class="col-xl-6">
+                                <div class="card mb-4">
+                                    <div class="card-header">
+                                        <i class="fas fa-chart-bar me-1"></i>
+                                        Jumlah warga belum LUNAS
+                                    </div>
+                                    <div class="card-body"><canvas id="myBlmLunasChart" width="100%" height="40"></canvas></div>
                                 </div>
-                                <div class="card-body"><canvas id="myBlmLunasChart" width="100%" height="40"></canvas></div>
                             </div>
-                        </div>
 
                         <?php } elseif ($level == "petugas") { ?>
-                        <!-- ===== CHART UNTUK ROLE PETUGAS ===== -->
+                            <!-- ===== CHART UNTUK ROLE PETUGAS ===== -->
 
-                        <!-- ===== BARIS 1: Total Pemakaian (Line) + Pie RT vs Kos ===== -->
-                        <div class="col-xl-6">
-                            <div class="card mb-4">
-                                <div class="card-header">
-                                    <i class="fas fa-chart-line me-1"></i>
-                                    Total Pemakaian Air
-                                    <span id="tot_pemakaian" class="float-end fw-bold"></span>
-                                </div>
-                                <div class="card-body"><canvas id="myLineChart" width="100%" height="40"></canvas></div>
-                            </div>
-                        </div>
-                        <div class="col-xl-6">
-                            <div class="card mb-4">
-                                <div class="card-header">
-                                    <i class="fas fa-chart-pie me-1"></i>
-                                    Jumlah Rumah Tinggal dan Kos
-                                </div>
-                                <div class="card-body d-flex justify-content-center">
-                                    <canvas id="myPieChart" width="100%" height="40"></canvas>
+                            <!-- ===== BARIS 1: Total Pemakaian (Line) + Pie RT vs Kos ===== -->
+                            <div class="col-xl-6">
+                                <div class="card mb-4">
+                                    <div class="card-header">
+                                        <i class="fas fa-chart-line me-1"></i>
+                                        Total Pemakaian Air
+                                        <span id="tot_pemakaian" class="float-end fw-bold"></span>
+                                    </div>
+                                    <div class="card-body"><canvas id="myLineChart" width="100%" height="40"></canvas></div>
                                 </div>
                             </div>
-                        </div>
+                            <div class="col-xl-6">
+                                <div class="card mb-4">
+                                    <div class="card-header">
+                                        <i class="fas fa-chart-pie me-1"></i>
+                                        Jumlah Rumah Tinggal dan Kos
+                                    </div>
+                                    <div class="card-body d-flex justify-content-center">
+                                        <canvas id="myPieChart" width="100%" height="40"></canvas>
+                                    </div>
+                                </div>
+                            </div>
 
-                        <!-- ===== BARIS 2: Sudah Dicatat (Bar) + Belum Dicatat (Bar) ===== -->
-                        <div class="col-xl-6">
-                            <div class="card mb-4">
-                                <div class="card-header">
-                                    <i class="fas fa-chart-bar me-1"></i>
-                                   Jumlah warga Tercatat
+                            <!-- ===== BARIS 2: Sudah Dicatat (Bar) + Belum Dicatat (Bar) ===== -->
+                            <div class="col-xl-6">
+                                <div class="card mb-4">
+                                    <div class="card-header">
+                                        <i class="fas fa-chart-bar me-1"></i>
+                                        Jumlah warga Tercatat
+                                    </div>
+                                    <div class="card-body"><canvas id="mySdhDicatatChart" width="100%" height="40"></canvas></div>
                                 </div>
-                                <div class="card-body"><canvas id="mySdhDicatatChart" width="100%" height="40"></canvas></div>
                             </div>
-                        </div>
-                        <div class="col-xl-6">
-                            <div class="card mb-4">
-                                <div class="card-header">
-                                    <i class="fas fa-chart-bar me-1"></i>
-                                    Jumlah Warga Belum tercatat
+                            <div class="col-xl-6">
+                                <div class="card mb-4">
+                                    <div class="card-header">
+                                        <i class="fas fa-chart-bar me-1"></i>
+                                        Jumlah Warga Belum tercatat
+                                    </div>
+                                    <div class="card-body"><canvas id="myBlmDicatatChart" width="100%" height="40"></canvas></div>
                                 </div>
-                                <div class="card-body"><canvas id="myBlmDicatatChart" width="100%" height="40"></canvas></div>
                             </div>
-                        </div>
 
                         <?php } else { ?>
-                        <!-- ===== CHART UNTUK ROLE WARGA ===== -->
-                        <div class="col-xl-6">
-                            <div class="card mb-4">
-                                <div class="card-header">
-                                    <i class="fas fa-chart-bar me-1"></i>
-                                    Total Pemakaian Air
-                                    <span id="tot_pemakaian" class="float-end fw-bold"></span>
+                            <!-- ===== CHART UNTUK ROLE WARGA ===== -->
+                            <div class="col-xl-6">
+                                <div class="card mb-4">
+                                    <div class="card-header">
+                                        <i class="fas fa-chart-bar me-1"></i>
+                                        Total Pemakaian Air
+                                        <span id="tot_pemakaian" class="float-end fw-bold"></span>
+                                    </div>
+                                    <div class="card-body"><canvas id="myBarChart" width="100%" height="40"></canvas></div>
                                 </div>
-                                <div class="card-body"><canvas id="myBarChart" width="100%" height="40"></canvas></div>
                             </div>
-                        </div>
-                        <div class="col-xl-6">
-                            <div class="card mb-4">
-                                <div class="card-header">
-                                    <i class="fas fa-chart-area me-1"></i>
-                                    Total Pembayaran Air
-                                    <span id="tot_tagihan" class="float-end fw-bold"></span>
-                                    <span id="tot_blm_lunas" class="float-end fw-bold text-danger me-3"></span>
+                            <div class="col-xl-6">
+                                <div class="card mb-4">
+                                    <div class="card-header">
+                                        <i class="fas fa-chart-area me-1"></i>
+                                        Total Pembayaran Air
+                                        <span id="tot_tagihan" class="float-end fw-bold"></span>
+                                        <span id="tot_blm_lunas" class="float-end fw-bold text-danger me-3"></span>
+                                    </div>
+                                    <div class="card-body"><canvas id="myAreaChart" width="100%" height="40"></canvas></div>
                                 </div>
-                                <div class="card-body"><canvas id="myAreaChart" width="100%" height="40"></canvas></div>
                             </div>
-                        </div>
                         <?php } ?>
 
                     </div>
