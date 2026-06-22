@@ -664,18 +664,18 @@ $level = $dt_user[2];
                             if (empty($qj)) {
                                 mysqli_query($koneksi, "INSERT INTO tarif (id_tarif, tarif, tipe, status) VALUES ('$id_tarif','$tarif',\"$tipe_tarif\",'$status')");
                                 if (mysqli_affected_rows($koneksi) > 0) {
-                                    echo "<div class='alert alert-success alert-dismissible fade show'>
+                                    echo "<div class='alert alert-success alert-dismissible fade show' id=alert-tarif>
                                                     <button type=button class=btn-close data-bs-dismiss=alert></button>
                                                     <strong>Data</strong> Berhasil Disimpan
                                             </div>";
                                 } else {
-                                    echo "<div class='alert alert-danger alert-dismissible fade show'>
+                                    echo "<div class='alert alert-danger alert-dismissible fade show' id=alert-tarif>
                                                     <button type=button class=btn-close data-bs-dismiss=alert></button>
                                                     <strong>Data</strong> Gagal Disimpan
                                             </div>";
                                 }
                             } else { //tarif sudah ada
-                                echo "<div class='alert alert-danger alert-dismissible fade show'>
+                                echo "<div class='alert alert-danger alert-dismissible fade show' id=alert-tarif>
                                             <button type=button class=btn-close data-bs-dismiss=alert></button>
                                             <strong> Tarif $id_tarif</strong> Sudah Ada
                                     </div>";
@@ -688,12 +688,12 @@ $level = $dt_user[2];
 
                             mysqli_query($koneksi, "UPDATE tarif SET tarif='$tarif', tipe=\"$tipe_tarif\", status='$status' WHERE id_tarif='$id_tarif'");
                             if (mysqli_affected_rows($koneksi) > 0) {
-                                echo "<div class='alert alert-success alert-dismissible fade show'>
+                                echo "<div class='alert alert-success alert-dismissible fade show' id=alert-tarif>
                                             <button type=button class=btn-close data-bs-dismiss=alert></button>
                                             <strong>Data</strong> Berhasil Diupdate
                                     </div>";
                             } else {
-                                echo "<div class='alert alert-primary alert-dismissible fade show'>
+                                echo "<div class='alert alert-primary alert-dismissible fade show' id=alert-tarif>
                                             <button type=button class=btn-close data-bs-dismiss=alert></button>
                                             <strong>Data</strong> Tidak Ada Perubahan
                                     </div>";
@@ -703,13 +703,13 @@ $level = $dt_user[2];
                             $id_tarif = $_POST['id_tarif'];
                             mysqli_query($koneksi, "DELETE FROM tarif WHERE id_tarif='$id_tarif'");
                             if (mysqli_affected_rows($koneksi) > 0) {
-                                echo "<div class='alert alert-success alert-dismissible fade show'>
+                                echo "<div class='alert alert-success alert-dismissible fade show' id=alert-tarif>
                                             <button type=button class=btn-close data-bs-dismiss=alert></button>
                                             <strong>Data</strong> Berhasil Dihapus
                                     </div>";
                                 echo "<meta http-equiv='refresh' content='1.5;url=index.php?p=tarif'>";
                             } else {
-                                echo "<div class='alert alert-danger alert-dismissible fade show'>
+                                echo "<div class='alert alert-danger alert-dismissible fade show' id=alert-tarif>
                                             <button type=button class=btn-close data-bs-dismiss=alert></button>
                                             <strong>Data</strong> Gagal Dihapus
                                     </div>";
