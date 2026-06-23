@@ -292,6 +292,7 @@ $(document).ready(function () {
 
         // --- Chart 1 (Baris 1 Kiri): Total Pemakaian Air/Bulan (Line) ---
         $.ajax({
+          
           type: "post",
           url: "../assets/ajax.php",
           data: {p: "chart_bar", u: user, l: level},
@@ -850,7 +851,7 @@ $(document).ready(function () {
           data: {p: "chart_warga_blm_lunas", u: user},
           dataType: "json"
         })
-        .done(function(respon) {
+        .done(function(respon) { 
           if (respon.blm_lunas > 0) {
             $("#tot_blm_lunas").text("| BLM LUNAS: Rp " + new Intl.NumberFormat('en-ID', { style: 'decimal' }).format(respon.blm_lunas));
           } else {

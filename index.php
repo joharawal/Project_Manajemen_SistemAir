@@ -18,6 +18,8 @@ $koneksi = $air->koneksi();
         
         <!-- SB Admin CSS -->
         <link href="css/styles.css" rel="stylesheet" />
+        <!-- Modern Blue-White Theme -->
+        <link href="css/modern-theme.css" rel="stylesheet" />
         
         <!-- Font Awesome -->
         <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>

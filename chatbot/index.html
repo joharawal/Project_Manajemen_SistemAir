@@ -1,0 +1,52 @@
+<?php
+session_start();
+
+if (empty($_SESSION['user']) && empty($_SESSION['pass'])) {
+    echo "<script>window.location.replace('../index.php')</script>";
+}
+?>
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Chatbot Air</title>
+
+    <link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+
+    <div class="chat-container">
+
+        <div class="header">
+            Asisten Sistem Air
+        </div>
+
+        <div id="chat-box">
+
+            <div class="bot">
+                Halo, ada yang bisa saya bantu?
+            </div>
+
+        </div>
+
+        <div class="input-area">
+
+            <input type="text" id="pesan" placeholder="Ketik pertanyaan...">
+
+            <button onclick="kirimPesan()">
+                Kirim
+            </button>
+
+        </div>
+
+    </div>
+
+    <script src="script.js"></script>
+
+</body>
+
+</html>

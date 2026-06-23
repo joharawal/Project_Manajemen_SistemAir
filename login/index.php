@@ -25,6 +25,8 @@ $level = $dt_user[2];
     <link rel="icon" type="image/x-icon" href="../assets/img/Icon.png">
     <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
     <link href="../css/styles.css" rel="stylesheet" />
+    <!-- Modern Blue-White Theme -->
+    <link href="../css/modern-theme.css" rel="stylesheet" />
     <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script src="../js/air.js"></script>
@@ -108,6 +110,7 @@ $level = $dt_user[2];
                                 <div class="sb-nav-link-icon"><i class="fa-solid fa-house-flood-water text-danger fa-beat"></i></div>
                                 Pemakaian Warga
                             </a>
+                
                         <?php
                         } elseif ($level == "bendahara") {
                         ?>
@@ -1395,6 +1398,91 @@ $level = $dt_user[2];
     <script src="../assets/demo/chart-bar-demo.js"></script> -->
     <script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js" crossorigin="anonymous"></script>
     <script src="../js/datatables-simple-demo.js"></script>
+
+    <!-- ===== TOMBOL FLOATING CHATBOT ===== -->
+    <style>
+        #chatbot-fab {
+            position: fixed;
+            bottom: 28px;
+            right: 28px;
+            width: 58px;
+            height: 58px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #1565c0, #0288d1);
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            box-shadow: 0 4px 18px rgba(21,101,192,0.45);
+            z-index: 1050;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            text-decoration: none;
+        }
+        #chatbot-fab:hover {
+            transform: scale(1.1) rotate(8deg);
+            box-shadow: 0 8px 24px rgba(21,101,192,0.55);
+        }
+        #chatbot-fab .fab-badge {
+            position: absolute;
+            top: -2px;
+            right: -2px;
+            width: 18px;
+            height: 18px;
+            background: #e53935;
+            border-radius: 50%;
+            font-size: 10px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid #fff;
+            animation: pulse-red 2s infinite;
+        }
+        @keyframes pulse-red {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(229,57,53,0.5); }
+            50%       { box-shadow: 0 0 0 6px rgba(229,57,53,0); }
+        }
+        #chatbot-tooltip {
+            position: fixed;
+            bottom: 96px;
+            right: 28px;
+            background: #1565c0;
+            color: #fff;
+            padding: 7px 14px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 500;
+            white-space: nowrap;
+            box-shadow: 0 4px 14px rgba(0,0,0,0.2);
+            z-index: 1049;
+            opacity: 0;
+            transform: translateY(8px);
+            transition: opacity 0.25s ease, transform 0.25s ease;
+            pointer-events: none;
+        }
+        #chatbot-tooltip.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+
+    <div id="chatbot-tooltip">💬 Tanya Asisten Air</div>
+    <a href="../chatbot/index.php" id="chatbot-fab" title="Asisten Chatbot" target="_blank">
+        🤖
+        <span class="fab-badge">!</span>
+    </a>
+
+    <script>
+        // Tampilkan tooltip saat hover FAB
+        const fab = document.getElementById('chatbot-fab');
+        const tip = document.getElementById('chatbot-tooltip');
+        fab.addEventListener('mouseenter', () => tip.classList.add('show'));
+        fab.addEventListener('mouseleave', () => tip.classList.remove('show'));
+    </script>
+    <!-- ===== END CHATBOT FAB ===== -->
     </head>
 </body>
 
