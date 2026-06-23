@@ -110,7 +110,7 @@ $level = $dt_user[2];
                                 <div class="sb-nav-link-icon"><span class="nav-icon-box nav-icon-red"><i class="fa-solid fa-house-flood-water"></i></span></div>
                                 Pemakaian Warga
                             </a>
-                
+
                         <?php
                         } elseif ($level == "bendahara") {
                         ?>
@@ -720,6 +720,7 @@ $level = $dt_user[2];
                         } elseif ($t == "meter_add") {
                             $username = $_POST['username'];
                             $meter_akhir = $_POST['meter_akhir'];
+                            $status_meter_add = $_POST['status_meter'] ?? 'Belum Lunas';
                             $id_tarif = $air->user_to_idtarif($username);
                             $tarif = $air->idtarif_to_tarif($id_tarif);
 
@@ -763,7 +764,7 @@ $level = $dt_user[2];
                                             <strong>Meter Akhir</strong> Harus Lebih Besar Dari Meter Awal
                                             </div>";
                                 } else { //meter akhir lebih besar dari meter awal atau pemakaian positif
-                                    mysqli_query($koneksi, "INSERT INTO pemakaian (username, meter_awal, meter_akhir, pemakaian, tgl, waktu, id_tarif, tagihan, status) VALUES ('$username','$meter_awal','$meter_akhir','$pemakaian',CURRENT_DATE(), CURRENT_TIME(), '$id_tarif', '$tagihan', 'Belum Lunas')");
+                                    mysqli_query($koneksi, "INSERT INTO pemakaian (username, meter_awal, meter_akhir, pemakaian, tgl, waktu, id_tarif, tagihan, status) VALUES ('$username','$meter_awal','$meter_akhir','$pemakaian',CURRENT_DATE(), CURRENT_TIME(), '$id_tarif', '$tagihan', '$status_meter_add')");
                                     if (mysqli_affected_rows($koneksi) > 0) {
                                         echo "<div class='alert alert-success alert-dismissible fade show' id=alert-meter>
                                                         <button type=button class=btn-close data-bs-dismiss=alert></button>
@@ -1048,7 +1049,7 @@ $level = $dt_user[2];
                                         <label for="status_meter" class="form-label">Status :</label>
                                         <select class="form-select" name="status_meter">
                                             <?php
-                                            $st_meter = array("BLM LUNAS", "LUNAS");
+                                            $st_meter = array("Belum Lunas", "Lunas");
                                             foreach ($st_meter as $st2) {
                                                 if (($status_meter ?? '') == $st2) $sel = "SELECTED";
                                                 else $sel = "";
@@ -1263,7 +1264,7 @@ $level = $dt_user[2];
                                         $selisih = $diff->days;
 
                                         // Tampilkan badge berdasarkan status
-                                        if ($status == "BLM LUNAS") {
+                                        if ($status == "Belum Lunas") {
                                             $badge = "<span class='badge bg-danger badge-small d-block w-100'><i class='fas fa-exclamation-triangle'></i> <strong>BELUM LUNAS</strong></span>";
                                         } else {
                                             $badge = "<span class='badge bg-success badge-small d-block w-100'><i class='fas fa-check-circle'></i> <strong>LUNAS</strong></span>";
@@ -1350,10 +1351,10 @@ $level = $dt_user[2];
                                         $dp_tgl = $air->tgl_balik_indo($dp[5]);
                                         $dp_waktu = $dp[6];
                                         $dp_tagihan = $dp[7];
-                                        $dp_status = $dp[8];
+                                        $dp_status = $dp[9];
 
                                         // Tampilkan badge berdasarkan status
-                                        if ($dp_status == "BLM LUNAS") {
+                                        if ($dp_status == "Belum Lunas") {
                                             $badge = "<span class='badge bg-danger badge-small d-block w-100'><i class='fas fa-exclamation-triangle'></i> <strong>BELUM LUNAS</strong></span>";
                                         } else {
                                             $badge = "<span class='badge bg-success badge-small d-block w-100'><i class='fas fa-check-circle'></i> <strong>LUNAS</strong></span>";
@@ -1417,15 +1418,17 @@ $level = $dt_user[2];
             align-items: center;
             justify-content: center;
             font-size: 24px;
-            box-shadow: 0 4px 18px rgba(21,101,192,0.45);
+            box-shadow: 0 4px 18px rgba(21, 101, 192, 0.45);
             z-index: 1050;
             transition: transform 0.2s ease, box-shadow 0.2s ease;
             text-decoration: none;
         }
+
         #chatbot-fab:hover {
             transform: scale(1.1) rotate(8deg);
-            box-shadow: 0 8px 24px rgba(21,101,192,0.55);
+            box-shadow: 0 8px 24px rgba(21, 101, 192, 0.55);
         }
+
         #chatbot-fab .fab-badge {
             position: absolute;
             top: -2px;
@@ -1442,10 +1445,19 @@ $level = $dt_user[2];
             border: 2px solid #fff;
             animation: pulse-red 2s infinite;
         }
+
         @keyframes pulse-red {
-            0%, 100% { box-shadow: 0 0 0 0 rgba(229,57,53,0.5); }
-            50%       { box-shadow: 0 0 0 6px rgba(229,57,53,0); }
+
+            0%,
+            100% {
+                box-shadow: 0 0 0 0 rgba(229, 57, 53, 0.5);
+            }
+
+            50% {
+                box-shadow: 0 0 0 6px rgba(229, 57, 53, 0);
+            }
         }
+
         #chatbot-tooltip {
             position: fixed;
             bottom: 96px;
@@ -1457,13 +1469,14 @@ $level = $dt_user[2];
             font-size: 13px;
             font-weight: 500;
             white-space: nowrap;
-            box-shadow: 0 4px 14px rgba(0,0,0,0.2);
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
             z-index: 1049;
             opacity: 0;
             transform: translateY(8px);
             transition: opacity 0.25s ease, transform 0.25s ease;
             pointer-events: none;
         }
+
         #chatbot-tooltip.show {
             opacity: 1;
             transform: translateY(0);
@@ -1478,21 +1491,31 @@ $level = $dt_user[2];
             max-height: 520px;
             background: #fff;
             border-radius: 18px;
-            box-shadow: 0 12px 50px rgba(21,101,192,0.25);
+            box-shadow: 0 12px 50px rgba(21, 101, 192, 0.25);
             z-index: 1051;
             display: none;
             flex-direction: column;
             overflow: hidden;
-            animation: chatSlideIn 0.3s cubic-bezier(0.4,0,0.2,1);
+            animation: chatSlideIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             font-family: 'Inter', Arial, sans-serif;
         }
+
         #chatbot-panel.open {
             display: flex;
         }
+
         @keyframes chatSlideIn {
-            from { opacity: 0; transform: translateY(20px) scale(0.95); }
-            to   { opacity: 1; transform: translateY(0) scale(1); }
+            from {
+                opacity: 0;
+                transform: translateY(20px) scale(0.95);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
         }
+
         /* Header */
         .cb-header {
             background: linear-gradient(135deg, #0d47a1, #1565c0, #0288d1);
@@ -1502,28 +1525,83 @@ $level = $dt_user[2];
             gap: 10px;
             flex-shrink: 0;
         }
+
         .cb-header-avatar {
-            width: 40px; height: 40px;
-            background: rgba(255,255,255,0.2);
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.2);
             border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             font-size: 18px;
-            border: 2px solid rgba(255,255,255,0.3);
+            border: 2px solid rgba(255, 255, 255, 0.3);
             flex-shrink: 0;
         }
-        .cb-header-info { flex: 1; }
-        .cb-header-title { color:#fff; font-size:14px; font-weight:700; }
-        .cb-header-sub   { color:rgba(255,255,255,0.75); font-size:11px; margin-top:1px; }
-        .cb-header-status { display:flex; align-items:center; gap:5px; color:rgba(255,255,255,0.9); font-size:11px; }
-        .cb-status-dot { width:8px; height:8px; background:#69f0ae; border-radius:50%; animation: pulse 2s infinite; }
-        @keyframes pulse { 0%,100%{box-shadow:0 0 0 0 rgba(105,240,174,0.5)} 50%{box-shadow:0 0 0 5px rgba(105,240,174,0)} }
+
+        .cb-header-info {
+            flex: 1;
+        }
+
+        .cb-header-title {
+            color: #fff;
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        .cb-header-sub {
+            color: rgba(255, 255, 255, 0.75);
+            font-size: 11px;
+            margin-top: 1px;
+        }
+
+        .cb-header-status {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 11px;
+        }
+
+        .cb-status-dot {
+            width: 8px;
+            height: 8px;
+            background: #69f0ae;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                box-shadow: 0 0 0 0 rgba(105, 240, 174, 0.5)
+            }
+
+            50% {
+                box-shadow: 0 0 0 5px rgba(105, 240, 174, 0)
+            }
+        }
+
         .cb-close {
-            background: rgba(255,255,255,0.18); border:none; border-radius:50%;
-            width:28px; height:28px; color:#fff; cursor:pointer; font-size:14px;
-            display:flex; align-items:center; justify-content:center;
+            background: rgba(255, 255, 255, 0.18);
+            border: none;
+            border-radius: 50%;
+            width: 28px;
+            height: 28px;
+            color: #fff;
+            cursor: pointer;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             transition: background 0.2s;
         }
-        .cb-close:hover { background: rgba(255,255,255,0.32); }
+
+        .cb-close:hover {
+            background: rgba(255, 255, 255, 0.32);
+        }
+
         /* Chat Box */
         #cb-chat-box {
             flex: 1;
@@ -1537,98 +1615,277 @@ $level = $dt_user[2];
             min-height: 200px;
             max-height: 340px;
         }
-        #cb-chat-box::-webkit-scrollbar { width: 4px; }
-        #cb-chat-box::-webkit-scrollbar-thumb { background: rgba(21,101,192,0.25); border-radius: 10px; }
+
+        #cb-chat-box::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        #cb-chat-box::-webkit-scrollbar-thumb {
+            background: rgba(21, 101, 192, 0.25);
+            border-radius: 10px;
+        }
+
         /* Messages */
-        .cb-msg-row { display:flex; align-items:flex-end; gap:7px; animation: cbFadeUp 0.3s ease; }
-        .cb-msg-row.cb-user-row { flex-direction: row-reverse; }
-        @keyframes cbFadeUp { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+        .cb-msg-row {
+            display: flex;
+            align-items: flex-end;
+            gap: 7px;
+            animation: cbFadeUp 0.3s ease;
+        }
+
+        .cb-msg-row.cb-user-row {
+            flex-direction: row-reverse;
+        }
+
+        @keyframes cbFadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(8px)
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0)
+            }
+        }
+
         .cb-avatar {
-            width:28px; height:28px; border-radius:50%; display:flex;
-            align-items:center; justify-content:center; font-size:13px; flex-shrink:0;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            flex-shrink: 0;
         }
-        .cb-avatar.bot { background: linear-gradient(135deg,#0d47a1,#1565c0); color:#fff; }
-        .cb-avatar.usr { background: linear-gradient(135deg,#1565c0,#0288d1); color:#fff; }
-        .cb-msg-content { max-width:78%; display:flex; flex-direction:column; gap:2px; }
+
+        .cb-avatar.bot {
+            background: linear-gradient(135deg, #0d47a1, #1565c0);
+            color: #fff;
+        }
+
+        .cb-avatar.usr {
+            background: linear-gradient(135deg, #1565c0, #0288d1);
+            color: #fff;
+        }
+
+        .cb-msg-content {
+            max-width: 78%;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
         .cb-bubble {
-            padding:9px 13px; border-radius:16px; font-size:13px;
-            line-height:1.5; box-shadow: 0 2px 6px rgba(0,0,0,0.07);
+            padding: 9px 13px;
+            border-radius: 16px;
+            font-size: 13px;
+            line-height: 1.5;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.07);
         }
-        .cb-bot-bubble  { background:#fff; color:#1a2332; border-radius:4px 16px 16px 16px; border-left:3px solid #1565c0; }
-        .cb-user-bubble { background:linear-gradient(135deg,#1565c0,#0288d1); color:#fff; border-radius:16px 4px 16px 16px; }
-        .cb-time { font-size:9px; color:#90a4ae; padding:0 3px; }
-        .cb-msg-row.cb-user-row .cb-time { text-align:right; }
+
+        .cb-bot-bubble {
+            background: #fff;
+            color: #1a2332;
+            border-radius: 4px 16px 16px 16px;
+            border-left: 3px solid #1565c0;
+        }
+
+        .cb-user-bubble {
+            background: linear-gradient(135deg, #1565c0, #0288d1);
+            color: #fff;
+            border-radius: 16px 4px 16px 16px;
+        }
+
+        .cb-time {
+            font-size: 9px;
+            color: #90a4ae;
+            padding: 0 3px;
+        }
+
+        .cb-msg-row.cb-user-row .cb-time {
+            text-align: right;
+        }
+
         /* Typing */
-        .cb-typing { display:flex; align-items:center; gap:7px; animation:cbFadeUp 0.3s ease; }
-        .cb-typing-bubble { background:#fff; border-radius:16px; padding:10px 14px; display:flex; gap:4px; border-left:3px solid #1565c0; box-shadow:0 2px 6px rgba(0,0,0,0.07); }
-        .cb-dot { width:6px; height:6px; background:#90a4ae; border-radius:50%; animation:cbTyping 1.2s infinite; }
-        .cb-dot:nth-child(2){animation-delay:0.2s} .cb-dot:nth-child(3){animation-delay:0.4s}
-        @keyframes cbTyping { 0%,60%,100%{transform:translateY(0);background:#90a4ae} 30%{transform:translateY(-5px);background:#1565c0} }
+        .cb-typing {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            animation: cbFadeUp 0.3s ease;
+        }
+
+        .cb-typing-bubble {
+            background: #fff;
+            border-radius: 16px;
+            padding: 10px 14px;
+            display: flex;
+            gap: 4px;
+            border-left: 3px solid #1565c0;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.07);
+        }
+
+        .cb-dot {
+            width: 6px;
+            height: 6px;
+            background: #90a4ae;
+            border-radius: 50%;
+            animation: cbTyping 1.2s infinite;
+        }
+
+        .cb-dot:nth-child(2) {
+            animation-delay: 0.2s
+        }
+
+        .cb-dot:nth-child(3) {
+            animation-delay: 0.4s
+        }
+
+        @keyframes cbTyping {
+
+            0%,
+            60%,
+            100% {
+                transform: translateY(0);
+                background: #90a4ae
+            }
+
+            30% {
+                transform: translateY(-5px);
+                background: #1565c0
+            }
+        }
+
         /* Quick replies */
         .cb-quick {
-            background:#f7fafd; padding:8px 12px; border-top:1px solid #dde3ea;
-            display:flex; flex-wrap:wrap; gap:6px; flex-shrink:0;
+            background: #f7fafd;
+            padding: 8px 12px;
+            border-top: 1px solid #dde3ea;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            flex-shrink: 0;
         }
+
         .cb-qbtn {
-            background:#fff; border:1.5px solid #1565c0; color:#1565c0;
-            padding:4px 12px; border-radius:20px; font-size:11px; font-weight:500;
-            cursor:pointer; transition:all 0.2s; font-family:'Inter',sans-serif;
+            background: #fff;
+            border: 1.5px solid #1565c0;
+            color: #1565c0;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: 'Inter', sans-serif;
         }
-        .cb-qbtn:hover { background:linear-gradient(135deg,#1565c0,#0288d1); color:#fff; border-color:transparent; }
+
+        .cb-qbtn:hover {
+            background: linear-gradient(135deg, #1565c0, #0288d1);
+            color: #fff;
+            border-color: transparent;
+        }
+
         /* Input */
         .cb-input-area {
-            background:#fff; border-top:1px solid #dde3ea;
-            display:flex; align-items:center; padding:10px 12px; gap:8px; flex-shrink:0;
+            background: #fff;
+            border-top: 1px solid #dde3ea;
+            display: flex;
+            align-items: center;
+            padding: 10px 12px;
+            gap: 8px;
+            flex-shrink: 0;
         }
+
         .cb-input-area input {
-            flex:1; border:1.5px solid #dde3ea; border-radius:20px;
-            padding:9px 14px; font-size:13px; font-family:'Inter',sans-serif;
-            outline:none; color:#1a2332; background:#f7fafd;
+            flex: 1;
+            border: 1.5px solid #dde3ea;
+            border-radius: 20px;
+            padding: 9px 14px;
+            font-size: 13px;
+            font-family: 'Inter', sans-serif;
+            outline: none;
+            color: #1a2332;
+            background: #f7fafd;
             transition: border-color 0.2s, box-shadow 0.2s;
         }
-        .cb-input-area input:focus { border-color:#1565c0; box-shadow:0 0 0 3px rgba(21,101,192,0.12); background:#fff; }
-        .cb-input-area input::placeholder { color:#aab4be; }
-        .cb-send {
-            width:38px; height:38px; border-radius:50%; border:none;
-            background:linear-gradient(135deg,#1565c0,#0288d1); color:#fff;
-            font-size:15px; cursor:pointer; display:flex; align-items:center; justify-content:center;
-            transition:all 0.2s; box-shadow:0 3px 10px rgba(21,101,192,0.4); flex-shrink:0;
+
+        .cb-input-area input:focus {
+            border-color: #1565c0;
+            box-shadow: 0 0 0 3px rgba(21, 101, 192, 0.12);
+            background: #fff;
         }
-        .cb-send:hover { transform:scale(1.1); box-shadow:0 5px 16px rgba(21,101,192,0.55); }
+
+        .cb-input-area input::placeholder {
+            color: #aab4be;
+        }
+
+        .cb-send {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            border: none;
+            background: linear-gradient(135deg, #1565c0, #0288d1);
+            color: #fff;
+            font-size: 15px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            box-shadow: 0 3px 10px rgba(21, 101, 192, 0.4);
+            flex-shrink: 0;
+        }
+
+        .cb-send:hover {
+            transform: scale(1.1);
+            box-shadow: 0 5px 16px rgba(21, 101, 192, 0.55);
+        }
 
         /* Responsive: lebih kecil di mobile */
         @media (max-width: 480px) {
-            #chatbot-panel { width: calc(100vw - 24px); right: 12px; bottom: 88px; }
+            #chatbot-panel {
+                width: calc(100vw - 24px);
+                right: 12px;
+                bottom: 88px;
+            }
         }
 
         /* ====== SPLIT-SCREEN MODE ====== */
         body.cb-split #layoutSidenav_content {
             margin-right: 380px;
-            transition: margin-right 0.35s cubic-bezier(0.4,0,0.2,1);
+            transition: margin-right 0.35s cubic-bezier(0.4, 0, 0.2, 1);
         }
+
         body.cb-split #chatbot-panel {
             position: fixed;
-            top: 62px;           /* tinggi topnav */
+            top: 62px;
+            /* tinggi topnav */
             right: 0;
             bottom: 0;
             width: 380px;
             max-height: none;
             height: calc(100vh - 62px);
             border-radius: 0;
-            box-shadow: -4px 0 24px rgba(21,101,192,0.15);
+            box-shadow: -4px 0 24px rgba(21, 101, 192, 0.15);
             animation: none;
-            border-left: 1px solid rgba(21,101,192,0.15);
+            border-left: 1px solid rgba(21, 101, 192, 0.15);
         }
+
         body.cb-split #cb-chat-box {
             max-height: none;
             flex: 1;
         }
+
         body.cb-split #chatbot-fab {
             display: none;
         }
+
         body.cb-split #chatbot-tooltip {
             display: none;
         }
+
         /* Split-screen toggle buttons in header */
         .cb-hdr-btns {
             display: flex;
@@ -1636,8 +1893,9 @@ $level = $dt_user[2];
             gap: 6px;
             flex-shrink: 0;
         }
+
         .cb-hdr-btn {
-            background: rgba(255,255,255,0.18);
+            background: rgba(255, 255, 255, 0.18);
             border: none;
             border-radius: 6px;
             width: 28px;
@@ -1650,11 +1908,19 @@ $level = $dt_user[2];
             transition: background 0.2s;
             font-size: 13px;
         }
-        .cb-hdr-btn:hover { background: rgba(255,255,255,0.32); }
-        .cb-hdr-btn.active { background: rgba(255,255,255,0.35); box-shadow: 0 0 0 2px rgba(255,255,255,0.5); }
+
+        .cb-hdr-btn:hover {
+            background: rgba(255, 255, 255, 0.32);
+        }
+
+        .cb-hdr-btn.active {
+            background: rgba(255, 255, 255, 0.35);
+            box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.5);
+        }
+
         /* Transition for main content */
         #layoutSidenav_content {
-            transition: margin-right 0.35s cubic-bezier(0.4,0,0.2,1);
+            transition: margin-right 0.35s cubic-bezier(0.4, 0, 0.2, 1);
         }
     </style>
 
@@ -1680,15 +1946,15 @@ $level = $dt_user[2];
                 <!-- Tombol popup mode -->
                 <button class="cb-hdr-btn active" id="cb-btn-popup" onclick="cbSetMode('popup')" title="Mode Popup">
                     <svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor">
-                        <rect x="1" y="3" width="12" height="9" rx="2" fill="none" stroke="currentColor" stroke-width="1.5"/>
-                        <path d="M4 1h6v2H4z" fill="currentColor" opacity=".5"/>
+                        <rect x="1" y="3" width="12" height="9" rx="2" fill="none" stroke="currentColor" stroke-width="1.5" />
+                        <path d="M4 1h6v2H4z" fill="currentColor" opacity=".5" />
                     </svg>
                 </button>
                 <!-- Tombol split-screen mode -->
                 <button class="cb-hdr-btn" id="cb-btn-split" onclick="cbSetMode('split')" title="Mode Split Layar">
                     <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-                        <rect x="1" y="1" width="5.5" height="12" rx="1.5" stroke="currentColor" stroke-width="1.4"/>
-                        <rect x="7.5" y="1" width="5.5" height="12" rx="1.5" stroke="currentColor" stroke-width="1.4"/>
+                        <rect x="1" y="1" width="5.5" height="12" rx="1.5" stroke="currentColor" stroke-width="1.4" />
+                        <rect x="7.5" y="1" width="5.5" height="12" rx="1.5" stroke="currentColor" stroke-width="1.4" />
                     </svg>
                 </button>
                 <button class="cb-hdr-btn cb-close" onclick="cbClose()" title="Tutup">✕</button>
@@ -1722,16 +1988,18 @@ $level = $dt_user[2];
 
     <script>
         // ====== FAB & PANEL TOGGLE ======
-        const cbFab   = document.getElementById('chatbot-fab');
-        const cbTip   = document.getElementById('chatbot-tooltip');
+        const cbFab = document.getElementById('chatbot-fab');
+        const cbTip = document.getElementById('chatbot-tooltip');
         const cbPanel = document.getElementById('chatbot-panel');
-        let cbOpen    = false;
-        let cbMode    = 'popup'; // 'popup' | 'split'
+        let cbOpen = false;
+        let cbMode = 'popup'; // 'popup' | 'split'
 
         // Set waktu pesan awal
         document.getElementById('cb-init-time').textContent = cbNow();
 
-        cbFab.addEventListener('mouseenter', () => { if (!cbOpen) cbTip.classList.add('show'); });
+        cbFab.addEventListener('mouseenter', () => {
+            if (!cbOpen) cbTip.classList.add('show');
+        });
         cbFab.addEventListener('mouseleave', () => cbTip.classList.remove('show'));
 
         // Buka/tutup via FAB
@@ -1791,11 +2059,14 @@ $level = $dt_user[2];
 
         // ====== UTILITIES ======
         function cbNow() {
-            return new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+            return new Date().toLocaleTimeString('id-ID', {
+                hour: '2-digit',
+                minute: '2-digit'
+            });
         }
 
         function cbAppend(type, text, time) {
-            const box  = document.getElementById('cb-chat-box');
+            const box = document.getElementById('cb-chat-box');
             const isBot = (type === 'bot');
 
             const row = document.createElement('div');
@@ -1810,7 +2081,8 @@ $level = $dt_user[2];
 
             const bubble = document.createElement('div');
             bubble.className = 'cb-bubble ' + (isBot ? 'cb-bot-bubble' : 'cb-user-bubble');
-            if (isBot) bubble.innerHTML = text; else bubble.textContent = text;
+            if (isBot) bubble.innerHTML = text;
+            else bubble.textContent = text;
 
             const timeEl = document.createElement('div');
             timeEl.className = 'cb-time';
@@ -1826,14 +2098,17 @@ $level = $dt_user[2];
 
         function cbShowTyping() {
             const box = document.getElementById('cb-chat-box');
-            const el  = document.createElement('div');
-            el.className = 'cb-typing'; el.id = 'cb-typing';
+            const el = document.createElement('div');
+            el.className = 'cb-typing';
+            el.id = 'cb-typing';
             const av = document.createElement('div');
-            av.className = 'cb-avatar bot'; av.textContent = '🤖';
+            av.className = 'cb-avatar bot';
+            av.textContent = '🤖';
             const bub = document.createElement('div');
             bub.className = 'cb-typing-bubble';
             bub.innerHTML = '<div class="cb-dot"></div><div class="cb-dot"></div><div class="cb-dot"></div>';
-            el.appendChild(av); el.appendChild(bub);
+            el.appendChild(av);
+            el.appendChild(bub);
             box.appendChild(el);
             box.scrollTop = box.scrollHeight;
         }
@@ -1858,19 +2133,22 @@ $level = $dt_user[2];
             fd.append('pesan', pesan);
 
             setTimeout(() => {
-                fetch('../chatbot/chatbot.php', { method: 'POST', body: fd })
-                .then(r => r.json())
-                .then(data => {
-                    cbHideTyping();
-                    cbAppend('bot', data.jawaban, cbNow());
-                    input.disabled = false;
-                    input.focus();
-                })
-                .catch(() => {
-                    cbHideTyping();
-                    cbAppend('bot', '⚠️ Terjadi kesalahan. Silakan coba lagi.', cbNow());
-                    input.disabled = false;
-                });
+                fetch('../chatbot/chatbot.php', {
+                        method: 'POST',
+                        body: fd
+                    })
+                    .then(r => r.json())
+                    .then(data => {
+                        cbHideTyping();
+                        cbAppend('bot', data.jawaban, cbNow());
+                        input.disabled = false;
+                        input.focus();
+                    })
+                    .catch(() => {
+                        cbHideTyping();
+                        cbAppend('bot', '⚠️ Terjadi kesalahan. Silakan coba lagi.', cbNow());
+                        input.disabled = false;
+                    });
             }, 600);
         }
 
@@ -1881,7 +2159,10 @@ $level = $dt_user[2];
 
         // Enter to send
         document.getElementById('cb-pesan').addEventListener('keydown', function(e) {
-            if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); cbKirim(); }
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                cbKirim();
+            }
         });
     </script>
     <!-- ===== END CHATBOT FAB ===== -->
