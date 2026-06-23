@@ -40,12 +40,12 @@ $(document).ready(function () {
       $("#data_user").hide();
     });
 
-    if ($("alert-user").hasClass("alert-danger")) {
-      // entry meter gagal
+    if ($("#alert-user").hasClass("alert-danger")) {
+      // entry user gagal - tetap di form
       $("#form_user").show();
       $("#data_user").hide();
-    } else if ($("alert-user").hasClass("alert-success")) {
-      // entry meter berhasil
+    } else if ($("#alert-user").hasClass("alert-success")) {
+      // entry user berhasil - kembali ke data
       $("#form_user").hide();
       $("#data_user").show();
     }
@@ -86,6 +86,16 @@ $(document).ready(function () {
       $("#tarif_form").append(
         "<input type=hidden name=id_tarif value=" + e[2] + ">",
       );
+    }
+
+    if ($("#alert-tarif").hasClass("alert-danger")) {
+      // entry tarif gagal - tetap di form
+      $("#form_tarif").show();
+      $("#data_tarif").hide();
+    } else if ($("#alert-tarif").hasClass("alert-success")) {
+      // entry tarif berhasil - kembali ke data
+      $("#form_tarif").hide();
+      $("#data_tarif").show();
     }
 
     const datatablesSimple = document.getElementById("tarif_table");
@@ -148,12 +158,12 @@ $(document).ready(function () {
       );
     }
 
-    if ($("alert-meter").hasClass("alert-danger")) {
-      // entry meter gagal
+    if ($("#alert-meter").hasClass("alert-danger")) {
+      // entry meter gagal - tetap di form
       $("#form_meter").show();
       $("#data_meter").hide();
-    } else if ($("alert-meter").hasClass("alert-success")) {
-      // entry meter berhasil
+    } else if ($("#alert-meter").hasClass("alert-success")) {
+      // entry meter berhasil - kembali ke data
       $("#form_meter").hide();
       $("#data_meter").show();
     }
