@@ -92,22 +92,22 @@ $level = $dt_user[2];
                     <div class="nav">
                         <div class="sb-sidenav-menu-heading">Core</div>
                         <a class="nav-link" href="index.php">
-                            <div class="sb-nav-link-icon"><i class="fa-solid fa-house-chimney fa-beat text-warning"></i></div>
+                            <div class="sb-nav-link-icon"><span class="nav-icon-box nav-icon-yellow"><i class="fa-solid fa-house-chimney"></i></span></div>
                             Dashboard
                         </a>
                         <?php
                         if ($level == "admin") {
                         ?>
                             <a class="nav-link" href="index.php?p=user">
-                                <div class="sb-nav-link-icon"><i class="fa-solid fa-address-card fa-beat text-primary"></i></div>
+                                <div class="sb-nav-link-icon"><span class="nav-icon-box nav-icon-blue"><i class="fa-solid fa-address-card"></i></span></div>
                                 Manajemen User
                             </a>
                             <a class="nav-link" href="index.php?p=tarif">
-                                <div class="sb-nav-link-icon"><i class="fa-solid fa-rupiah-sign me-1 text-success fa-beat"></i></div>
+                                <div class="sb-nav-link-icon"><span class="nav-icon-box nav-icon-green"><i class="fa-solid fa-rupiah-sign"></i></span></div>
                                 Manajemen Tarif Air
                             </a>
                             <a class="nav-link" href="index.php?p=catat_meter">
-                                <div class="sb-nav-link-icon"><i class="fa-solid fa-house-flood-water text-danger fa-beat"></i></div>
+                                <div class="sb-nav-link-icon"><span class="nav-icon-box nav-icon-red"><i class="fa-solid fa-house-flood-water"></i></span></div>
                                 Pemakaian Warga
                             </a>
                 
@@ -115,30 +115,30 @@ $level = $dt_user[2];
                         } elseif ($level == "bendahara") {
                         ?>
                             <!-- <a class="nav-link" href="index.php?p=pembayaran_warga">
-                                <div class="sb-nav-link-icon"><i class="fa-solid fa-wallet text-warning fa-fade"></i></div>
+                                <div class="sb-nav-link-icon"><span class="nav-icon-box nav-icon-yellow"><i class="fa-solid fa-wallet"></i></span></div>
                                 Pembayaran Warga
                             </a> -->
                             <a class="nav-link" href="index.php?p=tarif">
-                                <div class="sb-nav-link-icon"><i class="fa-solid fa-rupiah-sign me-1 text-success fa-beat"></i></div>
+                                <div class="sb-nav-link-icon"><span class="nav-icon-box nav-icon-green"><i class="fa-solid fa-rupiah-sign"></i></span></div>
                                 Manajemen Tarif Air
                             </a>
                             <a class="nav-link" href="index.php?p=catat_meter">
-                                <div class="sb-nav-link-icon"><i class="fa-solid fa-house-flood-water text-danger fa-beat"></i></div>
+                                <div class="sb-nav-link-icon"><span class="nav-icon-box nav-icon-red"><i class="fa-solid fa-house-flood-water"></i></span></div>
                                 Pemakaian Warga
                             </a>
                             <!-- <a class="nav-link" href="index.php?p=tagihan_warga_bendahara">
-                                <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt fa-spin text-success"></i></div>
+                                <div class="sb-nav-link-icon"><span class="nav-icon-box nav-icon-green"><i class="fas fa-tachometer-alt"></i></span></div>
                                 Tagihan Warga
                             </a> -->
                         <?php
                         } elseif ($level == "petugas") {
                         ?>
                             <a class="nav-link" href="index.php?p=catat_meter">
-                                <div class="sb-nav-link-icon"><i class="fa-solid fa-house-flood-water text-danger fa-beat"></i></div>
+                                <div class="sb-nav-link-icon"><span class="nav-icon-box nav-icon-red"><i class="fa-solid fa-house-flood-water"></i></span></div>
                                 Catat Meter Air
                             </a>
                             <!-- <a class="nav-link" href="index.php?p=lihat_pemakaian_warga">
-                                <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt fa-spin text-success"></i></div>
+                                <div class="sb-nav-link-icon"><span class="nav-icon-box nav-icon-green"><i class="fas fa-tachometer-alt"></i></span></div>
                                 Lihat Pemakaian Air
                             </a> -->
 
@@ -146,7 +146,7 @@ $level = $dt_user[2];
                         } elseif ($level == "warga") {
                         ?>
                             <a class="nav-link" href="index.php?p=lihat_pemakaian_warga">
-                                <div class="sb-nav-link-icon"><i class="fa-solid fa-gauge-high text-primary fa-beat"></i></div>
+                                <div class="sb-nav-link-icon"><span class="nav-icon-box nav-icon-blue"><i class="fa-solid fa-gauge-high"></i></span></div>
                                 Lihat Pemakaian
                             </a>
 
@@ -1399,8 +1399,9 @@ $level = $dt_user[2];
     <script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js" crossorigin="anonymous"></script>
     <script src="../js/datatables-simple-demo.js"></script>
 
-    <!-- ===== TOMBOL FLOATING CHATBOT ===== -->
+    <!-- ===== TOMBOL FLOATING CHATBOT (POPUP INLINE) ===== -->
     <style>
+        /* --- FAB Button --- */
         #chatbot-fab {
             position: fixed;
             bottom: 28px;
@@ -1467,20 +1468,421 @@ $level = $dt_user[2];
             opacity: 1;
             transform: translateY(0);
         }
+
+        /* --- Chat Popup Panel --- */
+        #chatbot-panel {
+            position: fixed;
+            bottom: 100px;
+            right: 28px;
+            width: 360px;
+            max-height: 520px;
+            background: #fff;
+            border-radius: 18px;
+            box-shadow: 0 12px 50px rgba(21,101,192,0.25);
+            z-index: 1051;
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+            animation: chatSlideIn 0.3s cubic-bezier(0.4,0,0.2,1);
+            font-family: 'Inter', Arial, sans-serif;
+        }
+        #chatbot-panel.open {
+            display: flex;
+        }
+        @keyframes chatSlideIn {
+            from { opacity: 0; transform: translateY(20px) scale(0.95); }
+            to   { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        /* Header */
+        .cb-header {
+            background: linear-gradient(135deg, #0d47a1, #1565c0, #0288d1);
+            padding: 14px 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-shrink: 0;
+        }
+        .cb-header-avatar {
+            width: 40px; height: 40px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 18px;
+            border: 2px solid rgba(255,255,255,0.3);
+            flex-shrink: 0;
+        }
+        .cb-header-info { flex: 1; }
+        .cb-header-title { color:#fff; font-size:14px; font-weight:700; }
+        .cb-header-sub   { color:rgba(255,255,255,0.75); font-size:11px; margin-top:1px; }
+        .cb-header-status { display:flex; align-items:center; gap:5px; color:rgba(255,255,255,0.9); font-size:11px; }
+        .cb-status-dot { width:8px; height:8px; background:#69f0ae; border-radius:50%; animation: pulse 2s infinite; }
+        @keyframes pulse { 0%,100%{box-shadow:0 0 0 0 rgba(105,240,174,0.5)} 50%{box-shadow:0 0 0 5px rgba(105,240,174,0)} }
+        .cb-close {
+            background: rgba(255,255,255,0.18); border:none; border-radius:50%;
+            width:28px; height:28px; color:#fff; cursor:pointer; font-size:14px;
+            display:flex; align-items:center; justify-content:center;
+            transition: background 0.2s;
+        }
+        .cb-close:hover { background: rgba(255,255,255,0.32); }
+        /* Chat Box */
+        #cb-chat-box {
+            flex: 1;
+            overflow-y: auto;
+            padding: 14px 12px;
+            background: #f0f4f8;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            scroll-behavior: smooth;
+            min-height: 200px;
+            max-height: 340px;
+        }
+        #cb-chat-box::-webkit-scrollbar { width: 4px; }
+        #cb-chat-box::-webkit-scrollbar-thumb { background: rgba(21,101,192,0.25); border-radius: 10px; }
+        /* Messages */
+        .cb-msg-row { display:flex; align-items:flex-end; gap:7px; animation: cbFadeUp 0.3s ease; }
+        .cb-msg-row.cb-user-row { flex-direction: row-reverse; }
+        @keyframes cbFadeUp { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+        .cb-avatar {
+            width:28px; height:28px; border-radius:50%; display:flex;
+            align-items:center; justify-content:center; font-size:13px; flex-shrink:0;
+        }
+        .cb-avatar.bot { background: linear-gradient(135deg,#0d47a1,#1565c0); color:#fff; }
+        .cb-avatar.usr { background: linear-gradient(135deg,#1565c0,#0288d1); color:#fff; }
+        .cb-msg-content { max-width:78%; display:flex; flex-direction:column; gap:2px; }
+        .cb-bubble {
+            padding:9px 13px; border-radius:16px; font-size:13px;
+            line-height:1.5; box-shadow: 0 2px 6px rgba(0,0,0,0.07);
+        }
+        .cb-bot-bubble  { background:#fff; color:#1a2332; border-radius:4px 16px 16px 16px; border-left:3px solid #1565c0; }
+        .cb-user-bubble { background:linear-gradient(135deg,#1565c0,#0288d1); color:#fff; border-radius:16px 4px 16px 16px; }
+        .cb-time { font-size:9px; color:#90a4ae; padding:0 3px; }
+        .cb-msg-row.cb-user-row .cb-time { text-align:right; }
+        /* Typing */
+        .cb-typing { display:flex; align-items:center; gap:7px; animation:cbFadeUp 0.3s ease; }
+        .cb-typing-bubble { background:#fff; border-radius:16px; padding:10px 14px; display:flex; gap:4px; border-left:3px solid #1565c0; box-shadow:0 2px 6px rgba(0,0,0,0.07); }
+        .cb-dot { width:6px; height:6px; background:#90a4ae; border-radius:50%; animation:cbTyping 1.2s infinite; }
+        .cb-dot:nth-child(2){animation-delay:0.2s} .cb-dot:nth-child(3){animation-delay:0.4s}
+        @keyframes cbTyping { 0%,60%,100%{transform:translateY(0);background:#90a4ae} 30%{transform:translateY(-5px);background:#1565c0} }
+        /* Quick replies */
+        .cb-quick {
+            background:#f7fafd; padding:8px 12px; border-top:1px solid #dde3ea;
+            display:flex; flex-wrap:wrap; gap:6px; flex-shrink:0;
+        }
+        .cb-qbtn {
+            background:#fff; border:1.5px solid #1565c0; color:#1565c0;
+            padding:4px 12px; border-radius:20px; font-size:11px; font-weight:500;
+            cursor:pointer; transition:all 0.2s; font-family:'Inter',sans-serif;
+        }
+        .cb-qbtn:hover { background:linear-gradient(135deg,#1565c0,#0288d1); color:#fff; border-color:transparent; }
+        /* Input */
+        .cb-input-area {
+            background:#fff; border-top:1px solid #dde3ea;
+            display:flex; align-items:center; padding:10px 12px; gap:8px; flex-shrink:0;
+        }
+        .cb-input-area input {
+            flex:1; border:1.5px solid #dde3ea; border-radius:20px;
+            padding:9px 14px; font-size:13px; font-family:'Inter',sans-serif;
+            outline:none; color:#1a2332; background:#f7fafd;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        .cb-input-area input:focus { border-color:#1565c0; box-shadow:0 0 0 3px rgba(21,101,192,0.12); background:#fff; }
+        .cb-input-area input::placeholder { color:#aab4be; }
+        .cb-send {
+            width:38px; height:38px; border-radius:50%; border:none;
+            background:linear-gradient(135deg,#1565c0,#0288d1); color:#fff;
+            font-size:15px; cursor:pointer; display:flex; align-items:center; justify-content:center;
+            transition:all 0.2s; box-shadow:0 3px 10px rgba(21,101,192,0.4); flex-shrink:0;
+        }
+        .cb-send:hover { transform:scale(1.1); box-shadow:0 5px 16px rgba(21,101,192,0.55); }
+
+        /* Responsive: lebih kecil di mobile */
+        @media (max-width: 480px) {
+            #chatbot-panel { width: calc(100vw - 24px); right: 12px; bottom: 88px; }
+        }
+
+        /* ====== SPLIT-SCREEN MODE ====== */
+        body.cb-split #layoutSidenav_content {
+            margin-right: 380px;
+            transition: margin-right 0.35s cubic-bezier(0.4,0,0.2,1);
+        }
+        body.cb-split #chatbot-panel {
+            position: fixed;
+            top: 62px;           /* tinggi topnav */
+            right: 0;
+            bottom: 0;
+            width: 380px;
+            max-height: none;
+            height: calc(100vh - 62px);
+            border-radius: 0;
+            box-shadow: -4px 0 24px rgba(21,101,192,0.15);
+            animation: none;
+            border-left: 1px solid rgba(21,101,192,0.15);
+        }
+        body.cb-split #cb-chat-box {
+            max-height: none;
+            flex: 1;
+        }
+        body.cb-split #chatbot-fab {
+            display: none;
+        }
+        body.cb-split #chatbot-tooltip {
+            display: none;
+        }
+        /* Split-screen toggle buttons in header */
+        .cb-hdr-btns {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex-shrink: 0;
+        }
+        .cb-hdr-btn {
+            background: rgba(255,255,255,0.18);
+            border: none;
+            border-radius: 6px;
+            width: 28px;
+            height: 28px;
+            color: #fff;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s;
+            font-size: 13px;
+        }
+        .cb-hdr-btn:hover { background: rgba(255,255,255,0.32); }
+        .cb-hdr-btn.active { background: rgba(255,255,255,0.35); box-shadow: 0 0 0 2px rgba(255,255,255,0.5); }
+        /* Transition for main content */
+        #layoutSidenav_content {
+            transition: margin-right 0.35s cubic-bezier(0.4,0,0.2,1);
+        }
     </style>
 
     <div id="chatbot-tooltip">💬 Tanya Asisten Air</div>
-    <a href="../chatbot/index.php" id="chatbot-fab" title="Asisten Chatbot" target="_blank">
+    <button id="chatbot-fab" title="Asisten Chatbot" onclick="cbToggle()">
         🤖
         <span class="fab-badge">!</span>
-    </a>
+    </button>
+
+    <!-- Panel Chat Popup -->
+    <div id="chatbot-panel">
+        <!-- Header -->
+        <div class="cb-header">
+            <div class="cb-header-avatar">🤖</div>
+            <div class="cb-header-info">
+                <div class="cb-header-title">Asisten Sistem Air</div>
+                <div class="cb-header-sub">Kelompok 8 · TE24E</div>
+            </div>
+            <div class="cb-header-status">
+                <div class="cb-status-dot"></div> Online
+            </div>
+            <div class="cb-hdr-btns">
+                <!-- Tombol popup mode -->
+                <button class="cb-hdr-btn active" id="cb-btn-popup" onclick="cbSetMode('popup')" title="Mode Popup">
+                    <svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor">
+                        <rect x="1" y="3" width="12" height="9" rx="2" fill="none" stroke="currentColor" stroke-width="1.5"/>
+                        <path d="M4 1h6v2H4z" fill="currentColor" opacity=".5"/>
+                    </svg>
+                </button>
+                <!-- Tombol split-screen mode -->
+                <button class="cb-hdr-btn" id="cb-btn-split" onclick="cbSetMode('split')" title="Mode Split Layar">
+                    <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                        <rect x="1" y="1" width="5.5" height="12" rx="1.5" stroke="currentColor" stroke-width="1.4"/>
+                        <rect x="7.5" y="1" width="5.5" height="12" rx="1.5" stroke="currentColor" stroke-width="1.4"/>
+                    </svg>
+                </button>
+                <button class="cb-hdr-btn cb-close" onclick="cbClose()" title="Tutup">✕</button>
+            </div>
+        </div>
+
+        <!-- Chat messages -->
+        <div id="cb-chat-box">
+            <div class="cb-msg-row">
+                <div class="cb-avatar bot">🤖</div>
+                <div class="cb-msg-content">
+                    <div class="cb-bubble cb-bot-bubble">Halo! Saya asisten Sistem Air. Ada yang bisa saya bantu? 👋</div>
+                    <div class="cb-time" id="cb-init-time"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Replies -->
+        <div class="cb-quick">
+            <button class="cb-qbtn" onclick="cbQuickReply('Cara membayar tagihan')">💳 Cara bayar tagihan</button>
+            <button class="cb-qbtn" onclick="cbQuickReply('Bagaimana cek pemakaian air?')">💧 Cek pemakaian</button>
+            <button class="cb-qbtn" onclick="cbQuickReply('Apa itu meter air?')">📊 Meter air</button>
+        </div>
+
+        <!-- Input -->
+        <div class="cb-input-area">
+            <input type="text" id="cb-pesan" placeholder="Ketik pertanyaan..." />
+            <button class="cb-send" onclick="cbKirim()" title="Kirim">➤</button>
+        </div>
+    </div>
 
     <script>
-        // Tampilkan tooltip saat hover FAB
-        const fab = document.getElementById('chatbot-fab');
-        const tip = document.getElementById('chatbot-tooltip');
-        fab.addEventListener('mouseenter', () => tip.classList.add('show'));
-        fab.addEventListener('mouseleave', () => tip.classList.remove('show'));
+        // ====== FAB & PANEL TOGGLE ======
+        const cbFab   = document.getElementById('chatbot-fab');
+        const cbTip   = document.getElementById('chatbot-tooltip');
+        const cbPanel = document.getElementById('chatbot-panel');
+        let cbOpen    = false;
+        let cbMode    = 'popup'; // 'popup' | 'split'
+
+        // Set waktu pesan awal
+        document.getElementById('cb-init-time').textContent = cbNow();
+
+        cbFab.addEventListener('mouseenter', () => { if (!cbOpen) cbTip.classList.add('show'); });
+        cbFab.addEventListener('mouseleave', () => cbTip.classList.remove('show'));
+
+        // Buka/tutup via FAB
+        function cbToggle() {
+            if (!cbOpen) {
+                cbOpen = true;
+                cbTip.classList.remove('show');
+                cbPanel.style.display = 'flex';
+                cbPanel.classList.add('open');
+                if (cbMode === 'popup') {
+                    cbPanel.style.animation = 'none';
+                    cbPanel.offsetHeight;
+                    cbPanel.style.animation = 'chatSlideIn 0.3s cubic-bezier(0.4,0,0.2,1)';
+                }
+                document.getElementById('cb-pesan').focus();
+            } else {
+                cbClose();
+            }
+        }
+
+        // Tutup chat (kembali ke FAB)
+        function cbClose() {
+            cbOpen = false;
+            cbPanel.classList.remove('open');
+            cbPanel.style.display = 'none';
+            document.body.classList.remove('cb-split');
+            cbMode = 'popup';
+            document.getElementById('cb-btn-popup').classList.add('active');
+            document.getElementById('cb-btn-split').classList.remove('active');
+        }
+
+        // Ganti mode: 'popup' atau 'split'
+        function cbSetMode(mode) {
+            cbMode = mode;
+            if (mode === 'split') {
+                document.body.classList.add('cb-split');
+                document.getElementById('cb-btn-split').classList.add('active');
+                document.getElementById('cb-btn-popup').classList.remove('active');
+                // Pastikan panel terbuka
+                cbOpen = true;
+                cbPanel.style.display = 'flex';
+                cbPanel.classList.add('open');
+            } else {
+                document.body.classList.remove('cb-split');
+                document.getElementById('cb-btn-popup').classList.add('active');
+                document.getElementById('cb-btn-split').classList.remove('active');
+                // Kembali ke popup mode
+                cbOpen = true;
+                cbPanel.style.display = 'flex';
+                cbPanel.classList.add('open');
+                cbPanel.style.animation = 'none';
+                cbPanel.offsetHeight;
+                cbPanel.style.animation = 'chatSlideIn 0.3s cubic-bezier(0.4,0,0.2,1)';
+            }
+            document.getElementById('cb-pesan').focus();
+        }
+
+        // ====== UTILITIES ======
+        function cbNow() {
+            return new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+        }
+
+        function cbAppend(type, text, time) {
+            const box  = document.getElementById('cb-chat-box');
+            const isBot = (type === 'bot');
+
+            const row = document.createElement('div');
+            row.className = 'cb-msg-row' + (isBot ? '' : ' cb-user-row');
+
+            const av = document.createElement('div');
+            av.className = 'cb-avatar ' + (isBot ? 'bot' : 'usr');
+            av.textContent = isBot ? '🤖' : '👤';
+
+            const content = document.createElement('div');
+            content.className = 'cb-msg-content';
+
+            const bubble = document.createElement('div');
+            bubble.className = 'cb-bubble ' + (isBot ? 'cb-bot-bubble' : 'cb-user-bubble');
+            if (isBot) bubble.innerHTML = text; else bubble.textContent = text;
+
+            const timeEl = document.createElement('div');
+            timeEl.className = 'cb-time';
+            timeEl.textContent = time || cbNow();
+
+            content.appendChild(bubble);
+            content.appendChild(timeEl);
+            row.appendChild(av);
+            row.appendChild(content);
+            box.appendChild(row);
+            box.scrollTop = box.scrollHeight;
+        }
+
+        function cbShowTyping() {
+            const box = document.getElementById('cb-chat-box');
+            const el  = document.createElement('div');
+            el.className = 'cb-typing'; el.id = 'cb-typing';
+            const av = document.createElement('div');
+            av.className = 'cb-avatar bot'; av.textContent = '🤖';
+            const bub = document.createElement('div');
+            bub.className = 'cb-typing-bubble';
+            bub.innerHTML = '<div class="cb-dot"></div><div class="cb-dot"></div><div class="cb-dot"></div>';
+            el.appendChild(av); el.appendChild(bub);
+            box.appendChild(el);
+            box.scrollTop = box.scrollHeight;
+        }
+
+        function cbHideTyping() {
+            const el = document.getElementById('cb-typing');
+            if (el) el.remove();
+        }
+
+        // ====== KIRIM PESAN ======
+        function cbKirim() {
+            const input = document.getElementById('cb-pesan');
+            const pesan = input.value.trim();
+            if (!pesan) return;
+
+            cbAppend('user', pesan, cbNow());
+            input.value = '';
+            input.disabled = true;
+            cbShowTyping();
+
+            const fd = new FormData();
+            fd.append('pesan', pesan);
+
+            setTimeout(() => {
+                fetch('../chatbot/chatbot.php', { method: 'POST', body: fd })
+                .then(r => r.json())
+                .then(data => {
+                    cbHideTyping();
+                    cbAppend('bot', data.jawaban, cbNow());
+                    input.disabled = false;
+                    input.focus();
+                })
+                .catch(() => {
+                    cbHideTyping();
+                    cbAppend('bot', '⚠️ Terjadi kesalahan. Silakan coba lagi.', cbNow());
+                    input.disabled = false;
+                });
+            }, 600);
+        }
+
+        function cbQuickReply(teks) {
+            document.getElementById('cb-pesan').value = teks;
+            cbKirim();
+        }
+
+        // Enter to send
+        document.getElementById('cb-pesan').addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); cbKirim(); }
+        });
     </script>
     <!-- ===== END CHATBOT FAB ===== -->
     </head>
