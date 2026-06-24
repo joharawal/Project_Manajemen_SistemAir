@@ -287,7 +287,8 @@ $(document).ready(function () {
               $("#sumary .bg-success .small").text("Tagihan");
 
               stat = d[0].status;
-              $("#sumary .bg-danger h1").text(stat);
+              var statLabel = (stat === "Belum Lunas") ? "BLM LUNAS" : stat;
+              $("#sumary .bg-danger h1").text(statLabel);
               $("#sumary .bg-danger .small").text("Status Tagihan");
           }
       })

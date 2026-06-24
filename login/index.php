@@ -343,7 +343,7 @@ $level = $dt_user[2];
                                         <div class="ms-2">Warga</div>
                                     </div>
                                     <div class="card-footer d-flex align-items-center justify-content-center">
-                                        <div class="small text-white">Belum Lunas</div>
+                                        <div class="small text-white">BLM LUNAS</div>
                                     </div>
                                 </div>
                             </div>
@@ -395,7 +395,7 @@ $level = $dt_user[2];
                             <div class="col-xl-3 col-md-6">
                                 <div class="card bg-danger text-white mb-4">
                                     <div class="card-body d-flex justify-content-center align-items-center">
-                                        <h1 id="val_status_warga">-</h1>
+                                        <h1 id="val_status_warga" style="white-space: nowrap; font-size: 1.6rem;">-</h1>
                                     </div>
                                     <div class="card-footer d-flex align-items-center justify-content-center">
                                         <div class="small text-white">Status Tagihan</div>
@@ -1049,11 +1049,10 @@ $level = $dt_user[2];
                                         <label for="status_meter" class="form-label">Status :</label>
                                         <select class="form-select" name="status_meter">
                                             <?php
-                                            $st_meter = array("Belum Lunas", "Lunas");
-                                            foreach ($st_meter as $st2) {
-                                                if (($status_meter ?? '') == $st2) $sel = "SELECTED";
-                                                else $sel = "";
-                                                echo "<option value='$st2' $sel>$st2</option>";
+                                            $st_meter = array("Belum Lunas" => "BLM LUNAS", "Lunas" => "Lunas");
+                                            foreach ($st_meter as $val => $label) {
+                                                $sel = ($current_status_meter ?? ($status_meter ?? 'Belum Lunas')) == $val ? 'SELECTED' : '';
+                                                echo "<option value='$val' $sel>$label</option>";
                                             }
                                             ?>
                                         </select>
@@ -1265,7 +1264,7 @@ $level = $dt_user[2];
 
                                         // Tampilkan badge berdasarkan status
                                         if ($status == "Belum Lunas") {
-                                            $badge = "<span class='badge bg-danger badge-small d-block w-100'><i class='fas fa-exclamation-triangle'></i> <strong>BELUM LUNAS</strong></span>";
+                                            $badge = "<span class='badge bg-danger badge-small d-block w-100'><i class='fas fa-exclamation-triangle'></i> <strong>BLM LUNAS</strong></span>";
                                         } else {
                                             $badge = "<span class='badge bg-success badge-small d-block w-100'><i class='fas fa-check-circle'></i> <strong>LUNAS</strong></span>";
                                         }
@@ -1351,11 +1350,11 @@ $level = $dt_user[2];
                                         $dp_tgl = $air->tgl_balik_indo($dp[5]);
                                         $dp_waktu = $dp[6];
                                         $dp_tagihan = $dp[7];
-                                        $dp_status = $dp[9];
+                                        $dp_status = $dp[8];
 
                                         // Tampilkan badge berdasarkan status
                                         if ($dp_status == "Belum Lunas") {
-                                            $badge = "<span class='badge bg-danger badge-small d-block w-100'><i class='fas fa-exclamation-triangle'></i> <strong>BELUM LUNAS</strong></span>";
+                                            $badge = "<span class='badge bg-danger badge-small d-block w-100'><i class='fas fa-exclamation-triangle'></i> <strong>BLM LUNAS</strong></span>";
                                         } else {
                                             $badge = "<span class='badge bg-success badge-small d-block w-100'><i class='fas fa-check-circle'></i> <strong>LUNAS</strong></span>";
                                         }
