@@ -1161,8 +1161,10 @@ $level = $dt_user[2];
                                                     <td>$tipe</td>
                                                     <td>$status</td>
                                                     <td>
+                                                    <div style='display:flex; gap:4px;'>
                                                     <a href=index.php?p=user_edit&user=$user><button type=button class='btn btn-outline-success btn-sm'><i class='fa-solid fa-pen-to-square'></i></button></a>
-                                                    <button type=button class='btn btn-outline-danger btn-sm' data-bs-toggle=modal data-bs-target=#myModal data_user=$user><i class='fa-solid fa-trash'></i></button> 
+                                                    <button type=button class='btn btn-outline-danger btn-sm' data-bs-toggle=modal data-bs-target=#myModal data_user=$user><i class='fa-solid fa-trash'></i></button>
+                                                    </div>
                                                     </td>
                                                 </tr>";
                                     }
