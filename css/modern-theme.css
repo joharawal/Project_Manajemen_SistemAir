@@ -139,12 +139,86 @@ body {
     background: rgba(0,0,0,0.25) !important;
     border-top: 1px solid rgba(255,255,255,0.08) !important;
     padding: 14px 20px !important;
-    font-size: 0.78rem !important;
+    font-size: 0.82rem !important;
+}
+/* Override Bootstrap .small yang mengecilkan teks di dalam footer */
+.sb-sidenav-footer .small {
+    font-size: 0.82rem !important;
+}
+.sb-sidenav-footer .small:first-child {
+    color: rgba(255,255,255,0.75) !important;
+    margin-bottom: 3px !important;
 }
 .sb-nav-link-icon {
-    width: 22px !important;
-    text-align: center !important;
-    margin-right: 10px !important;
+    width: 32px !important;
+    flex-shrink: 0;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    margin-right: 12px !important;
+}
+
+/* ===== SIDEBAR NAV ICON BOX ===== */
+.nav-icon-box {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 8px;
+    font-size: 0.82rem;
+    transition: all 0.25s cubic-bezier(0.4,0,0.2,1);
+    flex-shrink: 0;
+}
+.nav-icon-yellow {
+    background: rgba(255, 193, 7, 0.18);
+    color: #ffc107;
+    border: 1px solid rgba(255, 193, 7, 0.3);
+}
+.nav-icon-blue {
+    background: rgba(100, 181, 246, 0.18);
+    color: #64b5f6;
+    border: 1px solid rgba(100, 181, 246, 0.3);
+}
+.nav-icon-green {
+    background: rgba(102, 187, 106, 0.18);
+    color: #66bb6a;
+    border: 1px solid rgba(102, 187, 106, 0.3);
+}
+.nav-icon-red {
+    background: rgba(239, 83, 80, 0.18);
+    color: #ef5350;
+    border: 1px solid rgba(239, 83, 80, 0.3);
+}
+/* Hover effect: icon box menjadi lebih terang */
+.nav-link:hover .nav-icon-yellow,
+.nav-link.active .nav-icon-yellow {
+    background: rgba(255, 193, 7, 0.35);
+    box-shadow: 0 0 10px rgba(255, 193, 7, 0.35);
+    transform: scale(1.1);
+}
+.nav-link:hover .nav-icon-blue,
+.nav-link.active .nav-icon-blue {
+    background: rgba(100, 181, 246, 0.35);
+    box-shadow: 0 0 10px rgba(100, 181, 246, 0.35);
+    transform: scale(1.1);
+}
+.nav-link:hover .nav-icon-green,
+.nav-link.active .nav-icon-green {
+    background: rgba(102, 187, 106, 0.35);
+    box-shadow: 0 0 10px rgba(102, 187, 106, 0.35);
+    transform: scale(1.1);
+}
+.nav-link:hover .nav-icon-red,
+.nav-link.active .nav-icon-red {
+    background: rgba(239, 83, 80, 0.35);
+    box-shadow: 0 0 10px rgba(239, 83, 80, 0.35);
+    transform: scale(1.1);
+}
+/* Align nav-link items */
+.sb-sidenav-dark .sb-sidenav-menu .nav-link {
+    display: flex !important;
+    align-items: center !important;
 }
 #layoutSidenav_nav { transition: width 0.3s ease !important; }
 
