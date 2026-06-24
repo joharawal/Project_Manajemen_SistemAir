@@ -1,6 +1,45 @@
 $(document).ready(function () {
   //console.log("Script air.js jalan...");
 
+  // Fungsi untuk load data tarif saat edit
+  function loadTarifData(id_tarif) {
+    $.post("../assets/ajax.php", { p: "fetch_tarif", id_tarif: id_tarif }, function (response) {
+      const data = JSON.parse(response);
+      if (data.status === "success") {
+        // Populate form dengan data tarif
+        $("#id_tarif").val(data.data.id_tarif);
+        $("#tipe_tarif").val(data.data.tipe_tarif);
+        $("#tarif").val(data.data.tarif);
+        $("input[name='status'][value='" + data.data.status + "']").prop("checked", true);
+      }
+    });
+  }
+
+  // Event handler untuk tombol edit tarif
+  $(document).on("click", "a[href*='tarif_edit']", function (e) {
+    e.preventDefault();
+    const url = $(this).attr("href");
+    const params = new URLSearchParams(url.split("?")[1]);
+    const id_tarif = params.get("id_tarif");
+    
+    // Load data tarif
+    loadTarifData(id_tarif);
+    
+    // Ubah form state untuk edit
+    $("#tarif_form button").val("tarif_edit");
+    $("#tarif_form input[name='id_tarif']").val(id_tarif).prop("readonly", true);
+    
+    // Remove hidden id_tarif jika sudah ada (untuk avoid duplikasi)
+    $("#tarif_form input[type='hidden'][name='id_tarif']").remove();
+    
+    // Tampilkan form dan sembunyikan tabel
+    $("#form_tarif").show();
+    $("#data_tarif").hide();
+    
+    // Scroll ke form
+    $("html, body").animate({ scrollTop: $("#form_tarif").offset().top - 100 }, 500);
+  });
+
   uri = window.location.href;
   e = uri.split("=");
   console.log("URI: " + uri + " e[1]:" + e[1] + " e[2]:" + e[2]);
@@ -111,6 +150,13 @@ $(document).ready(function () {
     //menambahkan klik add tarif
     $(".datatable-dropdown button").click(function () {
       //console.log("Tombol Di Klik");
+      // Reset form untuk add baru
+      $("#tarif_form")[0].reset();
+      $("#id_tarif").prop("readonly", false);
+      $("#tarif_form button").val("tarif_add");
+      // Remove hidden id_tarif jika ada
+      $("#tarif_form input[type='hidden'][name='id_tarif']").remove();
+      
       $("#form_tarif").show();
       $("#data_tarif").hide();
     });
