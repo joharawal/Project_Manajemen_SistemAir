@@ -759,7 +759,7 @@ $level = $dt_user[2];
                                 $pemakaian = $meter_akhir - $meter_awal;
                                 $tagihan = $tarif * $pemakaian;
                                 if ($pemakaian < 0) { //meter akhir lebih kecil dari meter awal atau pemakaian negatif
-                                    echo "<div class='alert alert-danger alert-dismissible fade show'>
+                                    echo "<div class='alert alert-danger alert-dismissible fade show' id=alert-meter>
                                             <button type=button class=btn-close data-bs-dismiss=alert></button>
                                             <strong>Meter Akhir</strong> Harus Lebih Besar Dari Meter Awal
                                             </div>";
@@ -792,7 +792,7 @@ $level = $dt_user[2];
                             $pemakaian = $meter_akhir - $meter_awal;
                             $tagihan = $tarif * $pemakaian;
                             if ($pemakaian < 0) { //meter akhir lebih kecil dari meter awal atau pemakaian negatif
-                                echo "<div class='alert alert-danger alert-dismissible fade show'>
+                                echo "<div class='alert alert-danger alert-dismissible fade show' id=alert-meter>
                                             <button type=button class=btn-close data-bs-dismiss=alert></button>
                                             <strong>Meter Akhir</strong> Harus Lebih Besar Dari Meter Awal
                                             </div>";
@@ -1049,7 +1049,7 @@ $level = $dt_user[2];
                                         <label for="status_meter" class="form-label">Status :</label>
                                         <select class="form-select" name="status_meter">
                                             <?php
-                                            $st_meter = array("Belum Lunas" => "BLM LUNAS", "Lunas" => "Lunas");
+                                            $st_meter = array("Belum Lunas" => "Belum Lunas", "Lunas" => "Lunas");
                                             foreach ($st_meter as $val => $label) {
                                                 $sel = ($current_status_meter ?? ($status_meter ?? 'Belum Lunas')) == $val ? 'SELECTED' : '';
                                                 echo "<option value='$val' $sel>$label</option>";
