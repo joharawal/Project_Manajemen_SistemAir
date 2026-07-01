@@ -236,5 +236,26 @@ if (isset($_POST['p'])) {
         $q = mysqli_query($koneksi, "SELECT COALESCE(SUM(tagihan), 0) as blm_lunas FROM pemakaian WHERE username='$user' AND LOWER(status) != 'lunas'");
         $d = mysqli_fetch_assoc($q);
         echo json_encode(['blm_lunas' => (float)$d['blm_lunas']]);
+    } elseif ($p == "fetch_tarif") {
+        // Fetch data tarif untuk diisi ke form edit
+        $id_tarif = $_POST['id_tarif'] ?? '';
+        $q = mysqli_query($koneksi, "SELECT id_tarif, tipe, tarif, status FROM tarif WHERE id_tarif='$id_tarif'");
+        $d = mysqli_fetch_assoc($q);
+        if ($d) {
+            echo json_encode([
+                'status' => 'success',
+                'data' => [
+                    'id_tarif' => $d['id_tarif'],
+                    'tipe_tarif' => $d['tipe'],
+                    'tarif' => $d['tarif'],
+                    'status' => $d['status']
+                ]
+            ]);
+        } else {
+            echo json_encode([
+                'status' => 'error',
+                'message' => 'Data tarif tidak ditemukan'
+            ]);
+        }
     }
 }

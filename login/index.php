@@ -877,6 +877,13 @@ $level = $dt_user[2];
                             }
                         }
                     }
+                    
+                    // Inisialisasi variable untuk form tarif (jika belum di-set)
+                    if (!isset($id_tarif)) $id_tarif = '';
+                    if (!isset($tipe_tarif)) $tipe_tarif = '';
+                    if (!isset($tarif)) $tarif = '';
+                    if (!isset($status)) $status = '';
+                    
                     ?>
 
                     <div class="card mb-4" id="form_user">
